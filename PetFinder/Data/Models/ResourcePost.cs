@@ -14,5 +14,7 @@ namespace PetFinder.Data.Models
         public string Descripton { get; set; }
 
         public DateTime CreatedOn { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
