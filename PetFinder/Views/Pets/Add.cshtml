@@ -1,0 +1,54 @@
+﻿@model AddPetFormModel
+
+@{
+    ViewBag.Title = "Add Pet";
+}
+
+<h2 class="header-margin text-center">@ViewBag.Title</h2>
+<form class="offset-md-3 col-md-6 g-3" method="post" asp-controller="Pets" asp-action="Add">
+
+        <div class="form-group">
+            <label asp-for="Name" class="form-label">Name</label>
+            <input asp-for="Name" type="text" class="form-control" id="name">
+            <span asp-validation-for="Name" class="small text-danger"></span>
+        </div>
+
+
+        <div class="form-group">
+            <label asp-for="ImageUrl" class="form-label">Password</label>
+            <input asp-for="ImageUrl" type="text" class="form-control">
+            <span asp-validation-for="ImageUrl" class="small text-danger"></span>
+        </div>
+
+
+
+        <div class="form-group">
+            <label asp-for="SizeId">Size</label>
+            <select asp-for="SizeId" class="form-control">
+                @foreach (var size in Model.Sizes)
+                {
+                    <option value="@size.Id">@size.Type</option>
+                }
+
+            </select>
+        </div>
+
+   
+
+        <div class="form-group">
+            <label asp-for="SpeciesId">Species</label>
+            <select asp-for="SpeciesId" class="form-control">
+                @foreach (var specie in Model.Species)
+                {
+                    <option value="@specie.Name">@specie.Name</option>
+                }
+
+            </select>
+        </div>
+
+    
+
+
+        <button type="submit" class="btn btn-primary mt-3 col-sm-12 col-md-auto">Submit</button>
+
+</form>

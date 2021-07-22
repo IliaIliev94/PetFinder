@@ -8,6 +8,11 @@ namespace PetFinder.Data.Models
 {
     public class SearchPost
     {
+        public SearchPost()
+        {
+            this.Comments = new HashSet<Comment>();
+        }
+
         [Required]
         public string Id { get; init; } = Guid.NewGuid().ToString();
 
@@ -18,15 +23,19 @@ namespace PetFinder.Data.Models
 
         public bool IsFound { get; set; }
 
-        public string ImageUrl { get; set; }
-
         public DateTime DatePublished { get; init; }
 
         public DateTime? DateLostFound { get; set; }
 
+        public int PetId { get; set; }
+
         public virtual Pet Pet { get; set; }
 
-        public virtual SearchPostType Type { get; set; }
+        public int SearchPostTypeId { get; set; }
+
+        public virtual SearchPostType SearchPostType { get; set; }
+
+        public int CityId { get; set; }
 
         public virtual City City { get; set; }
 
