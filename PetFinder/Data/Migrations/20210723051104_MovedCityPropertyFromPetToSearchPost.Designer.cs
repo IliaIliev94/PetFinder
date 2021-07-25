@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetFinder.Data;
 
 namespace PetFinder.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210723051104_MovedCityPropertyFromPetToSearchPost")]
+    partial class MovedCityPropertyFromPetToSearchPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,6 +277,9 @@ namespace PetFinder.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -289,6 +294,8 @@ namespace PetFinder.Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
 
                     b.HasIndex("SizeId");
 
@@ -477,6 +484,10 @@ namespace PetFinder.Data.Migrations
 
             modelBuilder.Entity("PetFinder.Data.Models.Pet", b =>
                 {
+                    b.HasOne("PetFinder.Data.Models.City", null)
+                        .WithMany("Pets")
+                        .HasForeignKey("CityId");
+
                     b.HasOne("PetFinder.Data.Models.Size", "Size")
                         .WithMany("Pets")
                         .HasForeignKey("SizeId")
@@ -497,7 +508,7 @@ namespace PetFinder.Data.Migrations
             modelBuilder.Entity("PetFinder.Data.Models.SearchPost", b =>
                 {
                     b.HasOne("PetFinder.Data.Models.City", "City")
-                        .WithMany("SearchPosts")
+                        .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -521,7 +532,7 @@ namespace PetFinder.Data.Migrations
 
             modelBuilder.Entity("PetFinder.Data.Models.City", b =>
                 {
-                    b.Navigation("SearchPosts");
+                    b.Navigation("Pets");
                 });
 
             modelBuilder.Entity("PetFinder.Data.Models.Pet", b =>

@@ -15,7 +15,7 @@
 
 
         <div class="form-group">
-            <label asp-for="ImageUrl" class="form-label">Password</label>
+            <label asp-for="ImageUrl" class="form-label">Image URL</label>
             <input asp-for="ImageUrl" type="text" class="form-control">
             <span asp-validation-for="ImageUrl" class="small text-danger"></span>
         </div>
@@ -29,7 +29,7 @@
                 {
                     <option value="@size.Id">@size.Type</option>
                 }
-
+                <span asp-validation-for="SizeId" class="small text-danger"></span>
             </select>
         </div>
 
@@ -40,9 +40,9 @@
             <select asp-for="SpeciesId" class="form-control">
                 @foreach (var specie in Model.Species)
                 {
-                    <option value="@specie.Name">@specie.Name</option>
+                    <option value="@specie.Id">@specie.Name</option>
                 }
-
+                <span asp-validation-for="SpeciesId" class="small text-danger"></span>
             </select>
         </div>
 

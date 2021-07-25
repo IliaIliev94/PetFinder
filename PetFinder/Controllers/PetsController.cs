@@ -20,6 +20,23 @@ namespace PetFinder.Controllers
             this.context = context;
         }
 
+        public IActionResult All()
+        {
+            var pets = this.context
+                .Pets
+                .Select(pet => new PetListViewModel
+                {
+                    Id = pet.Id,
+                    Name = pet.Name,
+                    ImageUrl = pet.ImageUrl,
+                    Species = pet.Species.Name,
+                    Size = pet.Size.Type,
+                })
+                .ToList();
+
+            return this.View(pets);
+        }
+
         public IActionResult Add()
         {
            
@@ -35,10 +52,17 @@ namespace PetFinder.Controllers
         {
             if(!ModelState.IsValid)
             {
-                pet.Sizes = this.GetSizes();
-                pet.Species = this.GetSpecies();
 
-                return this.View(pet);
+                var message = string.Join(" | ", ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage));
+
+                Console.WriteLine(message);
+
+                //pet.Sizes = this.GetSizes();
+                //pet.Species = this.GetSpecies();
+
+                //return this.View(pet);
             }
 
             var newPet = new Pet

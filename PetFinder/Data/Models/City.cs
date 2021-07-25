@@ -9,13 +9,13 @@ namespace PetFinder.Data.Models
     {
         public City()
         {
-            this.Pets = new HashSet<Pet>();
+            this.SearchPosts = new HashSet<SearchPost>();
         }
 
         public int Id { get; init; }
 
         public string Name { get; init; }
 
-        public virtual ICollection<Pet> Pets { get; set; }
+        public virtual ICollection<SearchPost> SearchPosts { get; set; }
     }
 }

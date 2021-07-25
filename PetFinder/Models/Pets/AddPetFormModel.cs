@@ -12,17 +12,18 @@ namespace PetFinder.Models.Pets
 {
     public class AddPetFormModel
     {
-        [Required]
         [MaxLength(NameMaxLength)]
         public string Name { get; init; }
 
         [Display(Name ="Image URL")]
         public string ImageUrl { get; init; }
 
+        [Display(Name = "Size")]
         public int SizeId { get; init; }
 
         public ICollection<SizeViewModel> Sizes { get; set; }
 
+        [Display(Name = "Species")]
         public int SpeciesId { get; init; }
 
         public ICollection<SpeciesViewModel> Species { get; set; }

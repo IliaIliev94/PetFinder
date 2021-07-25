@@ -1,0 +1,32 @@
+﻿@model List<PetListViewModel>
+
+@{
+    ViewBag.Title = "All Pets";
+}
+
+<h2 class="text-center my-2">Pets</h2>
+
+<div class="text-center my-2">
+    <a asp-controller="Pets" asp-action="Add" class="btn btn-primary">Add pet</a>
+</div>
+
+<div class="container offset-md-1">
+
+        @foreach (var pet in Model)
+        {
+            <div class="card col-md-12 col-lg-3 float-left mx-2 my-2">
+                <img src="@pet.ImageUrl" class="card-img-top" alt="@pet.Name">
+                <div class="card-body">
+                    <h5 class="card-title">@pet.Name</h5>
+                    <p class="card-text">@pet.Species - @pet.Size</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        }
+
+</div>
+
+
+
+
+
