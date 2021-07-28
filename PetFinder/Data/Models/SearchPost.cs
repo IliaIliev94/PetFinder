@@ -27,7 +27,7 @@ namespace PetFinder.Data.Models
 
         public DateTime? DateLostFound { get; set; }
 
-        public int PetId { get; set; }
+        public string PetId { get; set; }
 
         public virtual Pet Pet { get; set; }
 

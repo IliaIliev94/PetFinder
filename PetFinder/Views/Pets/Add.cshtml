@@ -1,10 +1,10 @@
 ﻿@model AddPetFormModel
 
 @{
-    ViewBag.Title = "Add Pet";
+    ViewData["Title"] = "Add Pet";
 }
 
-<h2 class="header-margin text-center">@ViewBag.Title</h2>
+<h2 class="header-margin text-center">@ViewData["Title"]</h2>
 <form class="offset-md-3 col-md-6 g-3" method="post" asp-controller="Pets" asp-action="Add">
 
         <div class="form-group">
@@ -29,7 +29,6 @@
                 {
                     <option value="@size.Id">@size.Type</option>
                 }
-                <span asp-validation-for="SizeId" class="small text-danger"></span>
             </select>
         </div>
 
@@ -42,12 +41,11 @@
                 {
                     <option value="@specie.Id">@specie.Name</option>
                 }
-                <span asp-validation-for="SpeciesId" class="small text-danger"></span>
             </select>
         </div>
 
     
-
+    <input  type="hidden" asp-for="SearchPostId" value="@ViewBag.SearchId"/>
 
         <button type="submit" class="btn btn-primary mt-3 col-sm-12 col-md-auto">Submit</button>
 

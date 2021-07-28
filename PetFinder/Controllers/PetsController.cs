@@ -37,8 +37,10 @@ namespace PetFinder.Controllers
             return this.View(pets);
         }
 
-        public IActionResult Add()
+        public IActionResult Add(string searchId)
         {
+
+            ViewBag.SearchId = searchId;
            
             return this.View(new AddPetFormModel 
             { 
@@ -52,17 +54,10 @@ namespace PetFinder.Controllers
         {
             if(!ModelState.IsValid)
             {
+                pet.Sizes = this.GetSizes();
+                pet.Species = this.GetSpecies();
 
-                var message = string.Join(" | ", ModelState.Values
-                .SelectMany(v => v.Errors)
-                .Select(e => e.ErrorMessage));
-
-                Console.WriteLine(message);
-
-                //pet.Sizes = this.GetSizes();
-                //pet.Species = this.GetSpecies();
-
-                //return this.View(pet);
+                return this.View(pet);
             }
 
             var newPet = new Pet
@@ -72,6 +67,13 @@ namespace PetFinder.Controllers
                 SizeId = pet.SizeId,
                 SpeciesId = pet.SpeciesId,
             };
+
+            if(!String.IsNullOrEmpty(pet.SearchPostId))
+            {
+                this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == pet.SearchPostId).PetId = newPet.Id;
+            }
+
+            
 
             this.context.Pets.Add(newPet);
 

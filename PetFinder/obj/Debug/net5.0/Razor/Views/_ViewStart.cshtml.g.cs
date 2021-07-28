@@ -33,8 +33,15 @@ using PetFinder.Models.Pets;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 4 "D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\Views\_ViewImports.cshtml"
+using PetFinder.Models.SearchPosts;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7091c65830b0329e613be026ede8a57552863778", @"/Views/_ViewStart.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"2ceb0c765af0d96e0442067473785a8e4d52f8a5", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"353e1d1909354bd89b762ae37e068ee74a4e72d9", @"/Views/_ViewImports.cshtml")]
     public class Views__ViewStart : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

@@ -24,6 +24,8 @@ namespace PetFinder.Infrastructure
 
             SeedSpecies(data);
 
+            SeedSearchPostTypes(data);
+
             return app;
         }
 
@@ -109,6 +111,22 @@ namespace PetFinder.Infrastructure
                 new Specie {Name = "Sheep"},
                 new Specie {Name = "Pig"},
                 new Specie {Name = "Other"},
+            });
+
+            data.SaveChanges();
+        }
+
+        private static void SeedSearchPostTypes(ApplicationDbContext data)
+        {
+            if(data.SearchPostTypes.Any())
+            {
+                return;
+            }
+
+            data.SearchPostTypes.AddRange(new[]
+            {
+                new SearchPostType {Name = "Lost"},
+                new SearchPostType {Name = "Found"}
             });
 
             data.SaveChanges();

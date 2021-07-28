@@ -394,3 +394,4 @@ D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\PetFinder.genruntimeconfig.cache
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\Razor\Views\Pets\Add.cshtml.g.cs
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\Razor\Views\Pets\All.cshtml.g.cs
+D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\Razor\Views\SearchPosts\Add.cshtml.g.cs

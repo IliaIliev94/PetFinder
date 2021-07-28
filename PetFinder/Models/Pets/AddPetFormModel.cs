@@ -27,5 +27,7 @@ namespace PetFinder.Models.Pets
         public int SpeciesId { get; init; }
 
         public ICollection<SpeciesViewModel> Species { get; set; }
+
+        public string SearchPostId { get; init; }
     }
 }
