@@ -23,7 +23,7 @@
                                 Lost Pets
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-controller="SearchPosts" asp-action="AllLostSearchPosts">View</a>
+                                <a class="dropdown-item" asp-route-type="Lost" asp-controller="SearchPosts" asp-action="All">View</a>
                                 <a class="dropdown-item" asp-route-type="Lost" asp-controller="SearchPosts" asp-action="Add">Add</a>
                             </div>
                         </li>
@@ -32,7 +32,7 @@
                                 Found Pets
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" asp-controller="SearchPosts" asp-action="AllFoundSearchPosts">View</a>
+                                <a class="dropdown-item" asp-route-type="Found" asp-controller="SearchPosts" asp-action="All">View</a>
                                 <a class="dropdown-item" asp-route-type="Found" asp-controller="SearchPosts" asp-action="Add">Add</a>
                             </div>
                         </li>

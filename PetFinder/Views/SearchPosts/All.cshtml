@@ -1,0 +1,29 @@
+﻿@model IEnumerable<SearchPostListViewModel>
+
+@{
+    ViewData["Title"] = "Search Posts";
+}
+
+<h2 class="text-center my-2">@ViewData["Title"]</h2>
+
+<div class="text-center my-2">
+    <a asp-controller="SearchPosts" asp-action="Add" class="btn btn-primary">Add Search Post</a>
+</div>
+
+<div class="container offset-md-1">
+    <div class="row">
+        @foreach (var searchPost in Model)
+        {
+            <div class="card col-md-12 col-lg-3 float-left mx-2 my-2">
+                <img src="@searchPost.ImageUrl" class="card-img-top" alt="@searchPost.PetName">
+                <div class="card-body">
+                    <h5 class="card-title">@searchPost.Title</h5>
+                    <p class="card-text">@searchPost.PetName - @searchPost.PetSpecies</p>
+                    <a asp-controller="SearchPosts" asp-action="Details" asp-route-id="@searchPost.Id" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        }
+    </div>
+   
+
+</div>

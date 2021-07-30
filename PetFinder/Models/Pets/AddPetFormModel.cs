@@ -15,6 +15,7 @@ namespace PetFinder.Models.Pets
         [MaxLength(NameMaxLength)]
         public string Name { get; init; }
 
+        [Required]
         [Display(Name ="Image URL")]
         public string ImageUrl { get; init; }
 

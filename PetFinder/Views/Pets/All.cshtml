@@ -1,10 +1,10 @@
 ﻿@model List<PetListViewModel>
 
 @{
-    ViewBag.Title = "All Pets";
+    ViewData["Title"] = "All Pets";
 }
 
-<h2 class="text-center my-2">Pets</h2>
+<h2 class="text-center my-2">@ViewData["Title"]</h2>
 
 <div class="text-center my-2">
     <a asp-controller="Pets" asp-action="Add" class="btn btn-primary">Add pet</a>
@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <h5 class="card-title">@pet.Name</h5>
                     <p class="card-text">@pet.Species - @pet.Size</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <a asp-controller="Pets" asp-action="Details" asp-route-id="@pet.Id" class="btn btn-primary">Details</a>
                 </div>
             </div>
         }

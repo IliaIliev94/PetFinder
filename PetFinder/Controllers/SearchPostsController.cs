@@ -22,6 +22,49 @@ namespace PetFinder.Controllers
             this.context = context;
         }
 
+        public IActionResult All(string type)
+        {
+            var searchPosts = this.context
+                .SearchPosts
+                .Where(searchPost => searchPost.SearchPostType.Name == type)
+                .Select(searchPost => new SearchPostListViewModel
+                {
+                    Id = searchPost.Id,
+                    Title = searchPost.Title,
+                    ImageUrl = searchPost.Pet.ImageUrl,
+                    PetName = searchPost.Pet.Name,
+                    PetSpecies = searchPost.Pet.Species.Name,
+                })
+                .ToList();
+
+            return this.View(searchPosts);
+        }
+
+        public IActionResult Details(string id)
+        {
+            var searchPost = this.context
+                .SearchPosts
+                .Where(searchPost => searchPost.Id == id)
+                .Select(searchPost => new SearchPostDetailsViewModel
+                {
+                    Id = searchPost.Id,
+                    Title = searchPost.Title,
+                    Description = searchPost.Description,
+                    ImageUrl = searchPost.Pet.ImageUrl,
+                    City = searchPost.City.Name,
+                    PetName = searchPost.Pet.Name,
+                    PetSpecies = searchPost.Pet.Species.Name,
+                })
+                .FirstOrDefault();
+
+            if (searchPost == null)
+            {
+                return this.BadRequest();
+            }
+
+
+            return this.View(searchPost);
+        }
 
         public IActionResult Add(string type)
         {
@@ -44,6 +87,11 @@ namespace PetFinder.Controllers
         [HttpPost]
         public IActionResult Add(AddSearchPostFormModel searchPost)
         {
+
+            if(!ModelState.IsValid)
+            {
+                return this.View(searchPost);
+            }
 
             var newSearchPost = new SearchPost
             {

@@ -1,0 +1,13 @@
+﻿@model PetDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+
+<img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Species" />
+
+<div class="container">
+    <h2 class="text-center">@Model.Name</h2>
+    <h3 class="text-center">@Model.Species - @Model.Size</h3>
+</div>

@@ -37,6 +37,29 @@ namespace PetFinder.Controllers
             return this.View(pets);
         }
 
+        public IActionResult Details(string id)
+        {
+            var pet = this.context.Pets
+                .Where(pets => pets.Id == id)
+                .Select(pets => new PetDetailsViewModel
+                {
+                    Id = pets.Id,
+                    Name = pets.Name,
+                    ImageUrl = pets.ImageUrl,
+                    Species = pets.Species.Name,
+                    Size = pets.Size.Type,
+                })
+                .FirstOrDefault();
+
+            if(pet == null)
+            {
+                return this.BadRequest();
+            }
+
+            return this.View(pet);
+
+        }
+
         public IActionResult Add(string searchId)
         {
 

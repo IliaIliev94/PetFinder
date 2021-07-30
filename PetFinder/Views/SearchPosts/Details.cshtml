@@ -1,0 +1,14 @@
+﻿@model SearchPostDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<img src="@Model.ImageUrl" class="img-fluid" alt="@Model.PetSpecies" />
+
+<div class="container">
+    <h2 class="text-center">@Model.Title</h2>
+    <h3 class="text-center">@Model.PetName - @Model.PetSpecies</h3>
+    <h5 class="text-center">@Model.City</h5>
+    <p>@Model.Description</p>
+</div>
