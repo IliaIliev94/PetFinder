@@ -40,8 +40,15 @@ using PetFinder.Models.SearchPosts;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 5 "D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\Views\_ViewImports.cshtml"
+using PetFinder.Models.Home;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"40ac9ba4c9a7244210d56677f03b457f8e465c67", @"/Views/SearchPosts/All.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"353e1d1909354bd89b762ae37e068ee74a4e72d9", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"326acff5698ec567e482a3febb1d1d42e81b9514", @"/Views/_ViewImports.cshtml")]
     public class Views_SearchPosts_All : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IEnumerable<SearchPostListViewModel>>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("asp-controller", "SearchPosts", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -90,7 +97,7 @@ using PetFinder.Models.SearchPosts;
 #line hidden
 #nullable disable
             WriteLiteral("</h2>\r\n\r\n<div class=\"text-center my-2\">\r\n    ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "40ac9ba4c9a7244210d56677f03b457f8e465c675421", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "40ac9ba4c9a7244210d56677f03b457f8e465c675623", async() => {
                 WriteLiteral("Add Search Post");
             }
             );
@@ -162,7 +169,7 @@ WriteAttributeValue("", 554, searchPost.PetName, 554, 19, false);
 #line hidden
 #nullable disable
             WriteLiteral("</p>\r\n                    ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "40ac9ba4c9a7244210d56677f03b457f8e465c679112", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "40ac9ba4c9a7244210d56677f03b457f8e465c679314", async() => {
                 WriteLiteral("Details");
             }
             );

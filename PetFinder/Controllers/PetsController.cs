@@ -102,7 +102,7 @@ namespace PetFinder.Controllers
 
             this.context.SaveChanges();
 
-            return this.RedirectToAction("All", "SearchPosts");
+            return this.RedirectToAction("All");
         }
 
         private ICollection<SizeViewModel> GetSizes()

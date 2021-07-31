@@ -97,10 +97,11 @@ namespace PetFinder.Controllers
             {
                 Title = searchPost.Title,
                 Description = searchPost.Description,
+                IsFound = searchPost.SearchPostType == "Found" ? true : false,
                 CityId = searchPost.CityId,
                 DatePublished = DateTime.UtcNow,
                 DateLostFound = searchPost.DateLostFound,
-                SearchPostTypeId = searchPost.SearchPostType == "Lost" ? 1 : 2,
+                SearchPostTypeId = searchPost.SearchPostType == "Found" ? 1 : 2,
             };
 
             if (searchPost.SearchPostType != "Found" && searchPost.PetId != "0")

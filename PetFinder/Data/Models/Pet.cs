@@ -21,6 +21,7 @@ namespace PetFinder.Data.Models
         [MaxLength(NameMaxLength)]
         public string Name { get; set; }
 
+        [Required]
         public string ImageUrl { get; set; }
 
         public int SizeId { get; set; }

@@ -85,3 +85,9 @@ body {
     min-width: 100%;
     min-height: 100%;
 }
+
+
+.item-image {
+    max-height: 800px;
+    width: auto;
+}
