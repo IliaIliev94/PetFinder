@@ -50,8 +50,34 @@
 
 <div class="jumbotron">
     <div class="row">
-        <h2 class="col-md-4 text-center">@Model.TotalPosts Search Posts</h2>
-        <h2 class="col-md-4 text-center">@Model.FoundPets Found Pets</h2>
-        <h2 class="col-md-4 text-center">@Model.LostPets Lost Pets</h2>
+        <h2 class="col-md-4 text-center d-none statistics-data" id="total-pets"></h2>
+        <h2 class="col-md-4 text-center d-none statistics-data" id="found-pets"></h2>
+        <h2 class="col-md-4 text-center d-none statistics-data" id="lost-pets"></h2>
+        <div class="col text-center mt-3">
+            <button class="btn btn-primary" id="statistics-button">Show statistics</button>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+<script type="text/javascript">
+
+    $("#statistics-button").click(function () {
+        if ($(this).text() == "Show statistics") {
+            $.get("/api/statistics", function (data) {
+                $("#total-pets").text(data.totalPosts + " Search Posts");
+                $("#found-pets").text(data.foundPets + " Found Pets");
+                $("#lost-pets").text(data.lostPets + " Lost Posts");
+                console.log(data);
+            })
+            $(".statistics-data").removeClass("d-none");
+            $(this).text("Hide statistics");
+        } else {
+            $(".statistics-data").addClass("d-none");
+            $(this).text("Show statistics");
+        }
+        
+    });
+</script>
+
+}
