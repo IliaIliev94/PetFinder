@@ -18,7 +18,7 @@
     </div>
 }
 
-<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+<div id="carouselExampleIndicators" class="carousel slide mb-3" data-ride="carousel">
     <ol class="carousel-indicators">
         <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
         <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -64,12 +64,14 @@
 
     $("#statistics-button").click(function () {
         if ($(this).text() == "Show statistics") {
+
             $.get("/api/statistics", function (data) {
                 $("#total-pets").text(data.totalPosts + " Search Posts");
                 $("#found-pets").text(data.foundPets + " Found Pets");
-                $("#lost-pets").text(data.lostPets + " Lost Posts");
+                $("#lost-pets").text(data.lostPets + " Lost Pets");
                 console.log(data);
-            })
+            });
+
             $(".statistics-data").removeClass("d-none");
             $(this).text("Hide statistics");
         } else {

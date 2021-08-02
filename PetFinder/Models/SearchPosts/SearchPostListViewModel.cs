@@ -16,5 +16,6 @@ namespace PetFinder.Models.SearchPosts
         public string PetName { get; init; }
 
         public string PetSpecies { get; init; }
+
     }
 }

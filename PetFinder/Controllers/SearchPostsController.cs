@@ -22,10 +22,49 @@ namespace PetFinder.Controllers
             this.context = context;
         }
 
-        public IActionResult All(string type)
+        public IActionResult All(string type, string searchTerm, string species, string size)
         {
-            var searchPosts = this.context
-                .SearchPosts
+
+            var searchPostQuery = this.context.SearchPosts.AsQueryable();
+
+            if (type == null)
+            {
+                return this.BadRequest();
+            }
+
+            if(!string.IsNullOrWhiteSpace(species))
+            {
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Species.Name == species);
+            }
+
+            if(!string.IsNullOrWhiteSpace(size))
+            {
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Size.Type == size);
+            }
+
+            if(!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTermInvariant = searchTerm.ToLower();
+
+                searchPostQuery = searchPostQuery.Where(searchPost =>
+                    searchPost.Title.ToLower().Contains(searchTermInvariant)
+                    || searchPost.Description.ToLower().Contains(searchTermInvariant)
+                    || searchPost.Pet.Name.ToLower().Contains(searchTermInvariant)
+                    || searchPost.Pet.Species.Name.Contains(searchTermInvariant));
+            }
+
+            var petSizes = this.context.Sizes
+                .OrderByDescending(size => size.Id)
+                .Select(size => size.Type)
+                .ToList();
+
+            var petSpecies = this.context.Species
+                .OrderBy(species => species.Id)
+                .Select(species => species.Name)
+                .Reverse()
+                .ToList();
+
+            var searchPosts = searchPostQuery
                 .Where(searchPost => searchPost.SearchPostType.Name == type)
                 .Select(searchPost => new SearchPostListViewModel
                 {
@@ -37,7 +76,13 @@ namespace PetFinder.Controllers
                 })
                 .ToList();
 
-            return this.View(searchPosts);
+            return this.View(new AllSearchPostsViewModel 
+            { 
+                Type = type,
+                PetSpecies = petSpecies,
+                PetSizes = petSizes,
+                SearchPosts = searchPosts 
+            });
         }
 
         public IActionResult Details(string id)
