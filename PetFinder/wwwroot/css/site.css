@@ -91,3 +91,8 @@ body {
     max-height: 800px;
     width: auto;
 }
+
+.card-img-top {
+    height: 20rem;
+    object-fit: cover;
+}

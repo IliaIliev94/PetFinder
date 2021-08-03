@@ -22,29 +22,29 @@ namespace PetFinder.Controllers
             this.context = context;
         }
 
-        public IActionResult All(string type, string searchTerm, string species, string size)
+        public IActionResult All([FromQuery] AllSearchPostsViewModel query)
         {
 
             var searchPostQuery = this.context.SearchPosts.AsQueryable();
 
-            if (type == null)
+            if (query.Type == null)
             {
                 return this.BadRequest();
             }
 
-            if(!string.IsNullOrWhiteSpace(species))
+            if(!string.IsNullOrWhiteSpace(query.Species))
             {
-                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Species.Name == species);
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Species.Name == query.Species);
             }
 
-            if(!string.IsNullOrWhiteSpace(size))
+            if(!string.IsNullOrWhiteSpace(query.Size))
             {
-                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Size.Type == size);
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Size.Type == query.Size);
             }
 
-            if(!string.IsNullOrWhiteSpace(searchTerm))
+            if(!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
-                var searchTermInvariant = searchTerm.ToLower();
+                var searchTermInvariant = query.SearchTerm.ToLower();
 
                 searchPostQuery = searchPostQuery.Where(searchPost =>
                     searchPost.Title.ToLower().Contains(searchTermInvariant)
@@ -52,6 +52,15 @@ namespace PetFinder.Controllers
                     || searchPost.Pet.Name.ToLower().Contains(searchTermInvariant)
                     || searchPost.Pet.Species.Name.Contains(searchTermInvariant));
             }
+
+            searchPostQuery = query.Sorting switch
+            {
+                SearchPostSorting.DatePublished => searchPostQuery.OrderByDescending(searchPost => searchPost.DatePublished),
+                SearchPostSorting.DateLostFound => searchPostQuery.OrderByDescending(searchPost => searchPost.DateLostFound),
+                SearchPostSorting.PetSpecies => searchPostQuery.OrderByDescending(searchPost => searchPost.Pet.Species.Id),
+                SearchPostSorting.PetSize => searchPostQuery.OrderByDescending(searchPost => searchPost.Pet.Size.Id),
+                _ => searchPostQuery.OrderByDescending(searchPost => searchPost.Id),
+            };
 
             var petSizes = this.context.Sizes
                 .OrderByDescending(size => size.Id)
@@ -65,7 +74,7 @@ namespace PetFinder.Controllers
                 .ToList();
 
             var searchPosts = searchPostQuery
-                .Where(searchPost => searchPost.SearchPostType.Name == type)
+                .Where(searchPost => searchPost.SearchPostType.Name == query.Type)
                 .Select(searchPost => new SearchPostListViewModel
                 {
                     Id = searchPost.Id,
@@ -76,13 +85,11 @@ namespace PetFinder.Controllers
                 })
                 .ToList();
 
-            return this.View(new AllSearchPostsViewModel 
-            { 
-                Type = type,
-                PetSpecies = petSpecies,
-                PetSizes = petSizes,
-                SearchPosts = searchPosts 
-            });
+            query.PetSizes = petSizes;
+            query.PetSpecies = petSpecies;
+            query.SearchPosts = searchPosts;
+
+            return this.View(query);
         }
 
         public IActionResult Details(string id)

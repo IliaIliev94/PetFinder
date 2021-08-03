@@ -7,7 +7,9 @@ namespace PetFinder.Models.SearchPosts
 {
     public enum SearchPostSorting
     {
-        DateCreated = 0,
+        DatePublished = 0,
         DateLostFound = 1,
+        PetSpecies = 2,
+        PetSize = 3,
     }
 }

@@ -6,54 +6,70 @@
 
 <h2 class="text-center my-2">@ViewData["Title"]</h2>
 
-<div class="text-center my-2">
+<div class="text-center my-3">
     <a asp-controller="SearchPosts" asp-action="Add" class="btn btn-primary">Add Search Post</a>
 </div>
 
-<div class="container offset-md-1">
+<div class="container">
+    <div class="offset-lg-1">
+        <form method="get">
+            <div class="row align-items-end mb-4">
 
-    <form method="get">
-        <div class="row align-items-end mb-3">
-            <div class="form-group col-md-12 col-lg-3">
-                <label asp-for="SearchTerm"></label>
-                <input asp-for="SearchTerm" type="text" class="form-control" placeholder="Dog">
+                <div class="form-group">
+                    <label asp-for="SearchTerm"></label>
+                    <input asp-for="SearchTerm" type="text" class="form-control" placeholder="Dog">
+                </div>
+
+                <div class="form-group col-md-12 col-lg-2">
+                    <label asp-for="Species"></label>
+                    <select asp-for="Species" class="form-control">
+                        <option selected value="">All</option>
+                        @foreach (var species in Model.PetSpecies)
+                        {
+                            <option value="@species">@species</option>
+                        }
+
+                    </select>
+                </div>
+
+                <div class="form-group col-md-12 col-lg-2">
+                    <label asp-for="PetSizes"></label>
+                    <select asp-for="Size" class="form-control">
+                        <option selected value="">All</option>
+                        @foreach (var size in Model.PetSizes)
+                        {
+                            <option value="@size">@size</option>
+                        }
+
+                    </select>
+                </div>
+
+                <div class="form-group col-md-12 col-lg-2">
+                    <label asp-for="Sorting"></label>
+                    <select asp-for="Sorting" class="form-control">
+                        <option value="0" selected>Date Published</option>
+                        <option value="1">Date @(Model.Type == "Lost" ? "Lost" : "Found")</option>
+                        <option value="2">Pet Species</option>
+                        <option value="3">Pet Size</option>
+                    </select>
+                </div>
+
+
+                <input type="hidden" asp-for="@Model.Type" asp-route-type="@Model.Type" value="@Model.Type" />
+
+                <div class="form-group col-md-12 col-lg-auto">
+                    <input type="submit" value="Search" class="btn btn-primary btn-block" />
+                </div>
             </div>
-
-            <div class="form-group col-md-12 col-lg-3">
-                <select asp-for="Species" class="form-control">
-                    <option selected value="">All</option>
-                    @foreach (var species in Model.PetSpecies)
-                    {
-                        <option value="@species">@species</option>
-                    }
-
-                </select>
-            </div>
-
-            <div class="form-group col-md-12 col-lg-3">
-                <select asp-for="Size" class="form-control">
-                    <option selected value="">All</option>
-                    @foreach (var size in Model.PetSizes)
-                    {
-                        <option value="@size">@size</option>
-                    }
-
-                </select>
-            </div>
-
-
-            <input type="hidden" asp-for="@Model.Type" asp-route-type="@Model.Type" value="@Model.Type" />
-
-            <div class="form-group col-md-12 col-lg-auto">
-                <input type="submit" value="Search" class="btn btn-primary btn-block" />
-            </div>
-        </div>
-    </form>
+        </form>
+    </div>
+   
 
     <div class="row">
         @foreach (var searchPost in Model.SearchPosts)
         {
-            <div class="card col-md-12 col-lg-3 float-left mx-2 my-2">
+        <div class="col-md-12 col-lg-4 mb-3">
+            <div class="card h-100">
                 <img src="@searchPost.ImageUrl" class="card-img-top" alt="@searchPost.PetName">
                 <div class="card-body">
                     <h5 class="card-title">@searchPost.Title</h5>
@@ -61,6 +77,8 @@
                     <a asp-controller="SearchPosts" asp-action="Details" asp-route-id="@searchPost.Id" class="btn btn-primary">Details</a>
                 </div>
             </div>
+        </div>
+
         }
     </div>
    

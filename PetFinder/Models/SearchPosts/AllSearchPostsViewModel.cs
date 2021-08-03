@@ -13,16 +13,19 @@ namespace PetFinder.Models.SearchPosts
         [Display(Name = "Search")]
         public string SearchTerm { get; init; }
 
+        [Display(Name = "Pet Species")]
         public string Species { get; init; }
 
-        public IEnumerable<string> PetSpecies { get; init; }
+        public IEnumerable<string> PetSpecies { get; set; }
 
+        [Display(Name = "Pet Size")]
         public string Size { get; init; }
 
-        public IEnumerable<string> PetSizes { get; init; }
+        public IEnumerable<string> PetSizes { get; set; }
 
+        [Display(Name = "Sorting")]
         public SearchPostSorting Sorting { get; init; }
 
-        public IEnumerable<SearchPostListViewModel> SearchPosts { get; init; }
+        public IEnumerable<SearchPostListViewModel> SearchPosts { get; set; }
     }
 }
