@@ -1,44 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PetFinder.Data;
-using PetFinder.Models.Api.SearchPosts;
+﻿using PetFinder.Data;
 using PetFinder.Models.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PetFinder.Controllers.Api
+namespace PetFinder.Services.SearchPosts
 {
-    [ApiController]
-    [Route("api/searchposts")]
-    public class SearchPostApiController : ControllerBase
+
+    public class SearchPostService : ISearchPostService
     {
+
         private readonly ApplicationDbContext context;
 
-        public SearchPostApiController(ApplicationDbContext context)
+        public SearchPostService(ApplicationDbContext context)
         {
             this.context = context;
         }
 
-        [HttpGet]
-        public ActionResult<AllSearchPostsApiResponseModel> All([FromQuery]AllSearchPostsApiRequestModel query)
+        public SearchPostQueryServiceModel All(string species,
+            string size,
+            string searchTerm,
+            string type,
+            SearchPostSorting sorting)
         {
             var searchPostQuery = this.context.SearchPosts.AsQueryable();
 
 
-            if (!string.IsNullOrWhiteSpace(query.Species))
+            if (!string.IsNullOrWhiteSpace(species))
             {
-                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Species.Name == query.Species);
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Species.Name == species);
             }
 
-            if (!string.IsNullOrWhiteSpace(query.Size))
+            if (!string.IsNullOrWhiteSpace(size))
             {
-                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Size.Type == query.Size);
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Size.Type == size);
             }
 
-            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                var searchTermInvariant = query.SearchTerm.ToLower();
+                var searchTermInvariant = searchTerm.ToLower();
 
                 searchPostQuery = searchPostQuery.Where(searchPost =>
                     searchPost.Title.ToLower().Contains(searchTermInvariant)
@@ -47,12 +48,12 @@ namespace PetFinder.Controllers.Api
                     || searchPost.Pet.Species.Name.Contains(searchTermInvariant));
             }
 
-            if(!string.IsNullOrWhiteSpace(query.Type))
+            if (!string.IsNullOrWhiteSpace(type))
             {
-                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.SearchPostType.Name.ToLower() == query.Type.ToLower());
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.SearchPostType.Name.ToLower() == type.ToLower());
             }
 
-            searchPostQuery = query.Sorting switch
+            searchPostQuery = sorting switch
             {
                 SearchPostSorting.DatePublished => searchPostQuery.OrderByDescending(searchPost => searchPost.DatePublished),
                 SearchPostSorting.DateLostFound => searchPostQuery.OrderByDescending(searchPost => searchPost.DateLostFound),
@@ -73,7 +74,7 @@ namespace PetFinder.Controllers.Api
                 .ToList();
 
             var searchPosts = searchPostQuery
-                .Select(searchPost => new SearchPostResponseModel
+                .Select(searchPost => new SearchPostServiceModel
                 {
                     Id = searchPost.Id,
                     Title = searchPost.Title,
@@ -83,8 +84,7 @@ namespace PetFinder.Controllers.Api
                 })
                 .ToList();
 
-            return new AllSearchPostsApiResponseModel { SearchPosts = searchPosts };
+            return new SearchPostQueryServiceModel { PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts };
         }
-        
     }
 }

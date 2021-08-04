@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PetFinder.Models.SearchPosts
+namespace PetFinder.Services.SearchPosts
 {
-    public class SearchPostListViewModel
+    public class SearchPostServiceModel
     {
         public string Id { get; init; }
 
@@ -16,6 +16,5 @@ namespace PetFinder.Models.SearchPosts
         public string PetName { get; init; }
 
         public string PetSpecies { get; init; }
-
     }
 }

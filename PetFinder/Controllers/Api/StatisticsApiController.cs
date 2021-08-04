@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFinder.Data;
 using PetFinder.Models.Api.Statistics;
+using PetFinder.Services.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,20 +14,24 @@ namespace PetFinder.Controllers.Api
     public class StatisticsApiController : ControllerBase
     {
         private readonly ApplicationDbContext context;
+        private readonly IStatisticsService statistics;
 
-        public StatisticsApiController(ApplicationDbContext context)
+        public StatisticsApiController(ApplicationDbContext context, IStatisticsService statistics)
         {
             this.context = context;
+            this.statistics = statistics;
         }
 
         [HttpGet]
         public StatisticsResponseModel GetStatistics()
         {
+            var totalStatistics = statistics.Total();
+
             var statisticsData = new StatisticsResponseModel
             {
-                TotalPosts = context.SearchPosts.Count(),
-                FoundPets = context.SearchPosts.Where(searchPost => searchPost.IsFound).Count(),
-                LostPets = context.SearchPosts.Where(searchPost => !searchPost.IsFound).Count(),
+                TotalPosts = totalStatistics.TotalPosts,
+                FoundPets = totalStatistics.FoundPets,
+                LostPets = totalStatistics.LostPets,
             };
 
             return statisticsData;

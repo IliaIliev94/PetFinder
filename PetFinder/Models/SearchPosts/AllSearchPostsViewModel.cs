@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PetFinder.Models.Shared;
+using PetFinder.Services.SearchPosts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -26,6 +28,6 @@ namespace PetFinder.Models.SearchPosts
         [Display(Name = "Sorting")]
         public SearchPostSorting Sorting { get; init; }
 
-        public IEnumerable<SearchPostListViewModel> SearchPosts { get; set; }
+        public IEnumerable<SearchPostServiceModel> SearchPosts { get; set; }
     }
 }

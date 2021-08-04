@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using PetFinder.Data;
 using PetFinder.Models;
 using PetFinder.Models.Home;
+using PetFinder.Services.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,30 +15,20 @@ namespace PetFinder.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IStatisticsService statistics;
         private readonly ApplicationDbContext context;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, IStatisticsService statistics, ApplicationDbContext context)
         {
             this._logger = logger;
+            this.statistics = statistics;
             this.context = context;
         }
 
         public IActionResult Index()
         {
 
-            var indexModel = new IndexViewModel
-            {
-                TotalPosts = this.context.SearchPosts.Count(),
-
-                FoundPets = this.context.SearchPosts
-                    .Where(searchPost => searchPost.IsFound)
-                    .Count(),
-
-                LostPets = this.context.SearchPosts
-                    .Where(searchPost => !searchPost.IsFound)
-                    .Count(),
-
-                Pets = this.context.Pets
+            var pets = this.context.Pets
                     .OrderByDescending(pet => pet.Id)
                     .Select(pet => new PetHomeViewModel
                     {
@@ -47,7 +38,16 @@ namespace PetFinder.Controllers
                         Species = pet.Species.Name,
                     })
                     .Take(3)
-                    .ToList(),
+                    .ToList();
+
+            var totalStatistics = this.statistics.Total();
+
+            var indexModel = new IndexViewModel
+            {
+                TotalPosts = totalStatistics.TotalPosts,
+                FoundPets = totalStatistics.FoundPets,
+                LostPets = totalStatistics.LostPets,
+                Pets = pets,
             };
 
             return View(indexModel);

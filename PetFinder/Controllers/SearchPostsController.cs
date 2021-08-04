@@ -4,6 +4,8 @@ using PetFinder.Data.Models;
 using PetFinder.Models.Cities;
 using PetFinder.Models.Pets;
 using PetFinder.Models.SearchPosts;
+using PetFinder.Models.Shared;
+using PetFinder.Services.SearchPosts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,78 +18,27 @@ namespace PetFinder.Controllers
     {
 
         private ApplicationDbContext context;
+        private ISearchPostService searchPostService;
 
-        public SearchPostsController(ApplicationDbContext context)
+        public SearchPostsController(ApplicationDbContext context, ISearchPostService searchPostService)
         {
             this.context = context;
+            this.searchPostService = searchPostService;
         }
 
         public IActionResult All([FromQuery] AllSearchPostsViewModel query)
         {
 
-            var searchPostQuery = this.context.SearchPosts.AsQueryable();
+            var queryResult = this.searchPostService.All(
+                query.Species,
+                query.Size,
+                query.SearchTerm,
+                query.Type,
+                query.Sorting);
 
-            if (query.Type == null)
-            {
-                return this.BadRequest();
-            }
-
-            if(!string.IsNullOrWhiteSpace(query.Species))
-            {
-                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Species.Name == query.Species);
-            }
-
-            if(!string.IsNullOrWhiteSpace(query.Size))
-            {
-                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Size.Type == query.Size);
-            }
-
-            if(!string.IsNullOrWhiteSpace(query.SearchTerm))
-            {
-                var searchTermInvariant = query.SearchTerm.ToLower();
-
-                searchPostQuery = searchPostQuery.Where(searchPost =>
-                    searchPost.Title.ToLower().Contains(searchTermInvariant)
-                    || searchPost.Description.ToLower().Contains(searchTermInvariant)
-                    || searchPost.Pet.Name.ToLower().Contains(searchTermInvariant)
-                    || searchPost.Pet.Species.Name.Contains(searchTermInvariant));
-            }
-
-            searchPostQuery = query.Sorting switch
-            {
-                SearchPostSorting.DatePublished => searchPostQuery.OrderByDescending(searchPost => searchPost.DatePublished),
-                SearchPostSorting.DateLostFound => searchPostQuery.OrderByDescending(searchPost => searchPost.DateLostFound),
-                SearchPostSorting.PetSpecies => searchPostQuery.OrderByDescending(searchPost => searchPost.Pet.Species.Id),
-                SearchPostSorting.PetSize => searchPostQuery.OrderByDescending(searchPost => searchPost.Pet.Size.Id),
-                _ => searchPostQuery.OrderByDescending(searchPost => searchPost.Id),
-            };
-
-            var petSizes = this.context.Sizes
-                .OrderByDescending(size => size.Id)
-                .Select(size => size.Type)
-                .ToList();
-
-            var petSpecies = this.context.Species
-                .OrderBy(species => species.Id)
-                .Select(species => species.Name)
-                .Reverse()
-                .ToList();
-
-            var searchPosts = searchPostQuery
-                .Where(searchPost => searchPost.SearchPostType.Name == query.Type)
-                .Select(searchPost => new SearchPostListViewModel
-                {
-                    Id = searchPost.Id,
-                    Title = searchPost.Title,
-                    ImageUrl = searchPost.Pet.ImageUrl,
-                    PetName = searchPost.Pet.Name,
-                    PetSpecies = searchPost.Pet.Species.Name,
-                })
-                .ToList();
-
-            query.PetSizes = petSizes;
-            query.PetSpecies = petSpecies;
-            query.SearchPosts = searchPosts;
+            query.PetSizes = queryResult.PetSizes;
+            query.PetSpecies = queryResult.PetSpecies;
+            query.SearchPosts = queryResult.SearchPosts;
 
             return this.View(query);
         }

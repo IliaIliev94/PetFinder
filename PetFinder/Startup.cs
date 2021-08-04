@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PetFinder.Data;
 using PetFinder.Infrastructure;
+using PetFinder.Services.SearchPosts;
+using PetFinder.Services.Statistics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +37,12 @@ namespace PetFinder
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddControllersWithViews();
+
+            services.AddTransient<IStatisticsService, StatisticsService>();
+
+            services.AddTransient<ISearchPostService, SearchPostService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
