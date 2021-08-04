@@ -22,10 +22,23 @@ namespace PetFinder.Services.SearchPosts
             string size,
             string searchTerm,
             string type,
+            int currentPage,
+            int searchPostsPerPage,
             SearchPostSorting sorting)
         {
             var searchPostQuery = this.context.SearchPosts.AsQueryable();
 
+            var totalPages = (int)Math.Ceiling(this.context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == type).Count() * 1.0 / searchPostsPerPage);
+
+            if(currentPage < 1)
+            {
+                currentPage = 1;
+            }
+
+            if(currentPage > totalPages)
+            {
+                currentPage = totalPages;
+            }
 
             if (!string.IsNullOrWhiteSpace(species))
             {
@@ -73,7 +86,10 @@ namespace PetFinder.Services.SearchPosts
                 .Reverse()
                 .ToList();
 
+
             var searchPosts = searchPostQuery
+                .Skip((currentPage - 1) * searchPostsPerPage)
+                .Take(searchPostsPerPage)
                 .Select(searchPost => new SearchPostServiceModel
                 {
                     Id = searchPost.Id,
@@ -84,7 +100,7 @@ namespace PetFinder.Services.SearchPosts
                 })
                 .ToList();
 
-            return new SearchPostQueryServiceModel { PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts };
+            return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts };
         }
     }
 }

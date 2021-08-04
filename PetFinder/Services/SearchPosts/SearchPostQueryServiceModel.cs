@@ -7,6 +7,9 @@ namespace PetFinder.Services.SearchPosts
 {
     public class SearchPostQueryServiceModel
     {
+        public int TotalPages { get; set; }
+
+        public int CurrentPage { get; set; }
         public IEnumerable<string> PetSizes { get; init; }
 
         public IEnumerable<string> PetSpecies { get; init; }

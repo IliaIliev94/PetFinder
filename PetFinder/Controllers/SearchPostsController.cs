@@ -34,11 +34,15 @@ namespace PetFinder.Controllers
                 query.Size,
                 query.SearchTerm,
                 query.Type,
+                query.CurrentPage,
+                AllSearchPostsViewModel.SearchPostsPerPage,
                 query.Sorting);
 
             query.PetSizes = queryResult.PetSizes;
             query.PetSpecies = queryResult.PetSpecies;
             query.SearchPosts = queryResult.SearchPosts;
+            query.TotalPages = queryResult.TotalPages;
+            query.CurrentPage = queryResult.CurrentPage;
 
             return this.View(query);
         }

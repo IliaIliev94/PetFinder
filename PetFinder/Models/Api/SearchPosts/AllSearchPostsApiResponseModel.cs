@@ -1,4 +1,5 @@
 ﻿using PetFinder.Models.SearchPosts;
+using PetFinder.Services.SearchPosts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,6 @@ namespace PetFinder.Models.Api.SearchPosts
 {
     public class AllSearchPostsApiResponseModel
     {
-        public IEnumerable<SearchPostResponseModel> SearchPosts { get; set; }
+        public IEnumerable<SearchPostServiceModel> SearchPosts { get; set; }
     }
 }

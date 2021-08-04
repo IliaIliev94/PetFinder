@@ -12,74 +12,101 @@
 
 <div class="container-fluid">
 
-        <form method="get">
-            <div class="row align-items-end mb-4">
+    <form method="get">
+        <div class="row align-items-end mb-4">
 
-                <div class="form-group col-md-12 col-lg-4">
-                    <label asp-for="SearchTerm"></label>
-                    <input asp-for="SearchTerm" type="text" class="form-control" placeholder="Dog">
-                </div>
-
-                <div class="form-group col-md-12 col-lg-3">
-                    <label asp-for="Species"></label>
-                    <select asp-for="Species" class="form-control">
-                        <option selected value="">All</option>
-                        @foreach (var species in Model.PetSpecies)
-                        {
-                            <option value="@species">@species</option>
-                        }
-
-                    </select>
-                </div>
-
-                <div class="form-group col-md-12 col-lg-3">
-                    <label asp-for="PetSizes"></label>
-                    <select asp-for="Size" class="form-control">
-                        <option selected value="">All</option>
-                        @foreach (var size in Model.PetSizes)
-                        {
-                            <option value="@size">@size</option>
-                        }
-
-                    </select>
-                </div>
-
-                <div class="form-group col-md-12 col-lg-2">
-                    <label asp-for="Sorting"></label>
-                    <select asp-for="Sorting" class="form-control">
-                        <option value="0" selected>Date Published</option>
-                        <option value="1">Date @(Model.Type == "Lost" ? "Lost" : "Found")</option>
-                        <option value="2">Pet Species</option>
-                        <option value="3">Pet Size</option>
-                    </select>
-                </div>
-
-
-                <input type="hidden" asp-for="@Model.Type" asp-route-type="@Model.Type" value="@Model.Type" />
-
-                <div class="form-group col-md-12 col-lg-4 mx-auto my-4">
-                    <input type="submit" value="Search" class="btn btn-primary btn-block" />
-                </div>
+            <div class="form-group col-md-12 col-lg-4">
+                <label asp-for="SearchTerm"></label>
+                <input asp-for="SearchTerm" type="text" class="form-control" placeholder="Dog">
             </div>
-        </form>
-   
+
+            <div class="form-group col-md-12 col-lg-3">
+                <label asp-for="Species"></label>
+                <select asp-for="Species" class="form-control">
+                    <option selected value="">All</option>
+                    @foreach (var species in Model.PetSpecies)
+                    {
+                        <option value="@species">@species</option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="form-group col-md-12 col-lg-3">
+                <label asp-for="PetSizes"></label>
+                <select asp-for="Size" class="form-control">
+                    <option selected value="">All</option>
+                    @foreach (var size in Model.PetSizes)
+                    {
+                        <option value="@size">@size</option>
+                    }
+
+                </select>
+            </div>
+
+            <div class="form-group col-md-12 col-lg-2">
+                <label asp-for="Sorting"></label>
+                <select asp-for="Sorting" class="form-control">
+                    <option value="0" selected>Date Published</option>
+                    <option value="1">Date @(Model.Type == "Lost" ? "Lost" : "Found")</option>
+                    <option value="2">Pet Species</option>
+                    <option value="3">Pet Size</option>
+                </select>
+            </div>
+
+
+            <input type="hidden" asp-for="@Model.Type" asp-route-type="@Model.Type" value="@Model.Type" />
+
+            <div class="form-group col-md-12 col-lg-4 mx-auto my-4">
+                <input type="submit" value="Search" class="btn btn-primary btn-block" />
+            </div>
+        </div>
+    </form>
+
 
     <div class="row">
         @foreach (var searchPost in Model.SearchPosts)
         {
-        <div class="col-md-12 col-lg-4 mb-3">
-            <div class="card h-100">
-                <img src="@searchPost.ImageUrl" class="card-img-top" alt="@searchPost.PetName">
-                <div class="card-body">
-                    <h5 class="card-title">@searchPost.Title</h5>
-                    <p class="card-text">@searchPost.PetName - @searchPost.PetSpecies</p>
-                    <a asp-controller="SearchPosts" asp-action="Details" asp-route-id="@searchPost.Id" class="btn btn-primary">Details</a>
+            <div class="col-md-12 col-lg-4 mb-3">
+                <div class="card h-100">
+                    <img src="@searchPost.ImageUrl" class="card-img-top" alt="@searchPost.PetName">
+                    <div class="card-body">
+                        <h5 class="card-title">@searchPost.Title</h5>
+                        <p class="card-text">@searchPost.PetName - @searchPost.PetSpecies</p>
+                        <a asp-controller="SearchPosts" asp-action="Details" asp-route-id="@searchPost.Id" class="btn btn-primary">Details</a>
+                    </div>
                 </div>
             </div>
-        </div>
 
         }
     </div>
-   
+
+
+    <nav aria-label="Page navigation example">
+
+        <div class="d-flex justify-content-center">
+            <ul class="pagination mx-auto">
+
+                <li class="page-item"><a asp-controller="SearchPosts" asp-action="All" 
+                                         asp-route-currentPage="@(Model.CurrentPage - 1)" 
+                                         asp-route-type="@Model.Type" 
+                                         class="page-link @(Model.CurrentPage <= 1 ? "disabled" : String.Empty)">Previous</a></li>
+
+                @for (var i = 1; i <= @Model.TotalPages; i++)
+                {
+                    <li class="page-item"><a asp-controller="SearchPosts" 
+                                             asp-action="All" 
+                                             asp-route-currentPage="@i"
+                                             asp-route-type="@Model.Type" 
+                                             class="page-link">@i</a></li>
+                }
+                <li class="page-item"><a asp-controller="SearchPosts" asp-action="All" 
+                                         asp-route-currentPage="@(Model.CurrentPage + 1)" 
+                                         asp-route-type="@Model.Type" 
+                                         class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : String.Empty)">Next</a></li>
+            </ul>
+        </div>
+       
+    </nav>
 
 </div>

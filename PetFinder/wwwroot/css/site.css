@@ -96,3 +96,8 @@ body {
     height: 20rem;
     object-fit: cover;
 }
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}

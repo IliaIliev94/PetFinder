@@ -12,6 +12,8 @@ namespace PetFinder.Services.SearchPosts
             string size,
             string searchTerm,
             string type,
+            int currentPage,
+            int searchPostsPerPage,
             SearchPostSorting sorting);
     }
 }
