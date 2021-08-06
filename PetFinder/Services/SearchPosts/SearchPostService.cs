@@ -86,9 +86,10 @@ namespace PetFinder.Services.SearchPosts
                 .Reverse()
                 .ToList();
 
+            var parsedPageNumber = currentPage - 1;
 
             var searchPosts = searchPostQuery
-                .Skip((currentPage - 1) * searchPostsPerPage)
+                .Skip((parsedPageNumber > 0 ? parsedPageNumber : 0) * searchPostsPerPage)
                 .Take(searchPostsPerPage)
                 .Select(searchPost => new SearchPostServiceModel
                 {

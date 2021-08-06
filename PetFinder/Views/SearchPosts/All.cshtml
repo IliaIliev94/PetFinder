@@ -7,7 +7,7 @@
 <h2 class="text-center my-2">@ViewData["Title"]</h2>
 
 <div class="text-center my-3">
-    <a asp-controller="SearchPosts" asp-action="Add" class="btn btn-primary">Add Search Post</a>
+    <a asp-controller="SearchPosts" asp-action="Add" asp-route-type="@Model.Type" class="btn btn-primary">Add Search Post</a>
 </div>
 
 <div class="container-fluid">
@@ -77,36 +77,50 @@
                     </div>
                 </div>
             </div>
-
         }
+
     </div>
 
+    @if (!Model.SearchPosts.Any())
+    {
 
-    <nav aria-label="Page navigation example">
+        <h2 class="text-center">No search posts were found with the given criteria!</h2>
 
-        <div class="d-flex justify-content-center">
-            <ul class="pagination mx-auto">
+    }
+    else
+    {
+        <nav aria-label="Page navigation example">
 
-                <li class="page-item"><a asp-controller="SearchPosts" asp-action="All" 
-                                         asp-route-currentPage="@(Model.CurrentPage - 1)" 
-                                         asp-route-type="@Model.Type" 
-                                         class="page-link @(Model.CurrentPage <= 1 ? "disabled" : String.Empty)">Previous</a></li>
+            <div class="d-flex justify-content-center mt-5">
+                <ul class="pagination mx-auto">
 
-                @for (var i = 1; i <= @Model.TotalPages; i++)
-                {
-                    <li class="page-item"><a asp-controller="SearchPosts" 
-                                             asp-action="All" 
-                                             asp-route-currentPage="@i"
-                                             asp-route-type="@Model.Type" 
-                                             class="page-link">@i</a></li>
-                }
-                <li class="page-item"><a asp-controller="SearchPosts" asp-action="All" 
-                                         asp-route-currentPage="@(Model.CurrentPage + 1)" 
-                                         asp-route-type="@Model.Type" 
-                                         class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : String.Empty)">Next</a></li>
-            </ul>
-        </div>
-       
-    </nav>
+                    <li class="page-item">
+                        <a asp-controller="SearchPosts" asp-action="All"
+                           asp-route-currentPage="@(Model.CurrentPage - 1)"
+                           asp-route-type="@Model.Type"
+                           class="page-link @(Model.CurrentPage <= 1 ? "disabled" : String.Empty)">Previous</a>
+                    </li>
+
+                    @for (var i = 1; i <= @Model.TotalPages; i++)
+                    {
+                        <li class="page-item">
+                            <a asp-controller="SearchPosts"
+                               asp-action="All"
+                               asp-route-currentPage="@i"
+                               asp-route-type="@Model.Type"
+                               class="page-link">@i</a>
+                        </li>
+                    }
+                    <li class="page-item">
+                        <a asp-controller="SearchPosts" asp-action="All"
+                           asp-route-currentPage="@(Model.CurrentPage + 1)"
+                           asp-route-type="@Model.Type"
+                           class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : String.Empty)">Next</a>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+    }
 
 </div>

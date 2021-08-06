@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PetFinder.Data.Models;
 using System;
@@ -39,6 +40,31 @@ namespace PetFinder.Data
             builder.Entity<Specie>()
                 .HasIndex(x => x.Name)
                 .IsUnique();
+
+            builder.Entity<Owner>()
+                .HasOne<IdentityUser>()
+                .WithOne()
+                .HasForeignKey<Owner>(x => x.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<City>()
+                .HasMany(x => x.SearchPosts)
+                .WithOne(x => x.City)
+                .HasForeignKey(x => x.CityId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Specie>()
+                .HasMany(x => x.Pets)
+                .WithOne(x => x.Species)
+                .HasForeignKey(x => x.SpeciesId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<SearchPostType>()
+                .HasMany(x => x.SearchPosts)
+                .WithOne(x => x.SearchPostType)
+                .HasForeignKey(x => x.SearchPostTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }

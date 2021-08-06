@@ -30,6 +30,10 @@ namespace PetFinder.Data.Models
 
         public int SpeciesId { get; set; }
 
+        public int OwnerId { get; init; }
+
+        public Owner Owner { get; init; }
+
         public virtual Specie Species { get; set; }
 
         public virtual ICollection<SearchPost> SearchPosts { get; set; }

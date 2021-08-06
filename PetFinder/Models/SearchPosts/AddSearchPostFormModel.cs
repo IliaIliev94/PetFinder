@@ -2,15 +2,22 @@
 using PetFinder.Models.Pets;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+
+using static PetFinder.Data.DataConstraints.SearchPost;
 
 namespace PetFinder.Models.SearchPosts
 {
     public class AddSearchPostFormModel
     {
+        [Required]
+        [StringLength(MaxTitleLength, MinimumLength = MinTitleLength)]
         public string Title { get; init; }
 
+        [Required]
+        [MinLength(MinDescriptionLength)]
         public string Description { get; init; }
 
         public DateTime DatePublished { get; init; }

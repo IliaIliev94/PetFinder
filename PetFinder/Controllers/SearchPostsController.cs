@@ -29,6 +29,11 @@ namespace PetFinder.Controllers
         public IActionResult All([FromQuery] AllSearchPostsViewModel query)
         {
 
+            if (query.Type != "Lost" && query.Type != "Found")
+            {
+                return this.BadRequest();
+            }
+
             var queryResult = this.searchPostService.All(
                 query.Species,
                 query.Size,
