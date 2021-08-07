@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetFinder.Data;
 using PetFinder.Data.Models;
 using PetFinder.Models.Cities;
@@ -9,7 +10,9 @@ using PetFinder.Services.SearchPosts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using PetFinder.Infrastructure;
 
 
 namespace PetFinder.Controllers
@@ -43,11 +46,7 @@ namespace PetFinder.Controllers
                 AllSearchPostsViewModel.SearchPostsPerPage,
                 query.Sorting);
 
-            query.PetSizes = queryResult.PetSizes;
-            query.PetSpecies = queryResult.PetSpecies;
-            query.SearchPosts = queryResult.SearchPosts;
-            query.TotalPages = queryResult.TotalPages;
-            query.CurrentPage = queryResult.CurrentPage;
+            SetAllSearchPostQueryRsponseData(query, queryResult);
 
             return this.View(query);
         }
@@ -78,10 +77,17 @@ namespace PetFinder.Controllers
             return this.View(searchPost);
         }
 
+        [Authorize]
         public IActionResult Add(string type)
         {
             if(type == "Lost")
             {
+
+                if(!this.UserIsOwner())
+                {
+                    return this.RedirectToAction("Become", "Owners");
+                }
+
                 ViewBag.Type = "Lost";
             }
             else
@@ -97,8 +103,16 @@ namespace PetFinder.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Add(AddSearchPostFormModel searchPost)
         {
+
+            var owner = this.context.Owners.FirstOrDefault(owner => owner.UserId == this.User.GetId());
+
+            if(searchPost.SearchPostType == "Lost" && owner == null)
+            {
+                return this.RedirectToAction("Become", "Owners");
+            }
 
             if(!ModelState.IsValid)
             {
@@ -133,9 +147,7 @@ namespace PetFinder.Controllers
 
             this.context.SaveChanges();
 
-            
-
-            return this.RedirectToAction("Add", "Pets", new { SearchId = newSearchPost.Id});
+            return this.RedirectToAction("Add", "Pets", new { SearchId = newSearchPost.Id, OwnerId = owner.Id});
         }
 
         private IEnumerable<CityViewModel> GetCities()
@@ -146,6 +158,20 @@ namespace PetFinder.Controllers
         private IEnumerable<PetListViewModel> GetPets()
         {
             return this.context.Pets.Select(pet => new PetListViewModel { Id = pet.Id, Name = pet.Name }).ToList();
+        }
+
+        private void SetAllSearchPostQueryRsponseData(AllSearchPostsViewModel query, SearchPostQueryServiceModel queryResult)
+        {
+            query.PetSizes = queryResult.PetSizes;
+            query.PetSpecies = queryResult.PetSpecies;
+            query.SearchPosts = queryResult.SearchPosts;
+            query.TotalPages = queryResult.TotalPages;
+            query.CurrentPage = queryResult.CurrentPage;
+        }
+
+        private bool UserIsOwner()
+        {
+            return this.context.Owners.Any(owner => owner.UserId == this.User.GetId());
         }
     }
 }

@@ -4,9 +4,9 @@
     ViewData["Title"] = "Add Pet";
 }
 
-<h2 class="header-margin text-center">@ViewData["Title"]</h2>
-<form class="offset-md-3 col-md-6 g-3" method="post" asp-controller="Pets" asp-action="Add">
-
+<div class="row">
+    <form class="offset-md-2 offset-lg-3 col-md-8 col-lg-6 g-3" method="post" asp-controller="Pets" asp-action="Add">
+        <h2 class="header-margin text-center">@ViewData["Title"]</h2>
         <div class="form-group">
             <label asp-for="Name" class="form-label">Name</label>
             <input asp-for="Name" type="text" class="form-control" id="name">
@@ -32,7 +32,7 @@
             </select>
         </div>
 
-   
+
 
         <div class="form-group">
             <label asp-for="SpeciesId">Species</label>
@@ -44,9 +44,13 @@
             </select>
         </div>
 
-    
-    <input  type="hidden" asp-for="SearchPostId" value="@ViewBag.SearchId"/>
+
+        <input type="hidden" asp-for="SearchPostId" value="@ViewBag.SearchId" />
+
+        <input type="hidden" asp-for="OwnerId" value="@ViewBag.OwnerId"/>
 
         <button type="submit" class="btn btn-primary mt-3 col-sm-12 col-md-auto">Submit</button>
 
-</form>
+    </form>
+</div>
+

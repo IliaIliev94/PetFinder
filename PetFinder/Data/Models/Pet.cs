@@ -30,7 +30,7 @@ namespace PetFinder.Data.Models
 
         public int SpeciesId { get; set; }
 
-        public int OwnerId { get; init; }
+        public int? OwnerId { get; init; }
 
         public Owner Owner { get; init; }
 

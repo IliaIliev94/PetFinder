@@ -26,6 +26,8 @@ namespace PetFinder.Data
 
         public DbSet<ResourcePost> ResourcePosts { get; init; }
 
+        public DbSet<Owner> Owners { get; init; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

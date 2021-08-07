@@ -101,3 +101,8 @@ a.disabled {
     pointer-events: none;
     cursor: default;
 }
+
+.heading-margin {
+    margin-top: 20px;
+    margin-bottom: 40px;
+}

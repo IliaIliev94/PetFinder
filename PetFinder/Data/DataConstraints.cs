@@ -22,6 +22,7 @@ namespace PetFinder.Data
         public class Owner
         {
             public const int NameMaxLength = 40;
+            public const int PhoneMinLength = 6;
             public const int PhoneMaxLength = 30;
         }
     }

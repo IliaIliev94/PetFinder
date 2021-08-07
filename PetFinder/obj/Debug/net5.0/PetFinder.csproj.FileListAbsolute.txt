@@ -398,3 +398,4 @@ D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\Razor\Views\SearchPosts\All.cshtml.g.cs
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\Razor\Views\SearchPosts\Details.cshtml.g.cs
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\Razor\Views\Pets\Details.cshtml.g.cs
+D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\obj\Debug\net5.0\Razor\Views\Owners\Become.cshtml.g.cs

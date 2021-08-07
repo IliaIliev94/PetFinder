@@ -60,10 +60,11 @@ namespace PetFinder.Controllers
 
         }
 
-        public IActionResult Add(string searchId)
+        public IActionResult Add(string searchId, int ownerId)
         {
 
             ViewBag.SearchId = searchId;
+            ViewBag.OwnerId = ownerId;
            
             return this.View(new AddPetFormModel 
             { 
@@ -89,6 +90,7 @@ namespace PetFinder.Controllers
                 ImageUrl = pet.ImageUrl,
                 SizeId = pet.SizeId,
                 SpeciesId = pet.SpeciesId,
+                OwnerId = pet.OwnerId == null ? null : pet.OwnerId,
             };
 
             if(!String.IsNullOrEmpty(pet.SearchPostId))
