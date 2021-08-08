@@ -32,13 +32,11 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Found Pets
                             </a>
+
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" asp-route-type="Found" asp-controller="SearchPosts" asp-action="All" asp-route-currentPage="1">View</a>
                                 <a class="dropdown-item" asp-route-type="Found" asp-controller="SearchPosts" asp-action="Add">Add</a>
                             </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Pets" asp-action="All">Pets</a>
                         </li>
                     </ul>
                     <partial name="_LoginPartial" />

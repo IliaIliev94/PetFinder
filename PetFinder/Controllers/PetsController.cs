@@ -1,58 +1,48 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PetFinder.Data;
 using PetFinder.Models.Pets;
-using PetFinder.Models.Sizes;
-using PetFinder.Models.Species;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using PetFinder.Data.Models;
 using PetFinder.Services.Pets;
+using PetFinder.Services.Owners;
+using PetFinder.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 
 namespace PetFinder.Controllers
 {
     public class PetsController : Controller
     {
-        private ApplicationDbContext context;
-        private IPetService petService;
+        private readonly IPetService petService;
+        private readonly IOwnerService ownerService;
 
-        public PetsController(ApplicationDbContext context, IPetService petService)
+        public PetsController(IPetService petService, IOwnerService ownerService)
         {
-            this.context = context;
             this.petService = petService;
+            this.ownerService = ownerService;
         }
 
+        [Authorize]
         public IActionResult All()
         {
-            var pets = this.context
-                .Pets
-                .Select(pet => new PetListViewModel
-                {
-                    Id = pet.Id,
-                    Name = pet.Name,
-                    ImageUrl = pet.ImageUrl,
-                    Species = pet.Species.Name,
-                    Size = pet.Size.Type,
-                })
-                .ToList();
+
+            if(!this.ownerService.IsOwner(this.User.GetId()))
+            {
+                return this.BadRequest();
+            }
+
+            var pets = this.petService.All();
 
             return this.View(pets);
         }
 
+        [Authorize]
         public IActionResult Details(string id)
         {
-            var pet = this.context.Pets
-                .Where(pets => pets.Id == id)
-                .Select(pets => new PetDetailsViewModel
-                {
-                    Id = pets.Id,
-                    Name = pets.Name,
-                    ImageUrl = pets.ImageUrl,
-                    Species = pets.Species.Name,
-                    Size = pets.Size.Type,
-                })
-                .FirstOrDefault();
+
+            if (!this.ownerService.IsOwner(this.User.GetId()))
+            {
+                return this.BadRequest();
+            }
+
+            var pet = this.petService.Details(id);
 
             if(pet == null)
             {
@@ -63,64 +53,50 @@ namespace PetFinder.Controllers
 
         }
 
+        [Authorize]
         public IActionResult Add(string searchId, int ownerId)
         {
+
+            if (!this.ownerService.IsOwner(this.User.GetId()))
+            {
+                return this.BadRequest();
+            }
 
             ViewBag.SearchId = searchId;
             ViewBag.OwnerId = ownerId;
            
             return this.View(new AddPetFormModel 
             { 
-                Sizes = this.GetSizes(),
-                Species = this.GetSpecies(),
+                Sizes = this.petService.GetSizes(),
+                Species = this.petService.GetSpecies(),
             });
         }
 
         [HttpPost]
         public IActionResult Add(AddPetFormModel pet)
         {
-            if(!ModelState.IsValid)
+
+            if (!this.ownerService.IsOwner(this.User.GetId()))
             {
-                pet.Sizes = this.GetSizes();
-                pet.Species = this.GetSpecies();
+                return this.BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                pet.Sizes = this.petService.GetSizes();
+                pet.Species = this.petService.GetSpecies();
 
                 return this.View(pet);
             }
 
-            var newPet = new Pet
-            {
-                Name = pet.Name,
-                ImageUrl = pet.ImageUrl,
-                SizeId = pet.SizeId,
-                SpeciesId = pet.SpeciesId,
-                OwnerId = pet.OwnerId == null ? null : pet.OwnerId,
-            };
 
-            if(!String.IsNullOrEmpty(pet.SearchPostId))
-            {
-                this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == pet.SearchPostId).PetId = newPet.Id;
-            }
+            var newPet = this.petService.Create(pet.Name, pet.ImageUrl, pet.SpeciesId, pet.SizeId, ownerService.GetOwnerId(this.User.GetId()));
 
             
-
-            this.context.Pets.Add(newPet);
-
-            this.context.SaveChanges();
 
             return this.RedirectToAction("All");
         }
 
-        private ICollection<SizeViewModel> GetSizes()
-        {
-            return this.context.Sizes.Select(size => new SizeViewModel { Id = size.Id, Type = size.Type }).ToList();
-        }
 
-        private ICollection<SpeciesViewModel> GetSpecies()
-        {
-            var speciesList = this.context.Species.Select(specie => new SpeciesViewModel { Id = specie.Id, Name = specie.Name }).ToList();
-            speciesList.Reverse();
-
-            return speciesList;
-        }
     }
 }

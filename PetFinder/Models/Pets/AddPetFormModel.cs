@@ -1,5 +1,6 @@
 ﻿using PetFinder.Models.Sizes;
 using PetFinder.Models.Species;
+using PetFinder.Services.Pets.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,12 +23,12 @@ namespace PetFinder.Models.Pets
         [Display(Name = "Size")]
         public int SizeId { get; init; }
 
-        public ICollection<SizeViewModel> Sizes { get; set; }
+        public ICollection<SizeCategoryServiceModel> Sizes { get; set; }
 
         [Display(Name = "Species")]
         public int SpeciesId { get; init; }
 
-        public ICollection<SpeciesViewModel> Species { get; set; }
+        public ICollection<SpeciesCategoryServiceModel> Species { get; set; }
 
         public string SearchPostId { get; init; }
 

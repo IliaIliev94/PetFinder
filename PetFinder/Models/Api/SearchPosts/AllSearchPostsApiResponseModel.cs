@@ -1,5 +1,5 @@
 ﻿using PetFinder.Models.SearchPosts;
-using PetFinder.Services.SearchPosts;
+using PetFinder.Services.SearchPosts.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

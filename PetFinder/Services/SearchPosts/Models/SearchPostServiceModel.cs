@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PetFinder.Services.SearchPosts
+namespace PetFinder.Services.SearchPosts.Models
 {
     public class SearchPostServiceModel
     {

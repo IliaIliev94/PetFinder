@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PetFinder.Data.Models;
+using PetFinder.Services.Pets.Models;
 
 namespace PetFinder.Services.Pets
 {
@@ -44,5 +45,49 @@ namespace PetFinder.Services.Pets
         {
             return this.Create(name, imageUrl, speciesId, sizeId, 0);
         }
+
+        public IEnumerable<PetListServiceModel> All()
+        {
+            return this.context
+                .Pets
+                .Select(pet => new PetListServiceModel
+                {
+                    Id = pet.Id,
+                    Name = pet.Name,
+                    ImageUrl = pet.ImageUrl,
+                    Species = pet.Species.Name,
+                    Size = pet.Size.Type,
+                })
+                .ToList();
+        }
+
+        public PetDetailsServiceModel Details(string id)
+        {
+           return this.context.Pets
+                .Where(pets => pets.Id == id)
+                .Select(pets => new PetDetailsServiceModel
+                {
+                    Id = pets.Id,
+                    Name = pets.Name,
+                    ImageUrl = pets.ImageUrl,
+                    Species = pets.Species.Name,
+                    Size = pets.Size.Type,
+                })
+                .FirstOrDefault();
+        }
+
+        public ICollection<SizeCategoryServiceModel> GetSizes()
+        {
+            return this.context.Sizes.Select(size => new SizeCategoryServiceModel { Id = size.Id, Type = size.Type }).ToList();
+        }
+
+        public ICollection<SpeciesCategoryServiceModel> GetSpecies()
+        {
+            var speciesList = this.context.Species.Select(specie => new SpeciesCategoryServiceModel { Id = specie.Id, Name = specie.Name }).ToList();
+            speciesList.Reverse();
+
+            return speciesList;
+        }
+
     }
 }

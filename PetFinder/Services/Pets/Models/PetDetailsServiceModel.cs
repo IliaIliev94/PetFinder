@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PetFinder.Models.Pets
+namespace PetFinder.Services.Pets.Models
 {
-    public class PetDetailsViewModel
+    public class PetDetailsServiceModel
     {
         public string Id { get; init; }
 

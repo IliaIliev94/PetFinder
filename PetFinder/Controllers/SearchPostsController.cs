@@ -16,6 +16,8 @@ using PetFinder.Infrastructure;
 using PetFinder.Models.Sizes;
 using PetFinder.Models.Species;
 using PetFinder.Services.Pets;
+using PetFinder.Services.Pets.Models;
+using PetFinder.Services.SearchPosts.Models;
 
 namespace PetFinder.Controllers
 {
@@ -105,8 +107,8 @@ namespace PetFinder.Controllers
                 Cities = GetCities(),
                 Pet = new AddPetFormModel
                 {
-                    Species = this.GetSpecies(),
-                    Sizes = this.GetSizes(),
+                    Species = this.petService.GetSpecies(),
+                    Sizes = this.petService.GetSizes(),
                 }
             });
         }
@@ -132,8 +134,8 @@ namespace PetFinder.Controllers
             {
                 searchPost.Cities = GetCities();
                 searchPost.Pets = GetPets();
-                searchPost.Pet.Species = GetSpecies();
-                searchPost.Pet.Sizes = GetSizes();
+                searchPost.Pet.Species = this.petService.GetSpecies();
+                searchPost.Pet.Sizes = this.petService.GetSizes();
 
                 return this.View(searchPost);
             }
@@ -164,23 +166,12 @@ namespace PetFinder.Controllers
             return this.context.Cities.Select(city => new CityViewModel { Id = city.Id, Name = city.Name }).ToList();
         }
 
-        private IEnumerable<PetListViewModel> GetPets()
+        private IEnumerable<PetListServiceModel> GetPets()
         {
-            return this.context.Pets.Select(pet => new PetListViewModel { Id = pet.Id, Name = pet.Name }).ToList();
+            return this.context.Pets.Select(pet => new PetListServiceModel { Id = pet.Id, Name = pet.Name }).ToList();
         }
 
-        private ICollection<SizeViewModel> GetSizes()
-        {
-            return this.context.Sizes.Select(size => new SizeViewModel { Id = size.Id, Type = size.Type }).ToList();
-        }
 
-        private ICollection<SpeciesViewModel> GetSpecies()
-        {
-            var speciesList = this.context.Species.Select(specie => new SpeciesViewModel { Id = specie.Id, Name = specie.Name }).ToList();
-            speciesList.Reverse();
-
-            return speciesList;
-        }
 
         private void SetAllSearchPostQueryRsponseData(AllSearchPostsViewModel query, SearchPostQueryServiceModel queryResult)
         {
