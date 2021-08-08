@@ -13,7 +13,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using PetFinder.Infrastructure;
-
+using PetFinder.Models.Sizes;
+using PetFinder.Models.Species;
+using PetFinder.Services.Pets;
 
 namespace PetFinder.Controllers
 {
@@ -22,11 +24,13 @@ namespace PetFinder.Controllers
 
         private ApplicationDbContext context;
         private ISearchPostService searchPostService;
+        private IPetService petService;
 
-        public SearchPostsController(ApplicationDbContext context, ISearchPostService searchPostService)
+        public SearchPostsController(ApplicationDbContext context, ISearchPostService searchPostService, IPetService petService)
         {
             this.context = context;
             this.searchPostService = searchPostService;
+            this.petService = petService;
         }
 
         public IActionResult All([FromQuery] AllSearchPostsViewModel query)
@@ -99,6 +103,11 @@ namespace PetFinder.Controllers
             { 
                 Pets = GetPets(),
                 Cities = GetCities(),
+                Pet = new AddPetFormModel
+                {
+                    Species = this.GetSpecies(),
+                    Sizes = this.GetSizes(),
+                }
             });
         }
 
@@ -114,8 +123,18 @@ namespace PetFinder.Controllers
                 return this.RedirectToAction("Become", "Owners");
             }
 
+            if(searchPost.SearchPostType == "Lost" && searchPost.PetId != "0")
+            {
+                ModelState.Remove("Pet.ImageUrl");
+            }
+
             if(!ModelState.IsValid)
             {
+                searchPost.Cities = GetCities();
+                searchPost.Pets = GetPets();
+                searchPost.Pet.Species = GetSpecies();
+                searchPost.Pet.Sizes = GetSizes();
+
                 return this.View(searchPost);
             }
 
@@ -128,18 +147,8 @@ namespace PetFinder.Controllers
                 DatePublished = DateTime.UtcNow,
                 DateLostFound = searchPost.DateLostFound,
                 SearchPostTypeId = searchPost.SearchPostType == "Found" ? 1 : 2,
+                PetId = (searchPost.SearchPostType == "Found" || searchPost.PetId == "0") ? CreatePet(searchPost, owner) : searchPost.PetId,
             };
-
-            if (searchPost.SearchPostType != "Found" && searchPost.PetId != "0")
-            {
-                newSearchPost.PetId = searchPost.PetId;
-
-                this.context.SearchPosts.Add(newSearchPost);
-
-                this.context.SaveChanges();
-
-                return this.RedirectToAction("Index", "Home");
-            }
 
 
 
@@ -147,7 +156,7 @@ namespace PetFinder.Controllers
 
             this.context.SaveChanges();
 
-            return this.RedirectToAction("Add", "Pets", new { SearchId = newSearchPost.Id, OwnerId = owner.Id});
+            return this.RedirectToAction("All", "SearchPosts", new { Type = searchPost.SearchPostType});
         }
 
         private IEnumerable<CityViewModel> GetCities()
@@ -160,6 +169,19 @@ namespace PetFinder.Controllers
             return this.context.Pets.Select(pet => new PetListViewModel { Id = pet.Id, Name = pet.Name }).ToList();
         }
 
+        private ICollection<SizeViewModel> GetSizes()
+        {
+            return this.context.Sizes.Select(size => new SizeViewModel { Id = size.Id, Type = size.Type }).ToList();
+        }
+
+        private ICollection<SpeciesViewModel> GetSpecies()
+        {
+            var speciesList = this.context.Species.Select(specie => new SpeciesViewModel { Id = specie.Id, Name = specie.Name }).ToList();
+            speciesList.Reverse();
+
+            return speciesList;
+        }
+
         private void SetAllSearchPostQueryRsponseData(AllSearchPostsViewModel query, SearchPostQueryServiceModel queryResult)
         {
             query.PetSizes = queryResult.PetSizes;
@@ -167,6 +189,15 @@ namespace PetFinder.Controllers
             query.SearchPosts = queryResult.SearchPosts;
             query.TotalPages = queryResult.TotalPages;
             query.CurrentPage = queryResult.CurrentPage;
+        }
+
+        private string CreatePet(AddSearchPostFormModel searchPost, Owner owner)
+        {
+            if(searchPost.SearchPostType == "Found")
+            {
+                return petService.Create(searchPost.Pet.Name, searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId);
+            }
+            return petService.Create(searchPost.Pet.Name, searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId, owner.Id);
         }
 
         private bool UserIsOwner()

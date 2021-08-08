@@ -8,16 +8,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PetFinder.Data.Models;
+using PetFinder.Services.Pets;
 
 namespace PetFinder.Controllers
 {
     public class PetsController : Controller
     {
         private ApplicationDbContext context;
+        private IPetService petService;
 
-        public PetsController(ApplicationDbContext context)
+        public PetsController(ApplicationDbContext context, IPetService petService)
         {
             this.context = context;
+            this.petService = petService;
         }
 
         public IActionResult All()

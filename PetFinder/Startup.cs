@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PetFinder.Data;
 using PetFinder.Infrastructure;
+using PetFinder.Services.Pets;
 using PetFinder.Services.SearchPosts;
 using PetFinder.Services.Statistics;
 using System;
@@ -49,6 +50,8 @@ namespace PetFinder
             services.AddTransient<IStatisticsService, StatisticsService>();
 
             services.AddTransient<ISearchPostService, SearchPostService>();
+
+            services.AddTransient<IPetService, PetService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

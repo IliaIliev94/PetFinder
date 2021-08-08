@@ -33,5 +33,7 @@ namespace PetFinder.Models.SearchPosts
         public int CityId { get; init; }
 
         public IEnumerable<CityViewModel> Cities { get; set; }
+
+        public AddPetFormModel Pet { get; set; }
     }
 }
