@@ -73,6 +73,7 @@ namespace PetFinder.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Add(AddPetFormModel pet)
         {
 
@@ -97,6 +98,49 @@ namespace PetFinder.Controllers
             return this.RedirectToAction("All");
         }
 
+        [Authorize]
+        public IActionResult Edit(string id)
+        {
+
+            var pet = this.petService.GetEditData(id);
+            return this.View(new AddPetFormModel 
+            { 
+                Id = id,
+                Name = pet.Name,
+                ImageUrl = pet.ImageUrl,
+                SizeId = pet.SizeId,
+                SpeciesId = pet.SpeciesId,
+                Sizes = this.petService.GetSizes(),
+                Species = this.petService.GetSpecies(),
+            });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Edit(AddPetFormModel pet)
+        {
+            if (!ModelState.IsValid)
+            {
+                pet.Sizes = this.petService.GetSizes();
+                pet.Species = this.petService.GetSpecies();
+
+                return this.View(pet);
+            }
+
+            var successFull = this.petService.Edit(
+                pet.Id, 
+                pet.Name,
+                pet.ImageUrl,
+                pet.SpeciesId,
+                pet.SizeId);
+
+            if(!successFull)
+            {
+                return this.BadRequest();
+            }
+
+            return this.RedirectToAction("Details", "Pets", new { Id = pet.Id });
+        }
 
     }
 }

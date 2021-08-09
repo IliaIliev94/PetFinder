@@ -19,6 +19,14 @@ namespace PetFinder.Services.Pets
 
         PetDetailsServiceModel Details(string id);
 
+        bool Edit(string id,
+            string name,
+            string imageUrl,
+            int speciesId,
+            int sizeId);
+
+        EditPetServiceModel GetEditData(string id);
+
         ICollection<SizeCategoryServiceModel> GetSizes();
 
         ICollection<SpeciesCategoryServiceModel> GetSpecies();

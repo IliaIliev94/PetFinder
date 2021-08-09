@@ -84,5 +84,42 @@ namespace PetFinder.Services.Pets
             return speciesList;
         }
 
+        public bool Edit(
+            string id, 
+            string name,
+            string imageUrl,
+            int speciesId,
+            int sizeId)
+        {
+            var pet = this.context.Pets.FirstOrDefault(pet => pet.Id == id);
+
+            if(pet == null)
+            {
+                return false;
+            }
+
+            pet.Name = name;
+            pet.ImageUrl = imageUrl;
+            pet.SpeciesId = speciesId;
+            pet.SizeId = sizeId;
+
+            this.context.SaveChanges();
+
+            return true;
+        }
+
+        public EditPetServiceModel GetEditData(string id)
+        {
+            return this.context.Pets
+                .Where(pet => pet.Id == id)
+                .Select(pet => new EditPetServiceModel
+                {
+                    Name = pet.Name,
+                    ImageUrl = pet.ImageUrl,
+                    SizeId = pet.SizeId,
+                    SpeciesId = pet.SpeciesId,
+                })
+                .FirstOrDefault();
+        }
     }
 }

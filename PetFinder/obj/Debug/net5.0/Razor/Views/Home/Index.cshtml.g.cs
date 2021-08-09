@@ -75,8 +75,15 @@ using PetFinder.Infrastructure;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 10 "D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\Views\_ViewImports.cshtml"
+using PetFinder.Services.SearchPosts.Models;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"6517c155d5771e25060eafa4319a735e9a2d6b99", @"/Views/Home/Index.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"5b668da648314fae578019609b4f0bf5d94ebebb", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"36d62f3c693ebc48f89baa10772700a3e49f3044", @"/Views/_ViewImports.cshtml")]
     public class Views_Home_Index : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IndexViewModel>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("class", new global::Microsoft.AspNetCore.Html.HtmlString("btn btn-primary btn-lg"), global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -134,7 +141,7 @@ using PetFinder.Infrastructure;
         <hr class=""my-4"">
         <p class=""lead"">
             ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6517c155d5771e25060eafa4319a735e9a2d6b997624", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6517c155d5771e25060eafa4319a735e9a2d6b997843", async() => {
                 WriteLiteral("Add Search Post");
             }
             );
@@ -209,7 +216,7 @@ WriteAttributeValue("", 1213, Model.Pets[i].Species, 1213, 22, false);
 #nullable disable
             EndWriteAttribute();
             WriteLiteral(">\r\n                <div class=\"carousel-caption d-none d-md-block\">\r\n                    <h5>");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6517c155d5771e25060eafa4319a735e9a2d6b9911490", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "6517c155d5771e25060eafa4319a735e9a2d6b9911709", async() => {
 #nullable restore
 #line 33 "D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder\Views\Home\Index.cshtml"
                                                                                                                           Write(Model.Pets[i].Name);

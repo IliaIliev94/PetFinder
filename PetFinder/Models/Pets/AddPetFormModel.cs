@@ -11,6 +11,9 @@ namespace PetFinder.Models.Pets
 {
     public class AddPetFormModel
     {
+
+        public string Id { get; init; }
+
         [MaxLength(NameMaxLength)]
         public string Name { get; init; }
 
@@ -28,8 +31,5 @@ namespace PetFinder.Models.Pets
 
         public ICollection<SpeciesCategoryServiceModel> Species { get; set; }
 
-        public string SearchPostId { get; init; }
-
-        public int? OwnerId { get; init; }
     }
 }
