@@ -1,6 +1,4 @@
-﻿using PetFinder.Models.Sizes;
-using PetFinder.Models.Species;
-using PetFinder.Services.Pets.Models;
+﻿using PetFinder.Services.Pets.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

@@ -16,5 +16,24 @@ namespace PetFinder.Services.SearchPosts
             int currentPage,
             int searchPostsPerPage,
             SearchPostSorting sorting);
+
+        string Create(
+            string title,
+            string description,
+            string searchPostType,
+            int cityId,
+            DateTime? dateLostFound,
+            string petId,
+            string petName,
+            string imageUrl,
+            int speciesId,
+            int sizeId,
+            int? ownerId);
+
+        SearchPostDetailsServiceModel Details(string id);
+
+        IEnumerable<CityCategoryServiceModel> GetCities();
+
+        IEnumerable<PetSelectServiceModel> GetPets();
     }
 }

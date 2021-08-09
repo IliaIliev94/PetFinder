@@ -1,11 +1,9 @@
-﻿using PetFinder.Models.Cities;
-using PetFinder.Models.Pets;
-using PetFinder.Services.Pets.Models;
+﻿using PetFinder.Models.Pets;
+using PetFinder.Services.SearchPosts.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 using static PetFinder.Data.DataConstraints.SearchPost;
 
@@ -29,11 +27,11 @@ namespace PetFinder.Models.SearchPosts
 
         public string PetId { get; init; }
 
-        public IEnumerable<PetListServiceModel> Pets { get; set; }
+        public IEnumerable<PetSelectServiceModel> Pets { get; set; }
 
         public int CityId { get; init; }
 
-        public IEnumerable<CityViewModel> Cities { get; set; }
+        public IEnumerable<CityCategoryServiceModel> Cities { get; set; }
 
         public AddPetFormModel Pet { get; set; }
     }

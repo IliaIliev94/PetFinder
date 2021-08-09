@@ -23,7 +23,7 @@ namespace PetFinder.Services.Pets
                 string imageUrl,
                 int speciesId,
                 int sizeId,
-                int ownerId)
+                int? ownerId)
         {
             var pet = new Pet
             {
@@ -31,7 +31,7 @@ namespace PetFinder.Services.Pets
                 ImageUrl = imageUrl,
                 SpeciesId = speciesId,
                 SizeId = sizeId,
-                OwnerId = ownerId == 0 ? null: ownerId,
+                OwnerId = null,
             };
 
             this.context.Pets.Add(pet);
@@ -39,11 +39,6 @@ namespace PetFinder.Services.Pets
             this.context.SaveChanges();
 
             return pet.Id;
-        }
-
-        public string Create(string name, string imageUrl, int speciesId, int sizeId)
-        {
-            return this.Create(name, imageUrl, speciesId, sizeId, 0);
         }
 
         public IEnumerable<PetListServiceModel> All()

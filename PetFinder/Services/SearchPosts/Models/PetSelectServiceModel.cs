@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PetFinder.Models.Species
+namespace PetFinder.Services.SearchPosts.Models
 {
-    public class SpeciesViewModel
+    public class PetSelectServiceModel
     {
-        public int Id { get; init; }
+        public string Id { get; init; }
+
         public string Name { get; init; }
     }
 }

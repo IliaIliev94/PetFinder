@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PetFinder.Data.Models;
+using PetFinder.Services.Pets;
 
 namespace PetFinder.Services.SearchPosts
 {
@@ -13,10 +15,46 @@ namespace PetFinder.Services.SearchPosts
     {
 
         private readonly ApplicationDbContext context;
+        private readonly IPetService petService;
 
-        public SearchPostService(ApplicationDbContext context)
+        public SearchPostService(ApplicationDbContext context, IPetService petService)
         {
             this.context = context;
+            this.petService = petService;
+        }
+
+        public string Create(
+            string title,
+            string description,
+            string searchPostType,
+            int cityId,
+            DateTime? dateLostFound,
+            string petId,
+            string petName,
+            string imageUrl,
+            int speciesId,
+            int sizeId,
+            int? ownerId)
+        {
+            var newSearchPost = new SearchPost
+            {
+                Title = title,
+                Description = description,
+                IsFound = searchPostType == "Found" ? true : false,
+                CityId = cityId,
+                DatePublished = DateTime.UtcNow,
+                DateLostFound = dateLostFound,
+                SearchPostTypeId = searchPostType == "Found" ? 1 : 2,
+                PetId = (searchPostType == "Found" || petId == "0") ? CreatePet(searchPostType, petName, imageUrl, speciesId, sizeId, ownerId) : petId,
+            };
+
+
+
+            this.context.SearchPosts.Add(newSearchPost);
+
+            this.context.SaveChanges();
+
+            return newSearchPost.Id;
         }
 
         public SearchPostQueryServiceModel All(string species,
@@ -103,6 +141,39 @@ namespace PetFinder.Services.SearchPosts
                 .ToList();
 
             return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts };
+        }
+
+        public IEnumerable<CityCategoryServiceModel> GetCities()
+        {
+            return this.context.Cities.Select(city => new CityCategoryServiceModel { Id = city.Id, Name = city.Name }).ToList();
+        }
+
+        public  IEnumerable<PetSelectServiceModel> GetPets()
+        {
+            return this.context.Pets.Select(pet => new PetSelectServiceModel { Id = pet.Id, Name = pet.Name }).ToList();
+        }
+
+        private string CreatePet(string type, string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
+        {
+            return petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
+        }
+
+        public SearchPostDetailsServiceModel Details(string id)
+        {
+            return this.context
+                .SearchPosts
+                .Where(searchPost => searchPost.Id == id)
+                .Select(searchPost => new SearchPostDetailsServiceModel
+                {
+                    Id = searchPost.Id,
+                    Title = searchPost.Title,
+                    Description = searchPost.Description,
+                    ImageUrl = searchPost.Pet.ImageUrl,
+                    City = searchPost.City.Name,
+                    PetName = searchPost.Pet.Name,
+                    PetSpecies = searchPost.Pet.Species.Name,
+                })
+                .FirstOrDefault();
         }
     }
 }

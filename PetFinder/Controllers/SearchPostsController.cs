@@ -1,38 +1,29 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetFinder.Data;
-using PetFinder.Data.Models;
-using PetFinder.Models.Cities;
 using PetFinder.Models.Pets;
 using PetFinder.Models.SearchPosts;
-using PetFinder.Models.Shared;
 using PetFinder.Services.SearchPosts;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using PetFinder.Infrastructure;
-using PetFinder.Models.Sizes;
-using PetFinder.Models.Species;
 using PetFinder.Services.Pets;
-using PetFinder.Services.Pets.Models;
 using PetFinder.Services.SearchPosts.Models;
+using PetFinder.Services.Owners;
 
 namespace PetFinder.Controllers
 {
     public class SearchPostsController : Controller
     {
 
-        private ApplicationDbContext context;
-        private ISearchPostService searchPostService;
-        private IPetService petService;
+        private readonly ISearchPostService searchPostService;
+        private readonly IPetService petService;
+        private readonly IOwnerService ownerService;
 
-        public SearchPostsController(ApplicationDbContext context, ISearchPostService searchPostService, IPetService petService)
+        public SearchPostsController(ISearchPostService searchPostService, IPetService petService, IOwnerService ownerService)
         {
-            this.context = context;
             this.searchPostService = searchPostService;
             this.petService = petService;
+            this.ownerService = ownerService;
         }
 
         public IActionResult All([FromQuery] AllSearchPostsViewModel query)
@@ -59,20 +50,7 @@ namespace PetFinder.Controllers
 
         public IActionResult Details(string id)
         {
-            var searchPost = this.context
-                .SearchPosts
-                .Where(searchPost => searchPost.Id == id)
-                .Select(searchPost => new SearchPostDetailsViewModel
-                {
-                    Id = searchPost.Id,
-                    Title = searchPost.Title,
-                    Description = searchPost.Description,
-                    ImageUrl = searchPost.Pet.ImageUrl,
-                    City = searchPost.City.Name,
-                    PetName = searchPost.Pet.Name,
-                    PetSpecies = searchPost.Pet.Species.Name,
-                })
-                .FirstOrDefault();
+            var searchPost = this.searchPostService.Details(id);
 
             if (searchPost == null)
             {
@@ -89,7 +67,7 @@ namespace PetFinder.Controllers
             if(type == "Lost")
             {
 
-                if(!this.UserIsOwner())
+                if(!this.ownerService.IsOwner(this.User.GetId()))
                 {
                     return this.RedirectToAction("Become", "Owners");
                 }
@@ -103,8 +81,8 @@ namespace PetFinder.Controllers
 
             return this.View(new AddSearchPostFormModel 
             { 
-                Pets = GetPets(),
-                Cities = GetCities(),
+                Pets = this.searchPostService.GetPets(),
+                Cities = this.searchPostService.GetCities(),
                 Pet = new AddPetFormModel
                 {
                     Species = this.petService.GetSpecies(),
@@ -118,9 +96,8 @@ namespace PetFinder.Controllers
         public IActionResult Add(AddSearchPostFormModel searchPost)
         {
 
-            var owner = this.context.Owners.FirstOrDefault(owner => owner.UserId == this.User.GetId());
 
-            if(searchPost.SearchPostType == "Lost" && owner == null)
+            if(searchPost.SearchPostType == "Lost" && this.ownerService.IsOwner(this.User.GetId()))
             {
                 return this.RedirectToAction("Become", "Owners");
             }
@@ -132,44 +109,34 @@ namespace PetFinder.Controllers
 
             if(!ModelState.IsValid)
             {
-                searchPost.Cities = GetCities();
-                searchPost.Pets = GetPets();
+                searchPost.Cities = this.searchPostService.GetCities();
+                searchPost.Pets = this.searchPostService.GetPets();
                 searchPost.Pet.Species = this.petService.GetSpecies();
                 searchPost.Pet.Sizes = this.petService.GetSizes();
 
                 return this.View(searchPost);
             }
 
-            var newSearchPost = new SearchPost
-            {
-                Title = searchPost.Title,
-                Description = searchPost.Description,
-                IsFound = searchPost.SearchPostType == "Found" ? true : false,
-                CityId = searchPost.CityId,
-                DatePublished = DateTime.UtcNow,
-                DateLostFound = searchPost.DateLostFound,
-                SearchPostTypeId = searchPost.SearchPostType == "Found" ? 1 : 2,
-                PetId = (searchPost.SearchPostType == "Found" || searchPost.PetId == "0") ? CreatePet(searchPost, owner) : searchPost.PetId,
-            };
+            var userId = this.User.GetId();
+            int? ownerId = this.ownerService.IsOwner(userId) ? this.ownerService.GetOwnerId(userId) : null;
 
-
-
-            this.context.SearchPosts.Add(newSearchPost);
-
-            this.context.SaveChanges();
+            searchPostService.Create(
+                searchPost.Title,
+                searchPost.Description,
+                searchPost.SearchPostType,
+                searchPost.CityId,
+                searchPost.DateLostFound,
+                searchPost.PetId,
+                searchPost.Pet.Name,
+                searchPost.Pet.ImageUrl,
+                searchPost.Pet.SpeciesId,
+                searchPost.Pet.SizeId,
+                ownerId);
 
             return this.RedirectToAction("All", "SearchPosts", new { Type = searchPost.SearchPostType});
         }
 
-        private IEnumerable<CityViewModel> GetCities()
-        {
-            return this.context.Cities.Select(city => new CityViewModel { Id = city.Id, Name = city.Name }).ToList();
-        }
 
-        private IEnumerable<PetListServiceModel> GetPets()
-        {
-            return this.context.Pets.Select(pet => new PetListServiceModel { Id = pet.Id, Name = pet.Name }).ToList();
-        }
 
 
 
@@ -182,18 +149,5 @@ namespace PetFinder.Controllers
             query.CurrentPage = queryResult.CurrentPage;
         }
 
-        private string CreatePet(AddSearchPostFormModel searchPost, Owner owner)
-        {
-            if(searchPost.SearchPostType == "Found")
-            {
-                return petService.Create(searchPost.Pet.Name, searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId);
-            }
-            return petService.Create(searchPost.Pet.Name, searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId, owner.Id);
-        }
-
-        private bool UserIsOwner()
-        {
-            return this.context.Owners.Any(owner => owner.UserId == this.User.GetId());
-        }
     }
 }
