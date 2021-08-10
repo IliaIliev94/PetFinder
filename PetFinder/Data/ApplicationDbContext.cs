@@ -68,6 +68,11 @@ namespace PetFinder.Data
                 .HasForeignKey(x => x.SearchPostTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<SearchPost>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
+
             base.OnModelCreating(builder);
         }
     }

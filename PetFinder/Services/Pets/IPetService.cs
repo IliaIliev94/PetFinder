@@ -25,7 +25,7 @@ namespace PetFinder.Services.Pets
             int speciesId,
             int sizeId);
 
-        EditPetServiceModel GetEditData(string id);
+        PetEditServiceModel GetEditData(string id);
 
         ICollection<SizeCategoryServiceModel> GetSizes();
 

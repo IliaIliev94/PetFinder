@@ -31,5 +31,7 @@ namespace PetFinder.Models.Pets
 
         public ICollection<SpeciesCategoryServiceModel> Species { get; set; }
 
+        public int? OwnerId { get; init; }
+
     }
 }

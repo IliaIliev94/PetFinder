@@ -34,7 +34,8 @@ namespace PetFinder.Services.SearchPosts
             string imageUrl,
             int speciesId,
             int sizeId,
-            int? ownerId)
+            int? ownerId,
+            string userId)
         {
             var newSearchPost = new SearchPost
             {
@@ -46,6 +47,7 @@ namespace PetFinder.Services.SearchPosts
                 DateLostFound = dateLostFound,
                 SearchPostTypeId = searchPostType == "Found" ? 1 : 2,
                 PetId = (searchPostType == "Found" || petId == "0") ? CreatePet(searchPostType, petName, imageUrl, speciesId, sizeId, ownerId) : petId,
+                UserId = userId,
             };
 
 
@@ -174,6 +176,58 @@ namespace PetFinder.Services.SearchPosts
                     PetSpecies = searchPost.Pet.Species.Name,
                 })
                 .FirstOrDefault();
+        }
+
+        public SearchPostEditServiceModel GetEditData(string id)
+        {
+            return this.context
+                .SearchPosts
+                .Where(searchPost => searchPost.Id == id)
+                .Select(searchPost => new SearchPostEditServiceModel
+                {
+                    Title = searchPost.Title,
+                    Description = searchPost.Description,
+                    Type = searchPost.SearchPostType.Name,
+                    DateLostFound = searchPost.DateLostFound,
+                    CityId = searchPost.CityId,
+                    PetId = searchPost.PetId,
+                    UserId = searchPost.UserId,
+                })
+                .FirstOrDefault();
+        }
+
+        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petId)
+        {
+            var searchPost = this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == id);
+
+            if(searchPost == null)
+            {
+                return false;
+            }
+
+            searchPost.Title = title;
+            searchPost.Description = description;
+            searchPost.CityId = cityId;
+            searchPost.DateLostFound = dateLostFound;
+            searchPost.PetId = petId;
+
+            this.context.SaveChanges();
+
+            return true;
+
+        }
+
+        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petId, string petName, string imageUrl, int petSpeciesId, int petSizeId)
+        {
+           var isSearchPostEditSuccessfull = this.Edit(id, title, description, cityId, dateLostFound, petId);
+           var isPetEditSuccessfull = this.petService.Edit(petId, petName, imageUrl, petSpeciesId, petSizeId);
+
+            if(!isSearchPostEditSuccessfull || !isPetEditSuccessfull)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -18,4 +18,7 @@
     <h3 class="text-center">@Model.PetName - @Model.PetSpecies</h3>
     <h5 class="text-center">@Model.City</h5>
     <p class="text-justify mt-4">@Model.Description</p>
+    <div class="text-center mt-5">
+        <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    </div>
 </div>

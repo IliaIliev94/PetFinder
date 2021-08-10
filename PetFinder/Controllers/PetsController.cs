@@ -46,7 +46,7 @@ namespace PetFinder.Controllers
 
             if(pet == null)
             {
-                return this.BadRequest();
+                return this.RedirectToAction("Error", "Home");
             }
 
             return this.View(pet);
@@ -103,6 +103,18 @@ namespace PetFinder.Controllers
         {
 
             var pet = this.petService.GetEditData(id);
+            var userId = this.User.GetId();
+
+            if(pet == null)
+            {
+                return this.RedirectToAction("Error", "Home");
+            }
+
+            if (!this.ownerService.IsOwner(userId) || this.ownerService.GetOwnerId(userId) != pet.OwnerId)
+            {
+                return this.BadRequest();
+            }
+
             return this.View(new AddPetFormModel 
             { 
                 Id = id,
@@ -112,6 +124,7 @@ namespace PetFinder.Controllers
                 SpeciesId = pet.SpeciesId,
                 Sizes = this.petService.GetSizes(),
                 Species = this.petService.GetSpecies(),
+                OwnerId = pet.OwnerId,
             });
         }
 
@@ -119,6 +132,13 @@ namespace PetFinder.Controllers
         [Authorize]
         public IActionResult Edit(AddPetFormModel pet)
         {
+            var userId = this.User.GetId();
+
+            if (!this.ownerService.IsOwner(userId) || this.ownerService.GetOwnerId(userId) != pet.OwnerId)
+            {
+                return this.BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 pet.Sizes = this.petService.GetSizes();

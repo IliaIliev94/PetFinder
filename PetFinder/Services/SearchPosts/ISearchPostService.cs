@@ -28,9 +28,32 @@ namespace PetFinder.Services.SearchPosts
             string imageUrl,
             int speciesId,
             int sizeId,
-            int? ownerId);
+            int? ownerId,
+            string userId);
+
+        bool Edit(
+            string id,
+            string title,
+            string description,
+            int cityId,
+            DateTime? dateLostFound,
+            string petId);
+
+        bool Edit(
+            string id,
+            string title,
+            string description,
+            int cityId,
+            DateTime? dateLostFound,
+            string petId,
+            string petName,
+            string imageUrl,
+            int petSpeciesId,
+            int petSizeId);
 
         SearchPostDetailsServiceModel Details(string id);
+
+        SearchPostEditServiceModel GetEditData(string id);
 
         IEnumerable<CityCategoryServiceModel> GetCities();
 

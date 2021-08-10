@@ -54,7 +54,7 @@ namespace PetFinder.Controllers
 
             if (searchPost == null)
             {
-                return this.BadRequest();
+                return this.RedirectToAction("Error", "Home");
             }
 
 
@@ -96,8 +96,7 @@ namespace PetFinder.Controllers
         public IActionResult Add(AddSearchPostFormModel searchPost)
         {
 
-
-            if(searchPost.SearchPostType == "Lost" && this.ownerService.IsOwner(this.User.GetId()))
+            if(searchPost.SearchPostType == "Lost" && !this.ownerService.IsOwner(this.User.GetId()))
             {
                 return this.RedirectToAction("Become", "Owners");
             }
@@ -131,14 +130,75 @@ namespace PetFinder.Controllers
                 searchPost.Pet.ImageUrl,
                 searchPost.Pet.SpeciesId,
                 searchPost.Pet.SizeId,
-                ownerId);
+                ownerId,
+                userId);
 
             return this.RedirectToAction("All", "SearchPosts", new { Type = searchPost.SearchPostType});
         }
 
 
+        [Authorize]
+        public IActionResult Edit(string id)
+        {
 
+            var searchPost = this.searchPostService.GetEditData(id);
 
+            if(searchPost == null)
+            {
+                return this.RedirectToAction("Error", "Home");
+            }
+
+            if(searchPost.UserId != this.User.GetId())
+            {
+                return this.BadRequest();
+            }
+
+            return this.View(new AddSearchPostFormModel 
+            {
+                Id = id,
+                Title = searchPost.Title,
+                Description = searchPost.Description,
+                DateLostFound = searchPost.DateLostFound,
+                CityId = searchPost.CityId,
+                Cities = this.searchPostService.GetCities(),
+                PetId = searchPost.PetId,
+                Pets = this.searchPostService.GetPets(),
+                Pet = searchPost.Type == "Lost" ? null : GetEditPetData(searchPost.PetId),
+                UserId = searchPost.UserId,
+            });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Edit(AddSearchPostFormModel searchPost)
+        {
+            if(!ModelState.IsValid)
+            {
+                searchPost.Cities = this.searchPostService.GetCities();
+                searchPost.Pets = this.searchPostService.GetPets();
+                return this.View(searchPost);
+            }
+
+            var isEditSuccessfull = false;
+
+            if(searchPost.Pet == null)
+            {
+                isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description, searchPost.CityId, searchPost.DateLostFound, searchPost.PetId);
+            }
+            else
+            {
+                isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description, 
+                    searchPost.CityId, searchPost.DateLostFound, searchPost.PetId, searchPost.Pet.Name, 
+                    searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId);
+            }
+
+            if(!isEditSuccessfull)
+            {
+                return this.RedirectToAction("Error", "Home");
+            }
+
+            return this.RedirectToAction("Details", "SearchPosts", new { Id = searchPost.Id });
+        }
 
         private void SetAllSearchPostQueryRsponseData(AllSearchPostsViewModel query, SearchPostQueryServiceModel queryResult)
         {
@@ -147,6 +207,22 @@ namespace PetFinder.Controllers
             query.SearchPosts = queryResult.SearchPosts;
             query.TotalPages = queryResult.TotalPages;
             query.CurrentPage = queryResult.CurrentPage;
+        }
+
+        private AddPetFormModel GetEditPetData(string id)
+        {
+            var pet = this.petService.GetEditData(id);
+
+            return new AddPetFormModel
+            {
+                Id = id,
+                Name = pet.Name,
+                ImageUrl = pet.ImageUrl,
+                SizeId = pet.SizeId,
+                Sizes = this.petService.GetSizes(),
+                SpeciesId = pet.SpeciesId,
+                Species = this.petService.GetSpecies(),
+            };
         }
 
     }

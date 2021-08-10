@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PetFinder.Services.Pets.Models
 {
-    public class EditPetServiceModel
+    public class PetEditServiceModel
     {
         public string Name { get; init; }
 
@@ -14,6 +14,8 @@ namespace PetFinder.Services.Pets.Models
         public int SizeId { get; init; }
 
         public int SpeciesId { get; init; }
+
+        public int? OwnerId { get; init; }
 
     }
 }

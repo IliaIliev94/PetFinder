@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -41,6 +42,10 @@ namespace PetFinder.Data.Models
 
         public virtual ICollection<Comment> Comments { get; set; }
 
-        
+        public string UserId { get; set; }
+
+        public virtual IdentityUser User { get; set; }
+
+
     }
 }

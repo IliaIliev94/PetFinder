@@ -11,6 +11,9 @@ namespace PetFinder.Models.SearchPosts
 {
     public class AddSearchPostFormModel
     {
+
+        public string Id { get; set; }
+
         [Required]
         [StringLength(MaxTitleLength, MinimumLength = MinTitleLength)]
         public string Title { get; init; }
@@ -34,5 +37,7 @@ namespace PetFinder.Models.SearchPosts
         public IEnumerable<CityCategoryServiceModel> Cities { get; set; }
 
         public AddPetFormModel Pet { get; set; }
+
+        public string UserId { get; set; }
     }
 }

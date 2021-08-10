@@ -108,16 +108,17 @@ namespace PetFinder.Services.Pets
             return true;
         }
 
-        public EditPetServiceModel GetEditData(string id)
+        public PetEditServiceModel GetEditData(string id)
         {
             return this.context.Pets
                 .Where(pet => pet.Id == id)
-                .Select(pet => new EditPetServiceModel
+                .Select(pet => new PetEditServiceModel
                 {
                     Name = pet.Name,
                     ImageUrl = pet.ImageUrl,
                     SizeId = pet.SizeId,
                     SpeciesId = pet.SpeciesId,
+                    OwnerId = pet.OwnerId,
                 })
                 .FirstOrDefault();
         }
