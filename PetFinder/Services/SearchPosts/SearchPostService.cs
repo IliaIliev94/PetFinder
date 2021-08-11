@@ -119,6 +119,7 @@ namespace PetFinder.Services.SearchPosts
                 SearchPostSorting.DateLostFound => searchPostQuery.OrderByDescending(searchPost => searchPost.DateLostFound),
                 SearchPostSorting.PetSpecies => searchPostQuery.OrderByDescending(searchPost => searchPost.Pet.Species.Id),
                 SearchPostSorting.PetSize => searchPostQuery.OrderByDescending(searchPost => searchPost.Pet.Size.Id),
+                SearchPostSorting.City => searchPostQuery.OrderByDescending(searchPost => searchPost.City.Name),
                 _ => searchPostQuery.OrderByDescending(searchPost => searchPost.Id),
             };
 

@@ -11,5 +11,6 @@ namespace PetFinder.Models.Shared
         DateLostFound = 1,
         PetSpecies = 2,
         PetSize = 3,
+        City = 4,
     }
 }
