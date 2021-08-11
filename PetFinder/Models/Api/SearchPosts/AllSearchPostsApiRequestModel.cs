@@ -8,6 +8,8 @@ namespace PetFinder.Models.Api.SearchPosts
 {
     public class AllSearchPostsApiRequestModel
     {
+        public const int PostsPerPage = 12;
+        public int CurentPage { get; init; } = 1;
         public string Type { get; init; }
 
         public string SearchTerm { get; init; }
@@ -15,6 +17,8 @@ namespace PetFinder.Models.Api.SearchPosts
         public string Species { get; init; }
 
         public string Size { get; init; }
+
+        public string City { get; init; }
 
         public SearchPostSorting Sorting { get; init; }
     }

@@ -12,6 +12,7 @@ namespace PetFinder.Services.SearchPosts
         SearchPostQueryServiceModel All(string species,
             string size,
             string searchTerm,
+            string city,
             string type,
             int currentPage,
             int searchPostsPerPage,

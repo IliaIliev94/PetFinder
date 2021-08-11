@@ -13,12 +13,10 @@ namespace PetFinder.Controllers.Api
     [Route("api/statistics")]
     public class StatisticsApiController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
         private readonly IStatisticsService statistics;
 
-        public StatisticsApiController(ApplicationDbContext context, IStatisticsService statistics)
+        public StatisticsApiController( IStatisticsService statistics)
         {
-            this.context = context;
             this.statistics = statistics;
         }
 

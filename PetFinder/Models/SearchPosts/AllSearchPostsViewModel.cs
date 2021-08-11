@@ -34,6 +34,11 @@ namespace PetFinder.Models.SearchPosts
         [Display(Name = "Sorting")]
         public SearchPostSorting Sorting { get; init; }
 
+        [Display(Name = "City")]
+        public string City { get; init; }
+
+        public IEnumerable<string> Cities { get; set; }
+
         public IEnumerable<SearchPostServiceModel> SearchPosts { get; set; }
     }
 }

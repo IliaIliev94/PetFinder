@@ -62,6 +62,7 @@ namespace PetFinder.Services.SearchPosts
         public SearchPostQueryServiceModel All(string species,
             string size,
             string searchTerm,
+            string city,
             string type,
             int currentPage,
             int searchPostsPerPage,
@@ -107,6 +108,11 @@ namespace PetFinder.Services.SearchPosts
                 searchPostQuery = searchPostQuery.Where(searchPost => searchPost.SearchPostType.Name.ToLower() == type.ToLower());
             }
 
+            if(!string.IsNullOrWhiteSpace(city))
+            {
+                searchPostQuery = searchPostQuery.Where(searchPost => searchPost.City.Name == city);
+            }
+
             searchPostQuery = sorting switch
             {
                 SearchPostSorting.DatePublished => searchPostQuery.OrderByDescending(searchPost => searchPost.DatePublished),
@@ -127,6 +133,11 @@ namespace PetFinder.Services.SearchPosts
                 .Reverse()
                 .ToList();
 
+            var cities = this.context.Cities
+                .OrderBy(city => city.Id)
+                .Select(city => city.Name)
+                .ToList();
+
             var parsedPageNumber = currentPage - 1;
 
             var searchPosts = searchPostQuery
@@ -142,7 +153,7 @@ namespace PetFinder.Services.SearchPosts
                 })
                 .ToList();
 
-            return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts };
+            return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts, Cities = cities, };
         }
 
         public IEnumerable<CityCategoryServiceModel> GetCities()

@@ -13,6 +13,8 @@ namespace PetFinder.Services.SearchPosts.Models
         public IEnumerable<string> PetSizes { get; init; }
 
         public IEnumerable<string> PetSpecies { get; init; }
+
+        public IEnumerable<string> Cities { get; init; }
         public IEnumerable<SearchPostServiceModel> SearchPosts { get; set; }
     }
 }

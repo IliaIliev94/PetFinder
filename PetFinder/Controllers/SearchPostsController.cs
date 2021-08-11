@@ -38,6 +38,7 @@ namespace PetFinder.Controllers
                 query.Species,
                 query.Size,
                 query.SearchTerm,
+                query.City,
                 query.Type,
                 query.CurrentPage,
                 AllSearchPostsViewModel.SearchPostsPerPage,
@@ -207,6 +208,7 @@ namespace PetFinder.Controllers
             query.SearchPosts = queryResult.SearchPosts;
             query.TotalPages = queryResult.TotalPages;
             query.CurrentPage = queryResult.CurrentPage;
+            query.Cities = queryResult.Cities;
         }
 
         private AddPetFormModel GetEditPetData(string id)

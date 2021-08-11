@@ -14,12 +14,10 @@ namespace PetFinder.Controllers.Api
     [Route("api/searchposts")]
     public class SearchPostApiController : ControllerBase
     {
-        private readonly ApplicationDbContext context;
         private readonly ISearchPostService searchPostService;
 
-        public SearchPostApiController(ApplicationDbContext context, ISearchPostService searchPostService)
+        public SearchPostApiController(ISearchPostService searchPostService)
         {
-            this.context = context;
             this.searchPostService = searchPostService;
         }
 
@@ -31,9 +29,10 @@ namespace PetFinder.Controllers.Api
                 query.Species,
                 query.Size,
                 query.SearchTerm,
+                query.City,
                 query.Type,
-                1,
-                context.SearchPosts.Count(),
+                query.CurentPage,
+                AllSearchPostsApiRequestModel.PostsPerPage,
                 query.Sorting);
 
             return new AllSearchPostsApiResponseModel { SearchPosts = queryResult.SearchPosts };
