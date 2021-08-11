@@ -46,11 +46,12 @@ namespace PetFinder.Services.SearchPosts
             string description,
             int cityId,
             DateTime? dateLostFound,
-            string petId,
             string petName,
             string imageUrl,
             int petSpeciesId,
             int petSizeId);
+
+        IEnumerable<SearchPostServiceModel> GetSearchPostsById(string id);
 
         SearchPostDetailsServiceModel Details(string id);
 

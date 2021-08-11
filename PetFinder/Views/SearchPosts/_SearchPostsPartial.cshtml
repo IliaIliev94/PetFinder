@@ -1,0 +1,23 @@
+﻿@model IEnumerable<SearchPostServiceModel>
+
+@if (!Model.Any())
+{
+    <h2 class="text-center">No search posts were found with the given criteria!</h2>
+}
+
+<div class="row">
+    @foreach (var searchPost in Model)
+    {
+        <div class="col-md-12 col-lg-4 mb-3">
+            <div class="card h-100">
+                <img src="@searchPost.ImageUrl" class="card-img-top" alt="@searchPost.PetName">
+                <div class="card-body">
+                    <h5 class="card-title">@searchPost.Title</h5>
+                    <p class="card-text">@searchPost.PetName - @searchPost.PetSpecies</p>
+                    <a asp-controller="SearchPosts" asp-action="Details" asp-route-id="@searchPost.Id" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>

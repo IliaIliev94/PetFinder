@@ -1,0 +1,9 @@
+﻿@model IEnumerable<SearchPostServiceModel>
+
+@{
+    ViewData["Title"] = "My Search Posts";
+}
+
+<h1 class="heading-margin text-center">@ViewData["Title"]</h1>
+
+<partial name="_SearchPostsPartial" model="@Model"></partial>

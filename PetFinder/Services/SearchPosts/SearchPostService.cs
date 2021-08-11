@@ -229,8 +229,9 @@ namespace PetFinder.Services.SearchPosts
 
         }
 
-        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petId, string petName, string imageUrl, int petSpeciesId, int petSizeId)
+        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petName, string imageUrl, int petSpeciesId, int petSizeId)
         {
+            var petId = this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == id).PetId;
            var isSearchPostEditSuccessfull = this.Edit(id, title, description, cityId, dateLostFound, petId);
            var isPetEditSuccessfull = this.petService.Edit(petId, petName, imageUrl, petSpeciesId, petSizeId);
 
@@ -240,6 +241,21 @@ namespace PetFinder.Services.SearchPosts
             }
 
             return true;
+        }
+
+        public IEnumerable<SearchPostServiceModel> GetSearchPostsById(string id)
+        {
+            return this.context.SearchPosts
+                .Where(searchPost => searchPost.UserId == id)
+                .Select(searchPost => new SearchPostServiceModel
+                {
+                    Id = searchPost.Id,
+                    Title = searchPost.Title,
+                    PetName = searchPost.Pet.Name,
+                    PetSpecies = searchPost.Pet.Species.Name,
+                    ImageUrl = searchPost.Pet.ImageUrl,
+                })
+                .ToList();
         }
     }
 }

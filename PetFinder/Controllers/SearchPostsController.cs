@@ -63,6 +63,14 @@ namespace PetFinder.Controllers
         }
 
         [Authorize]
+        public IActionResult Mine()
+        {
+            var searchPosts = this.searchPostService.GetSearchPostsById(this.User.GetId());
+
+            return this.View(searchPosts);
+        }
+
+        [Authorize]
         public IActionResult Add(string type)
         {
             if(type == "Lost")
@@ -162,7 +170,6 @@ namespace PetFinder.Controllers
                 DateLostFound = searchPost.DateLostFound,
                 CityId = searchPost.CityId,
                 Cities = this.searchPostService.GetCities(),
-                PetId = searchPost.PetId,
                 Pets = this.searchPostService.GetPets(),
                 Pet = searchPost.Type == "Lost" ? null : GetEditPetData(searchPost.PetId),
                 UserId = searchPost.UserId,
@@ -189,7 +196,7 @@ namespace PetFinder.Controllers
             else
             {
                 isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description, 
-                    searchPost.CityId, searchPost.DateLostFound, searchPost.PetId, searchPost.Pet.Name, 
+                    searchPost.CityId, searchPost.DateLostFound, searchPost.Pet.Name, 
                     searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId);
             }
 

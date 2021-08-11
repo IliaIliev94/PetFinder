@@ -10,7 +10,7 @@ namespace PetFinder.Models.SearchPosts
 {
     public class AllSearchPostsViewModel
     {
-        public const int SearchPostsPerPage = 12;
+        public const int SearchPostsPerPage = 3;
 
         public int CurrentPage { get; set; } = 1;
 
