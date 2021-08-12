@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using PetFinder.Data.Models;
 using PetFinder.Services.Pets.Models;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace PetFinder.Services.Pets
 {
@@ -12,10 +14,12 @@ namespace PetFinder.Services.Pets
     {
 
         private readonly ApplicationDbContext context;
+        private readonly IMapper mapper;
 
-        public PetService(ApplicationDbContext context)
+        public PetService(ApplicationDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
         public string Create(
@@ -41,19 +45,12 @@ namespace PetFinder.Services.Pets
             return pet.Id;
         }
 
-        public IEnumerable<PetListServiceModel> All(int ownerId)
+        public IEnumerable<PetServiceModel> All(int ownerId)
         {
             return this.context
                 .Pets
                 .Where(pet => pet.OwnerId == ownerId)
-                .Select(pet => new PetListServiceModel
-                {
-                    Id = pet.Id,
-                    Name = pet.Name,
-                    ImageUrl = pet.ImageUrl,
-                    Species = pet.Species.Name,
-                    Size = pet.Size.Type,
-                })
+                .ProjectTo<PetServiceModel>(mapper.ConfigurationProvider)
                 .ToList();
         }
 
@@ -61,14 +58,7 @@ namespace PetFinder.Services.Pets
         {
            return this.context.Pets
                 .Where(pets => pets.Id == id)
-                .Select(pets => new PetDetailsServiceModel
-                {
-                    Id = pets.Id,
-                    Name = pets.Name,
-                    ImageUrl = pets.ImageUrl,
-                    Species = pets.Species.Name,
-                    Size = pets.Size.Type,
-                })
+                .ProjectTo<PetDetailsServiceModel>(mapper.ConfigurationProvider)
                 .FirstOrDefault();
         }
 
@@ -114,14 +104,7 @@ namespace PetFinder.Services.Pets
         {
             return this.context.Pets
                 .Where(pet => pet.Id == id)
-                .Select(pet => new PetEditServiceModel
-                {
-                    Name = pet.Name,
-                    ImageUrl = pet.ImageUrl,
-                    SizeId = pet.SizeId,
-                    SpeciesId = pet.SpeciesId,
-                    OwnerId = pet.OwnerId,
-                })
+                .ProjectTo<PetEditServiceModel>(mapper.ConfigurationProvider)
                 .FirstOrDefault();
         }
 

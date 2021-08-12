@@ -9,6 +9,7 @@ using PetFinder.Infrastructure;
 using PetFinder.Services.Pets;
 using PetFinder.Services.SearchPosts.Models;
 using PetFinder.Services.Owners;
+using AutoMapper;
 
 namespace PetFinder.Controllers
 {
@@ -18,12 +19,13 @@ namespace PetFinder.Controllers
         private readonly ISearchPostService searchPostService;
         private readonly IPetService petService;
         private readonly IOwnerService ownerService;
-
-        public SearchPostsController(ISearchPostService searchPostService, IPetService petService, IOwnerService ownerService)
+        private readonly IMapper mapper;
+        public SearchPostsController(ISearchPostService searchPostService, IPetService petService, IOwnerService ownerService, IMapper mapper)
         {
             this.searchPostService = searchPostService;
             this.petService = petService;
             this.ownerService = ownerService;
+            this.mapper = mapper;
         }
 
         public IActionResult All([FromQuery] AllSearchPostsViewModel query)
@@ -90,7 +92,7 @@ namespace PetFinder.Controllers
 
             return this.View(new AddSearchPostFormModel 
             { 
-                Pets = this.searchPostService.GetPets(),
+                Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId())),
                 Cities = this.searchPostService.GetCities(),
                 Pet = new AddPetFormModel
                 {
@@ -118,7 +120,7 @@ namespace PetFinder.Controllers
             if(!ModelState.IsValid)
             {
                 searchPost.Cities = this.searchPostService.GetCities();
-                searchPost.Pets = this.searchPostService.GetPets();
+                searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
                 searchPost.Pet.Species = this.petService.GetSpecies();
                 searchPost.Pet.Sizes = this.petService.GetSizes();
 
@@ -162,18 +164,13 @@ namespace PetFinder.Controllers
                 return this.BadRequest();
             }
 
-            return this.View(new AddSearchPostFormModel 
-            {
-                Id = id,
-                Title = searchPost.Title,
-                Description = searchPost.Description,
-                DateLostFound = searchPost.DateLostFound,
-                CityId = searchPost.CityId,
-                Cities = this.searchPostService.GetCities(),
-                Pets = this.searchPostService.GetPets(),
-                Pet = searchPost.Type == "Lost" ? null : GetEditPetData(searchPost.PetId),
-                UserId = searchPost.UserId,
-            });
+            var searchPostFormModel = this.mapper.Map<AddSearchPostFormModel>(searchPost);
+
+            searchPostFormModel.Cities = this.searchPostService.GetCities();
+            searchPostFormModel.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
+            searchPostFormModel.Pet = searchPost.Type == "Lost" ? null : GetEditPetData(searchPost.PetId);
+
+            return this.View(searchPostFormModel);
         }
 
         [HttpPost]
@@ -183,7 +180,7 @@ namespace PetFinder.Controllers
             if(!ModelState.IsValid)
             {
                 searchPost.Cities = this.searchPostService.GetCities();
-                searchPost.Pets = this.searchPostService.GetPets();
+                searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
                 return this.View(searchPost);
             }
 

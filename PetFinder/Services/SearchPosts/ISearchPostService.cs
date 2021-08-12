@@ -61,6 +61,6 @@ namespace PetFinder.Services.SearchPosts
 
         IEnumerable<CityCategoryServiceModel> GetCities();
 
-        IEnumerable<PetSelectServiceModel> GetPets();
+        IEnumerable<PetSelectServiceModel> GetPets(int ownerId);
     }
 }

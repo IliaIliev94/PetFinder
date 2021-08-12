@@ -5,6 +5,7 @@ using PetFinder.Services.Pets;
 using PetFinder.Services.Owners;
 using PetFinder.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper;
 
 namespace PetFinder.Controllers
 {
@@ -12,11 +13,13 @@ namespace PetFinder.Controllers
     {
         private readonly IPetService petService;
         private readonly IOwnerService ownerService;
+        private readonly IMapper mapper;
 
-        public PetsController(IPetService petService, IOwnerService ownerService)
+        public PetsController(IPetService petService, IOwnerService ownerService, IMapper mapper)
         {
             this.petService = petService;
             this.ownerService = ownerService;
+            this.mapper = mapper;
         }
 
         [Authorize]
@@ -115,17 +118,11 @@ namespace PetFinder.Controllers
                 return this.BadRequest();
             }
 
-            return this.View(new AddPetFormModel 
-            { 
-                Id = id,
-                Name = pet.Name,
-                ImageUrl = pet.ImageUrl,
-                SizeId = pet.SizeId,
-                SpeciesId = pet.SpeciesId,
-                Sizes = this.petService.GetSizes(),
-                Species = this.petService.GetSpecies(),
-                OwnerId = pet.OwnerId,
-            });
+            var petFormModel = this.mapper.Map<AddPetFormModel>(pet);
+            petFormModel.Sizes = this.petService.GetSizes();
+            petFormModel.Species = this.petService.GetSpecies();
+
+            return this.View(petFormModel);
         }
 
         [HttpPost]

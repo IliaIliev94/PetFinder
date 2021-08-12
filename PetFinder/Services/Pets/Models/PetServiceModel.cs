@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PetFinder.Services.Pets.Models
 {
-    public class PetListServiceModel
+    public class PetServiceModel
     {
         public string Id { get; init; }
 

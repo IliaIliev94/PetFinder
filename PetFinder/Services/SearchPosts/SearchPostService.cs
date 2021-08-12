@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using PetFinder.Data.Models;
 using PetFinder.Services.Pets;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 
 namespace PetFinder.Services.SearchPosts
 {
@@ -17,11 +19,13 @@ namespace PetFinder.Services.SearchPosts
 
         private readonly ApplicationDbContext context;
         private readonly IPetService petService;
+        private readonly IMapper mapper;
 
-        public SearchPostService(ApplicationDbContext context, IPetService petService)
+        public SearchPostService(ApplicationDbContext context, IPetService petService, IMapper mapper)
         {
             this.context = context;
             this.petService = petService;
+            this.mapper = mapper;
         }
 
         public string Create(
@@ -163,9 +167,9 @@ namespace PetFinder.Services.SearchPosts
             return this.context.Cities.Select(city => new CityCategoryServiceModel { Id = city.Id, Name = city.Name }).ToList();
         }
 
-        public  IEnumerable<PetSelectServiceModel> GetPets()
+        public  IEnumerable<PetSelectServiceModel> GetPets(int ownerId)
         {
-            return this.context.Pets.Select(pet => new PetSelectServiceModel { Id = pet.Id, Name = pet.Name }).ToList();
+            return this.context.Pets.Where(searchPost => searchPost.OwnerId == ownerId).Select(pet => new PetSelectServiceModel { Id = pet.Id, Name = pet.Name }).ToList();
         }
 
         private string CreatePet(string type, string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
@@ -178,16 +182,7 @@ namespace PetFinder.Services.SearchPosts
             return this.context
                 .SearchPosts
                 .Where(searchPost => searchPost.Id == id)
-                .Select(searchPost => new SearchPostDetailsServiceModel
-                {
-                    Id = searchPost.Id,
-                    Title = searchPost.Title,
-                    Description = searchPost.Description,
-                    ImageUrl = searchPost.Pet.ImageUrl,
-                    City = searchPost.City.Name,
-                    PetName = searchPost.Pet.Name,
-                    PetSpecies = searchPost.Pet.Species.Name,
-                })
+                .ProjectTo<SearchPostDetailsServiceModel>(mapper.ConfigurationProvider)
                 .FirstOrDefault();
         }
 
@@ -196,16 +191,7 @@ namespace PetFinder.Services.SearchPosts
             return this.context
                 .SearchPosts
                 .Where(searchPost => searchPost.Id == id)
-                .Select(searchPost => new SearchPostEditServiceModel
-                {
-                    Title = searchPost.Title,
-                    Description = searchPost.Description,
-                    Type = searchPost.SearchPostType.Name,
-                    DateLostFound = searchPost.DateLostFound,
-                    CityId = searchPost.CityId,
-                    PetId = searchPost.PetId,
-                    UserId = searchPost.UserId,
-                })
+                .ProjectTo<SearchPostEditServiceModel>(mapper.ConfigurationProvider)
                 .FirstOrDefault();
         }
 
@@ -248,14 +234,7 @@ namespace PetFinder.Services.SearchPosts
         {
             return this.context.SearchPosts
                 .Where(searchPost => searchPost.UserId == id)
-                .Select(searchPost => new SearchPostServiceModel
-                {
-                    Id = searchPost.Id,
-                    Title = searchPost.Title,
-                    PetName = searchPost.Pet.Name,
-                    PetSpecies = searchPost.Pet.Species.Name,
-                    ImageUrl = searchPost.Pet.ImageUrl,
-                })
+                .ProjectTo<SearchPostServiceModel>(mapper.ConfigurationProvider)
                 .ToList();
         }
 
