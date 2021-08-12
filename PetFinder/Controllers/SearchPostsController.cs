@@ -208,6 +208,18 @@ namespace PetFinder.Controllers
             return this.RedirectToAction("Details", "SearchPosts", new { Id = searchPost.Id });
         }
 
+        [Authorize]
+        public IActionResult Delete(string id)
+        {
+            var isDeleteSuccessfull = this.searchPostService.Delete(id, this.User.GetId());
+
+            if(!isDeleteSuccessfull)
+            {
+                return this.BadRequest();
+            }
+
+            return this.RedirectToAction("Mine");
+        }
         private void SetAllSearchPostQueryRsponseData(AllSearchPostsViewModel query, SearchPostQueryServiceModel queryResult)
         {
             query.PetSizes = queryResult.PetSizes;

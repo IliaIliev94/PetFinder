@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PetFinder.Data.Models;
 using PetFinder.Services.Pets;
+using Microsoft.EntityFrameworkCore;
 
 namespace PetFinder.Services.SearchPosts
 {
@@ -256,6 +257,34 @@ namespace PetFinder.Services.SearchPosts
                     ImageUrl = searchPost.Pet.ImageUrl,
                 })
                 .ToList();
+        }
+
+        public bool Delete(string id, string userId)
+        {
+            var searchPost = this.context.SearchPosts.Include(searchPost => searchPost.SearchPostType).FirstOrDefault(searchPost => searchPost.Id == id);
+
+            if(searchPost == null || searchPost.UserId != userId)
+            {
+                return false;
+            }
+
+            var petId = String.Empty;
+
+            if(searchPost.SearchPostType.Name == "Found")
+            {
+                petId = searchPost.PetId;
+            }
+
+            this.context.SearchPosts.Remove(searchPost);
+
+            if (!string.IsNullOrEmpty(petId))
+            {
+                this.context.Pets.Remove(this.context.Pets.FirstOrDefault(pet => pet.Id == petId));
+            }
+
+            this.context.SaveChanges();
+
+            return true;
         }
     }
 }
