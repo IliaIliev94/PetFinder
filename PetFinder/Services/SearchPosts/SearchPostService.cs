@@ -231,7 +231,7 @@ namespace PetFinder.Services.SearchPosts
 
         public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petName, string imageUrl, int petSpeciesId, int petSizeId)
         {
-            var petId = this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == id).PetId;
+           var petId = this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == id).PetId;
            var isSearchPostEditSuccessfull = this.Edit(id, title, description, cityId, dateLostFound, petId);
            var isPetEditSuccessfull = this.petService.Edit(petId, petName, imageUrl, petSpeciesId, petSizeId);
 

@@ -15,7 +15,7 @@ namespace PetFinder.Services.Pets
             int sizeId,
             int? ownerId);
 
-        IEnumerable<PetListServiceModel> All();
+        IEnumerable<PetListServiceModel> All(int ownerId);
 
         PetDetailsServiceModel Details(string id);
 
@@ -24,6 +24,8 @@ namespace PetFinder.Services.Pets
             string imageUrl,
             int speciesId,
             int sizeId);
+
+        bool Delete(string id, int ownerId);
 
         PetEditServiceModel GetEditData(string id);
 

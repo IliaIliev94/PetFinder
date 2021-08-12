@@ -1,4 +1,4 @@
-﻿@model List<PetListServiceModel>
+﻿@model IEnumerable<PetListServiceModel>
 
 @{
     ViewData["Title"] = "All Pets";
@@ -11,6 +11,10 @@
 </div>
 
 <div class="container mt-4">
+    @if (!this.Model.Any())
+    {
+        <h2 class="text-center">You don't own any pets currently!</h2>
+    }
     <div class="row">
         @foreach (var pet in Model)
         {

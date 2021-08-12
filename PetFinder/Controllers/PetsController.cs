@@ -28,7 +28,7 @@ namespace PetFinder.Controllers
                 return this.BadRequest();
             }
 
-            var pets = this.petService.All();
+            var pets = this.petService.All(this.ownerService.GetOwnerId(this.User.GetId()));
 
             return this.View(pets);
         }
@@ -162,5 +162,17 @@ namespace PetFinder.Controllers
             return this.RedirectToAction("Details", "Pets", new { Id = pet.Id });
         }
 
+        [Authorize]
+        public IActionResult Delete(string id)
+        {
+            var isDeleteSuccessfull = this.petService.Delete(id, this.ownerService.GetOwnerId(this.User.GetId()));
+
+            if(!isDeleteSuccessfull)
+            {
+                return this.BadRequest();
+            }
+
+            return this.RedirectToAction("All");
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace PetFinder.Services.Pets
                 ImageUrl = imageUrl,
                 SpeciesId = speciesId,
                 SizeId = sizeId,
-                OwnerId = null,
+                OwnerId = ownerId,
             };
 
             this.context.Pets.Add(pet);
@@ -41,10 +41,11 @@ namespace PetFinder.Services.Pets
             return pet.Id;
         }
 
-        public IEnumerable<PetListServiceModel> All()
+        public IEnumerable<PetListServiceModel> All(int ownerId)
         {
             return this.context
                 .Pets
+                .Where(pet => pet.OwnerId == ownerId)
                 .Select(pet => new PetListServiceModel
                 {
                     Id = pet.Id,
@@ -108,6 +109,7 @@ namespace PetFinder.Services.Pets
             return true;
         }
 
+
         public PetEditServiceModel GetEditData(string id)
         {
             return this.context.Pets
@@ -121,6 +123,22 @@ namespace PetFinder.Services.Pets
                     OwnerId = pet.OwnerId,
                 })
                 .FirstOrDefault();
+        }
+
+        public bool Delete(string id, int ownerId)
+        {
+            var pet = this.context.Pets.FirstOrDefault(pet => pet.Id == id);
+
+            if(pet == null || pet.OwnerId != ownerId || context.SearchPosts.Any(searchPost => searchPost.PetId == pet.Id))
+            {
+                return false;
+            }
+
+            this.context.Pets.Remove(pet);
+
+            this.context.SaveChanges();
+
+            return true;
         }
     }
 }

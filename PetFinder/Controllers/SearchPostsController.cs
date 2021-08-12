@@ -152,7 +152,7 @@ namespace PetFinder.Controllers
 
             var searchPost = this.searchPostService.GetEditData(id);
 
-            if(searchPost == null)
+            if(searchPost == null || searchPost.PetId == null)
             {
                 return this.RedirectToAction("Error", "Home");
             }
