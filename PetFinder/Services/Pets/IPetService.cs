@@ -33,5 +33,9 @@ namespace PetFinder.Services.Pets
 
         ICollection<SpeciesCategoryServiceModel> GetSpecies();
 
+        bool SizeExists(int id);
+
+        bool SpeciesExists(int id);
+
     }
 }

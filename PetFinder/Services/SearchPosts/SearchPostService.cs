@@ -162,16 +162,6 @@ namespace PetFinder.Services.SearchPosts
             return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts, Cities = cities, };
         }
 
-        public IEnumerable<CityCategoryServiceModel> GetCities()
-        {
-            return this.context.Cities.Select(city => new CityCategoryServiceModel { Id = city.Id, Name = city.Name }).ToList();
-        }
-
-        public  IEnumerable<PetSelectServiceModel> GetPets(int ownerId)
-        {
-            return this.context.Pets.Where(searchPost => searchPost.OwnerId == ownerId).Select(pet => new PetSelectServiceModel { Id = pet.Id, Name = pet.Name }).ToList();
-        }
-
         private string CreatePet(string type, string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
         {
             return petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
@@ -264,6 +254,32 @@ namespace PetFinder.Services.SearchPosts
             this.context.SaveChanges();
 
             return true;
+        }
+
+        public IEnumerable<CityCategoryServiceModel> GetCities()
+        {
+            return this.context.Cities
+                .ProjectTo<CityCategoryServiceModel>(mapper.ConfigurationProvider).ToList();
+        }
+
+        public IEnumerable<PetSelectServiceModel> GetPets(int ownerId)
+        {
+            return this.context.Pets
+                .Where(searchPost => searchPost.OwnerId == ownerId)
+                .ProjectTo<PetSelectServiceModel>(mapper.ConfigurationProvider)
+                .ToList();
+        }
+
+        public bool CityExists(int id)
+        {
+            return this.context.Cities
+                .Any(city => city.Id == id);
+        }
+
+        public bool PetExists(string id)
+        {
+            return this.context.Pets
+                .Any(pet => pet.Id == id);
         }
     }
 }

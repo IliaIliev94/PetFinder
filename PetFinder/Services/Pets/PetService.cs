@@ -64,13 +64,17 @@ namespace PetFinder.Services.Pets
 
         public ICollection<SizeCategoryServiceModel> GetSizes()
         {
-            return this.context.Sizes.Select(size => new SizeCategoryServiceModel { Id = size.Id, Type = size.Type }).ToList();
+            return this.context.Sizes
+                .ProjectTo<SizeCategoryServiceModel>(mapper.ConfigurationProvider)
+                .ToList();
         }
 
         public ICollection<SpeciesCategoryServiceModel> GetSpecies()
         {
-            var speciesList = this.context.Species.Select(specie => new SpeciesCategoryServiceModel { Id = specie.Id, Name = specie.Name }).ToList();
-            speciesList.Reverse();
+            var speciesList = this.context.Species
+                .OrderByDescending(species => species.Id)
+                .ProjectTo<SpeciesCategoryServiceModel>(mapper.ConfigurationProvider)
+                .ToList();
 
             return speciesList;
         }
@@ -122,6 +126,18 @@ namespace PetFinder.Services.Pets
             this.context.SaveChanges();
 
             return true;
+        }
+
+        public bool SizeExists(int id)
+        {
+            return this.context.Sizes
+                .Any(size => size.Id == id);
+        }
+
+        public bool SpeciesExists(int id)
+        {
+            return this.context.Species
+                .Any(specie => specie.Id == id);
         }
     }
 }

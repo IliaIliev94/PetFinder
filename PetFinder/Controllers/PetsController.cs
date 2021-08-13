@@ -85,6 +85,16 @@ namespace PetFinder.Controllers
                 return this.BadRequest();
             }
 
+            if (!this.petService.SizeExists(pet.SizeId))
+            {
+                ModelState.AddModelError(nameof(pet.SizeId), "Size does not exist.");
+            }
+
+            if (!this.petService.SpeciesExists(pet.SpeciesId))
+            {
+                ModelState.AddModelError(nameof(pet.SpeciesId), "Species does not exist.");
+            }
+
             if (!ModelState.IsValid)
             {
                 pet.Sizes = this.petService.GetSizes();
@@ -134,6 +144,16 @@ namespace PetFinder.Controllers
             if (!this.ownerService.IsOwner(userId) || this.ownerService.GetOwnerId(userId) != pet.OwnerId)
             {
                 return this.BadRequest();
+            }
+
+            if(!this.petService.SizeExists(pet.SizeId))
+            {
+                ModelState.AddModelError(nameof(pet.SizeId), "Size does not exist.");
+            }
+
+            if(!this.petService.SpeciesExists(pet.SpeciesId))
+            {
+                ModelState.AddModelError(nameof(pet.SpeciesId), "Species does not exist.");
             }
 
             if (!ModelState.IsValid)

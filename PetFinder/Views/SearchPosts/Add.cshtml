@@ -2,104 +2,15 @@
 
 @{
     ViewData["Title"] = "Add Search Post";
+    ViewBag.Page = "Add";
 }
 
 <div class="row">
     <form class="offset-md-2 offset-lg-3 col-md-8 col-lg-6 g-3" method="post" asp-controller="SearchPosts" asp-action="Add">
         <h2 class="heading-margin text-center">@ViewData["Title"]</h2>
-        <div class="form-group">
-            <label asp-for="Title" class="form-label">Title</label>
-            <input asp-for="Title" type="text" class="form-control" id="title">
-            <span asp-validation-for="Title" class="small text-danger"></span>
-        </div>
+       
 
-
-        <div class="form-group">
-            <label asp-for="Description" class="form-label">Description</label>
-            <textarea asp-for="Description" type="text" class="form-control"></textarea>
-            <span asp-validation-for="Description" class="small text-danger"></span>
-        </div>
-
-
-        <div class="form-group">
-            @if (ViewBag.Type == "Found")
-            {
-                <label asp-for="DateLostFound" class="form-label">Date Found</label>
-            }
-            else
-            {
-                <label asp-for="DateLostFound" class="form-label">Date Lost</label>
-            }
-            <input asp-for="DateLostFound" type="date" name="name" class="form-control" />
-        </div>
-
-        @if (ViewBag.Type == "Lost")
-        {
-            <div class="form-group">
-                <label asp-for="PetId">Pet</label>
-                <select asp-for="PetId" class="form-control" id="trigger-select">
-                    <option value="0">Create new pet</option>
-                    @foreach (var pet in Model.Pets)
-                    {
-                        <option value="@pet.Id">@pet.Name</option>
-                    }
-                </select>
-            </div>
-        }
-
-        <div class="form-group">
-            <label asp-for="CityId">City</label>
-            <select asp-for="CityId" class="form-control">
-                @foreach (var city in Model.Cities)
-                {
-                    <option value="@city.Id">@city.Name</option>
-                }
-            </select>
-        </div>
-
-
-
-        <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
-
-        <div class="" id="trigger-form">
-            <h2 class="heading-margin text-center">Add Pet Data</h2>
-            <div class="form-group">
-                <label asp-for="Pet.Name" class="form-label">Name</label>
-                <input asp-for="Pet.Name" type="text" class="form-control" id="name">
-                <span asp-validation-for="Pet.Name" class="small text-danger"></span>
-            </div>
-
-
-            <div class="form-group">
-                <label asp-for="Pet.ImageUrl" class="form-label">Image URL</label>
-                <input asp-for="Pet.ImageUrl" type="text" class="form-control">
-                <span asp-validation-for="Pet.ImageUrl" class="small text-danger"></span>
-            </div>
-
-
-
-            <div class="form-group">
-                <label asp-for="Pet.SizeId">Size</label>
-                <select asp-for="Pet.SizeId" class="form-control">
-                    @foreach (var size in Model.Pet.Sizes)
-                    {
-                        <option value="@size.Id">@size.Type</option>
-                    }
-                </select>
-            </div>
-
-
-
-            <div class="form-group">
-                <label asp-for="Pet.SpeciesId">Species</label>
-                <select asp-for="Pet.SpeciesId" class="form-control">
-                    @foreach (var specie in Model.Pet.Species)
-                    {
-                        <option value="@specie.Id">@specie.Name</option>
-                    }
-                </select>
-            </div>
-        </div>
+       <partial name="_SearchPostsFormPartial" model="@Model"></partial>
 
 
         <button type="submit" class="btn btn-primary mt-3 col-sm-12 col-md-auto">Submit</button>

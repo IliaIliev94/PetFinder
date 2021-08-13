@@ -16,5 +16,7 @@ namespace PetFinder.Services.Pets.Models
         public string Species { get; init; }
 
         public string Size { get; init; }
+
+        public int OwnerId { get; init; }
     }
 }

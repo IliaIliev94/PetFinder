@@ -42,6 +42,12 @@ namespace PetFinder.Infrastructure
                 .ForMember(x => x.Size, y => y.MapFrom(s => s.Size.Type));
 
             this.CreateMap<Pet, PetEditServiceModel>();
+
+            this.CreateMap<City, CityCategoryServiceModel>();
+            this.CreateMap<Pet, PetSelectServiceModel>();
+
+            this.CreateMap<Size, SizeCategoryServiceModel>();
+            this.CreateMap<Specie, SpeciesCategoryServiceModel>();
         }
     }
 }

@@ -62,5 +62,9 @@ namespace PetFinder.Services.SearchPosts
         IEnumerable<CityCategoryServiceModel> GetCities();
 
         IEnumerable<PetSelectServiceModel> GetPets(int ownerId);
+
+        bool CityExists(int id);
+
+        bool PetExists(string id);
     }
 }

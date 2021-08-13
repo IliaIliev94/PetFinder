@@ -117,12 +117,24 @@ namespace PetFinder.Controllers
                 ModelState.Remove("Pet.ImageUrl");
             }
 
+            if(!searchPostService.CityExists(searchPost.CityId))
+            {
+                this.ModelState.AddModelError(nameof(searchPost.CityId), "City does not exist.");
+            }
+
+            if(searchPost.PetId != "0" && !this.searchPostService.PetExists(searchPost.PetId))
+            {
+                this.ModelState.AddModelError(nameof(searchPost.PetId), "Pet does not exist.");
+            }
+
             if(!ModelState.IsValid)
             {
                 searchPost.Cities = this.searchPostService.GetCities();
                 searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
                 searchPost.Pet.Species = this.petService.GetSpecies();
                 searchPost.Pet.Sizes = this.petService.GetSizes();
+
+                ViewBag.Type = searchPost.SearchPostType;
 
                 return this.View(searchPost);
             }
@@ -177,7 +189,18 @@ namespace PetFinder.Controllers
         [Authorize]
         public IActionResult Edit(AddSearchPostFormModel searchPost)
         {
-            if(!ModelState.IsValid)
+
+            if (searchPost.SearchPostType == "Lost" && searchPost.PetId != "0")
+            {
+                ModelState.Remove("Pet.ImageUrl");
+            }
+
+            if (!searchPostService.CityExists(searchPost.CityId))
+            {
+                this.ModelState.AddModelError(nameof(searchPost.CityId), "City does not exist.");
+            }
+
+            if (!ModelState.IsValid)
             {
                 searchPost.Cities = this.searchPostService.GetCities();
                 searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
@@ -217,6 +240,8 @@ namespace PetFinder.Controllers
 
             return this.RedirectToAction("Mine");
         }
+
+
         private void SetAllSearchPostQueryRsponseData(AllSearchPostsViewModel query, SearchPostQueryServiceModel queryResult)
         {
             query.PetSizes = queryResult.PetSizes;
@@ -229,18 +254,11 @@ namespace PetFinder.Controllers
 
         private AddPetFormModel GetEditPetData(string id)
         {
-            var pet = this.petService.GetEditData(id);
+            var pet = this.mapper.Map<AddPetFormModel>(this.petService.GetEditData(id));
+            pet.Sizes = this.petService.GetSizes();
+            pet.Species = this.petService.GetSpecies();
 
-            return new AddPetFormModel
-            {
-                Id = id,
-                Name = pet.Name,
-                ImageUrl = pet.ImageUrl,
-                SizeId = pet.SizeId,
-                Sizes = this.petService.GetSizes(),
-                SpeciesId = pet.SpeciesId,
-                Species = this.petService.GetSpecies(),
-            };
+            return pet;
         }
 
     }
