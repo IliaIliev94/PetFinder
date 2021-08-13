@@ -171,7 +171,7 @@ namespace PetFinder.Controllers
                 return this.RedirectToAction("Error", "Home");
             }
 
-            if(searchPost.UserId != this.User.GetId())
+            if(searchPost.UserId != this.User.GetId() && !User.IsAdmin())
             {
                 return this.BadRequest();
             }
@@ -179,7 +179,10 @@ namespace PetFinder.Controllers
             var searchPostFormModel = this.mapper.Map<AddSearchPostFormModel>(searchPost);
 
             searchPostFormModel.Cities = this.searchPostService.GetCities();
-            searchPostFormModel.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
+            if(!this.User.IsAdmin())
+            {
+                searchPostFormModel.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
+            }
             searchPostFormModel.Pet = searchPost.Type == "Lost" ? null : GetEditPetData(searchPost.PetId);
 
             return this.View(searchPostFormModel);
@@ -190,12 +193,17 @@ namespace PetFinder.Controllers
         public IActionResult Edit(AddSearchPostFormModel searchPost)
         {
 
+            if(searchPost.UserId != this.User.GetId() && !this.User.IsAdmin())
+            {
+                return this.BadRequest();
+            }
+
             if (searchPost.SearchPostType == "Lost" && searchPost.PetId != "0")
             {
                 ModelState.Remove("Pet.ImageUrl");
             }
 
-            if (!searchPostService.CityExists(searchPost.CityId))
+            if (!searchPostService.CityExists(searchPost.CityId) && !User.IsAdmin())
             {
                 this.ModelState.AddModelError(nameof(searchPost.CityId), "City does not exist.");
             }
@@ -203,21 +211,32 @@ namespace PetFinder.Controllers
             if (!ModelState.IsValid)
             {
                 searchPost.Cities = this.searchPostService.GetCities();
-                searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
+                if(!this.User.IsAdmin())
+                {
+                    searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
+                }
+                
                 return this.View(searchPost);
             }
 
             var isEditSuccessfull = false;
 
-            if(searchPost.Pet == null)
+            if(this.User.IsAdmin())
             {
-                isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description, searchPost.CityId, searchPost.DateLostFound, searchPost.PetId);
+                isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description, 0, searchPost.DateLostFound, null);
             }
             else
             {
-                isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description, 
-                    searchPost.CityId, searchPost.DateLostFound, searchPost.Pet.Name, 
-                    searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId);
+                if (searchPost.Pet == null)
+                {
+                    isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description, searchPost.CityId, searchPost.DateLostFound, searchPost.PetId);
+                }
+                else
+                {
+                    isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description,
+                        searchPost.CityId, searchPost.DateLostFound, searchPost.Pet.Name,
+                        searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId);
+                }
             }
 
             if(!isEditSuccessfull)
@@ -231,11 +250,17 @@ namespace PetFinder.Controllers
         [Authorize]
         public IActionResult Delete(string id)
         {
-            var isDeleteSuccessfull = this.searchPostService.Delete(id, this.User.GetId());
 
-            if(!isDeleteSuccessfull)
+            var isDeleteSuccessfull = this.searchPostService.Delete(id, this.User.GetId(), this.User.IsAdmin());
+
+            if(!isDeleteSuccessfull.Item1)
             {
                 return this.BadRequest();
+            }
+
+            if(this.User.IsAdmin())
+            {
+                return this.RedirectToAction("All", "SearchPosts", new { Type = isDeleteSuccessfull.Item2 });
             }
 
             return this.RedirectToAction("Mine");

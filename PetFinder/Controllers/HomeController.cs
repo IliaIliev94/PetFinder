@@ -14,13 +14,11 @@ namespace PetFinder.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IStatisticsService statistics;
         private readonly ApplicationDbContext context;
 
-        public HomeController(ILogger<HomeController> logger, IStatisticsService statistics, ApplicationDbContext context)
+        public HomeController(IStatisticsService statistics, ApplicationDbContext context)
         {
-            this._logger = logger;
             this.statistics = statistics;
             this.context = context;
         }

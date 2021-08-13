@@ -1,32 +1,34 @@
 ﻿@model AddSearchPostFormModel
 
 
-    <div class="form-group">
-        <label asp-for="Title" class="form-label"></label>
-        <input asp-for="Title" type="text" class="form-control" id="title" value="@Model.Title">
-        <span asp-validation-for="Title" class="small text-danger"></span>
-    </div>
+<div class="form-group">
+    <label asp-for="Title" class="form-label"></label>
+    <input asp-for="Title" type="text" class="form-control" id="title" value="@Model.Title">
+    <span asp-validation-for="Title" class="small text-danger"></span>
+</div>
 
 
-    <div class="form-group">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" type="text" class="form-control">@Model.Description</textarea>
-        <span asp-validation-for="Description" class="small text-danger"></span>
-    </div>
+<div class="form-group">
+    <label asp-for="Description" class="form-label"></label>
+    <textarea asp-for="Description" type="text" class="form-control">@Model.Description</textarea>
+    <span asp-validation-for="Description" class="small text-danger"></span>
+</div>
 
 
-    <div class="form-group">
-        @if (ViewBag.Type == "Found")
-        {
-            <label asp-for="DateLostFound" class="form-label">Date Found</label>
-        }
-        else
-        {
-            <label asp-for="DateLostFound" class="form-label">Date Lost</label>
-        }
-        <input asp-for="DateLostFound" type="date" name="name" class="form-control" value="@Model.DateLostFound" />
-    </div>
+<div class="form-group">
+    @if (ViewBag.Type == "Found")
+    {
+        <label asp-for="DateLostFound" class="form-label">Date Found</label>
+    }
+    else
+    {
+        <label asp-for="DateLostFound" class="form-label">Date Lost</label>
+    }
+    <input asp-for="DateLostFound" type="date" name="name" class="form-control" value="@Model.DateLostFound" />
+</div>
 
+@if (!this.User.IsAdmin())
+{
     <div class="form-group">
         <label asp-for="CityId">City</label>
         <select asp-for="CityId" class="form-control">
@@ -167,4 +169,6 @@
 
         <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
     }
+}
+
 

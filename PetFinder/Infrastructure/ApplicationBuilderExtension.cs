@@ -4,6 +4,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using PetFinder.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System;
+
+using static PetFinder.WebConstantscs;
 
 namespace PetFinder.Infrastructure
 {
@@ -14,7 +19,9 @@ namespace PetFinder.Infrastructure
 
             var scopedServices = app.ApplicationServices.CreateScope();
 
-            var data = scopedServices.ServiceProvider.GetService<ApplicationDbContext>();
+            var serviceProvider = scopedServices.ServiceProvider;
+
+            var data = serviceProvider.GetRequiredService<ApplicationDbContext>();
 
             data.Database.Migrate();
 
@@ -25,6 +32,8 @@ namespace PetFinder.Infrastructure
             SeedSpecies(data);
 
             SeedSearchPostTypes(data);
+
+            SeedAdministrator(serviceProvider);
 
             return app;
         }
@@ -130,6 +139,41 @@ namespace PetFinder.Infrastructure
             });
 
             data.SaveChanges();
+        }
+
+        private static void SeedAdministrator(IServiceProvider services)
+        {
+            var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+            Task
+                .Run(async () => 
+                { 
+                    if(await roleManager.RoleExistsAsync(AdministratorRoleName))
+                    {
+                        return;
+                    }
+
+                        var role = new IdentityRole { Name = AdministratorRoleName };
+
+                        await roleManager.CreateAsync(role);
+
+                        const string adminEmail = "admin@pf.com";
+                        const string adminPassword = "admin12";
+
+                        var user = new IdentityUser
+                        {
+                            Email = adminEmail,
+                            UserName = "Admin",
+                        };
+
+                        await userManager.CreateAsync(user, adminPassword);
+
+                        await userManager.AddToRoleAsync(user, role.Name);
+
+                })
+                .GetAwaiter()
+                .GetResult();
         }
     }
 }

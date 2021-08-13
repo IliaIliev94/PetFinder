@@ -196,9 +196,16 @@ namespace PetFinder.Services.SearchPosts
 
             searchPost.Title = title;
             searchPost.Description = description;
-            searchPost.CityId = cityId;
             searchPost.DateLostFound = dateLostFound;
-            searchPost.PetId = petId;
+            if(cityId != 0)
+            {
+                searchPost.CityId = cityId;
+            }
+            if(!string.IsNullOrWhiteSpace(petId))
+            {
+                searchPost.PetId = petId;
+            }
+            
 
             this.context.SaveChanges();
 
@@ -228,18 +235,24 @@ namespace PetFinder.Services.SearchPosts
                 .ToList();
         }
 
-        public bool Delete(string id, string userId)
+        public Tuple<bool, string> Delete(string id, string userId, bool userIsAdmin)
         {
             var searchPost = this.context.SearchPosts.Include(searchPost => searchPost.SearchPostType).FirstOrDefault(searchPost => searchPost.Id == id);
+            var type = searchPost.SearchPostType.Name;
 
-            if(searchPost == null || searchPost.UserId != userId)
+            if(searchPost == null)
             {
-                return false;
+                return Tuple.Create(false, "");
+            }
+
+            if(searchPost.UserId != userId && !userIsAdmin)
+            {
+                return Tuple.Create(false, "");
             }
 
             var petId = String.Empty;
 
-            if(searchPost.SearchPostType.Name == "Found")
+            if(type == "Found")
             {
                 petId = searchPost.PetId;
             }
@@ -253,7 +266,7 @@ namespace PetFinder.Services.SearchPosts
 
             this.context.SaveChanges();
 
-            return true;
+            return Tuple.Create(true, type);
         }
 
         public IEnumerable<CityCategoryServiceModel> GetCities()

@@ -51,7 +51,7 @@ namespace PetFinder.Services.SearchPosts
             int petSpeciesId,
             int petSizeId);
 
-        bool Delete(string id, string userId);
+        Tuple<bool, string> Delete(string id, string userId, bool userIsAdmin);
 
         IEnumerable<SearchPostServiceModel> GetSearchPostsById(string id);
 

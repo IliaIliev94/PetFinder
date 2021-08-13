@@ -19,7 +19,7 @@
     <h5 class="text-center">@Model.City</h5>
     <p class="text-justify mt-4">@Model.Description</p>
     <div class="text-center mt-5">
-        @if (this.User.GetId() == Model.UserId)
+        @if (this.User.GetId() == Model.UserId || this.User.IsInRole(WebConstantscs.AdministratorRoleName))
         {
             <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
             <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
