@@ -22,5 +22,7 @@ namespace PetFinder.Services.SearchPosts.Models
         public string PetSpecies { get; init; }
 
         public string UserId { get; init; }
+
+        public string PhoneNumber { get; init; }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using PetFinder.Data.Models;
 using PetFinder.Models.Pets;
+using PetFinder.Models.Resources;
 using PetFinder.Models.SearchPosts;
 using PetFinder.Services.Pets.Models;
+using PetFinder.Services.Resources.Models;
 using PetFinder.Services.SearchPosts.Models;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,8 @@ namespace PetFinder.Infrastructure
                 .ForMember(x => x.ImageUrl, y => y.MapFrom(s => s.Pet.ImageUrl))
                 .ForMember(x => x.City, y => y.MapFrom(s => s.City.Name))
                 .ForMember(x => x.PetSpecies, y => y.MapFrom(s => s.Pet.Species.Name))
-                .ForMember(x => x.PetName, y => y.MapFrom(s => s.Pet.Name));
+                .ForMember(x => x.PetName, y => y.MapFrom(s => s.Pet.Name))
+                .ForMember(x => x.PhoneNumber, y => y.MapFrom(s => s.Pet.Owner.PhoneNumber));
 
             this.CreateMap<SearchPost, SearchPostEditServiceModel>()
                 .ForMember(x => x.Type, y => y.MapFrom(s => s.SearchPostType.Name))
@@ -48,6 +51,14 @@ namespace PetFinder.Infrastructure
 
             this.CreateMap<Size, SizeCategoryServiceModel>();
             this.CreateMap<Specie, SpeciesCategoryServiceModel>();
+
+            this.CreateMap<ResourcePost, ResourcePostServiceModel>()
+                .ForMember(x => x.Description, y =>  y.MapFrom(s => s.Description.Substring(0, (Math.Min(100, s.Description.Length)))));
+
+            this.CreateMap<ResourcePost, ResourcePostDetailsServiceModel>();
+            this.CreateMap<ResourcePost, ResourcePostEditServiceModel>();
+            this.CreateMap<ResourcePostEditServiceModel, AddResourcePostFormModel>();
+
         }
     }
 }

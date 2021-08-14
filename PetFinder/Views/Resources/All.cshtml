@@ -1,0 +1,14 @@
+﻿@model IEnumerable<ResourcePostServiceModel>
+
+@{
+    ViewData["Title"] = "Resources";
+}
+<h2 class="text-center heading-margin">@ViewData["Title"]</h2>
+@if (User.IsAdmin())
+{
+<div class="text-center mb-5">
+    <a asp-controller="Resources" asp-action="Add" class="btn btn-primary">Add resource posts!</a>
+</div>
+    
+}
+<partial name="_ResourcePostPartial" model="@Model">

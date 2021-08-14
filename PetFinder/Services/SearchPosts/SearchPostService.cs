@@ -294,5 +294,13 @@ namespace PetFinder.Services.SearchPosts
             return this.context.Pets
                 .Any(pet => pet.Id == id);
         }
+
+        public string GetUserId(string id)
+        {
+            return this.context
+                .SearchPosts
+                .FirstOrDefault(searchPost => searchPost.Id == id)
+                .UserId;
+        }
     }
 }

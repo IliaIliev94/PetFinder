@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-using static PetFinder.Data.DataConstraints.SearchPost;
+using static PetFinder.Data.DataConstraints.ResourcePost;
 
 namespace PetFinder.Data.Models
 {
@@ -17,12 +17,15 @@ namespace PetFinder.Data.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        [StringLength(MaxTitleLength, MinimumLength = MinTitleLength)]
+        [MaxLength(MaxTitleLength)]
         public string Title { get; set; }
 
         [Required]
         [MinLength(MinDescriptionLength)]
-        public string Descripton { get; set; }
+        public string Description { get; set; }
+
+        [Required]
+        public string ImageUrl { get; set; }
 
         public DateTime CreatedOn { get; set; }
 

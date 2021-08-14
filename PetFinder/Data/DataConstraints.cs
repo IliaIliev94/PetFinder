@@ -33,5 +33,11 @@ namespace PetFinder.Data
             public const int PhoneMinLength = 6;
             public const int PhoneMaxLength = 30;
         }
+
+        public class ResourcePost
+        {
+            public const int MaxTitleLength = 50;
+            public const int MinDescriptionLength = 10;
+        }
     }
 }

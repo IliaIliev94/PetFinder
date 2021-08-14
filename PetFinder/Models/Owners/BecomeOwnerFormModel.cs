@@ -17,6 +17,7 @@ namespace PetFinder.Models.Owners
         [Required]
         [StringLength(PhoneMaxLength, MinimumLength = PhoneMinLength)]
         [Display(Name = "Phone Number")]
+        [Phone]
         public string PhoneNumber { get; init; }
     }
 }

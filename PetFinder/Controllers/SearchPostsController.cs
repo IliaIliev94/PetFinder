@@ -92,7 +92,7 @@ namespace PetFinder.Controllers
 
             return this.View(new AddSearchPostFormModel 
             { 
-                Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId())),
+                Pets = this.ownerService.IsOwner(this.User.GetId()) ? this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId())) : null,
                 Cities = this.searchPostService.GetCities(),
                 Pet = new AddPetFormModel
                 {
@@ -171,7 +171,7 @@ namespace PetFinder.Controllers
                 return this.RedirectToAction("Error", "Home");
             }
 
-            if(searchPost.UserId != this.User.GetId() && !User.IsAdmin())
+            if(this.searchPostService.GetUserId(id) != this.User.GetId() && !User.IsAdmin())
             {
                 return this.BadRequest();
             }
@@ -193,7 +193,7 @@ namespace PetFinder.Controllers
         public IActionResult Edit(AddSearchPostFormModel searchPost)
         {
 
-            if(searchPost.UserId != this.User.GetId() && !this.User.IsAdmin())
+            if(this.searchPostService.GetUserId(searchPost.Id) != this.User.GetId() && !this.User.IsAdmin())
             {
                 return this.BadRequest();
             }

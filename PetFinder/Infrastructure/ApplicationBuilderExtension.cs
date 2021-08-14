@@ -33,9 +33,78 @@ namespace PetFinder.Infrastructure
 
             SeedSearchPostTypes(data);
 
+            SeedResourcePosts(data);
+
             SeedAdministrator(serviceProvider);
 
             return app;
+        }
+
+        private static void SeedResourcePosts(ApplicationDbContext data)
+        {
+            if(data.ResourcePosts.Any())
+            {
+                return;
+            }
+
+            data.ResourcePosts.AddRange(new[]
+            {
+
+                new ResourcePost
+                {
+                    Title = "Post1",
+                    CreatedOn = DateTime.UtcNow,
+                    ImageUrl = "https://www.thesprucepets.com/thmb/d-OLDGZ8-cDohlNuKdOC1CIkmng=/1000x1000/smart/filters:no_upscale()/GettyImages-962608834-fd496cfed51e4d2abe61c0af864fa681.jpg",
+                    Description = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum dui velit, ut fermentum magna condimentum sed. Nulla accumsan orci diam, eu commodo tellus congue vitae. Etiam non ullamcorper mi. Maecenas quis vulputate magna. Sed finibus laoreet fringilla. Nam finibus tincidunt felis, nec condimentum neque viverra vitae. Nunc molestie elit nec gravida euismod. Pellentesque quis commodo nunc. Quisque efficitur vehicula enim, vel eleifend metus sollicitudin at. Nunc at odio leo. Integer nec orci id massa euismod pretium.
+
+                                Praesent imperdiet mi quis vestibulum pellentesque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquam est eget diam gravida, quis consequat ligula ullamcorper. Quisque vestibulum mollis leo, id sodales enim dictum sit amet. Sed dapibus velit id nisi tristique efficitur nec vel ante. Duis ultricies mattis molestie. Praesent at velit tincidunt, pharetra elit non, auctor velit. Vivamus vel gravida lectus. Integer ultricies velit et ultricies tincidunt. Aenean scelerisque ut lectus a ullamcorper. Vivamus dapibus imperdiet arcu eu lobortis.
+
+                                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer tempus augue eros, non cursus nisl blandit a. Nunc ullamcorper quam at dolor auctor, sit amet porta sem porta. Suspendisse vel molestie augue. Aenean quis est sit amet magna hendrerit tristique. Suspendisse sed enim justo. Morbi sagittis tempor nunc sed suscipit.
+
+                                Pellentesque et accumsan magna, eu tempus ligula. Donec varius ante urna, non scelerisque dolor convallis vitae. Duis commodo egestas lorem, et egestas nibh laoreet vel. Nullam auctor luctus vulputate. Aliquam erat volutpat. Curabitur libero turpis, aliquet volutpat facilisis et, ornare eu massa. Fusce et vehicula sem, sed bibendum libero. Sed non interdum dolor. Praesent lectus eros, convallis non convallis eu, laoreet volutpat velit. Fusce aliquam, magna laoreet molestie gravida, lectus quam feugiat mauris, eleifend mattis justo ex quis eros. Aliquam ultricies metus a velit accumsan posuere. Aenean pulvinar ligula. "
+                },
+                 new ResourcePost
+                {
+                    Title = "Post2",
+                    CreatedOn = DateTime.UtcNow,
+                    ImageUrl = "https://www.thesprucepets.com/thmb/d-OLDGZ8-cDohlNuKdOC1CIkmng=/1000x1000/smart/filters:no_upscale()/GettyImages-962608834-fd496cfed51e4d2abe61c0af864fa681.jpg",
+                    Description = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum dui velit, ut fermentum magna condimentum sed. Nulla accumsan orci diam, eu commodo tellus congue vitae. Etiam non ullamcorper mi. Maecenas quis vulputate magna. Sed finibus laoreet fringilla. Nam finibus tincidunt felis, nec condimentum neque viverra vitae. Nunc molestie elit nec gravida euismod. Pellentesque quis commodo nunc. Quisque efficitur vehicula enim, vel eleifend metus sollicitudin at. Nunc at odio leo. Integer nec orci id massa euismod pretium.
+
+                                Praesent imperdiet mi quis vestibulum pellentesque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquam est eget diam gravida, quis consequat ligula ullamcorper. Quisque vestibulum mollis leo, id sodales enim dictum sit amet. Sed dapibus velit id nisi tristique efficitur nec vel ante. Duis ultricies mattis molestie. Praesent at velit tincidunt, pharetra elit non, auctor velit. Vivamus vel gravida lectus. Integer ultricies velit et ultricies tincidunt. Aenean scelerisque ut lectus a ullamcorper. Vivamus dapibus imperdiet arcu eu lobortis.
+
+                                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer tempus augue eros, non cursus nisl blandit a. Nunc ullamcorper quam at dolor auctor, sit amet porta sem porta. Suspendisse vel molestie augue. Aenean quis est sit amet magna hendrerit tristique. Suspendisse sed enim justo. Morbi sagittis tempor nunc sed suscipit.
+
+                                Pellentesque et accumsan magna, eu tempus ligula. Donec varius ante urna, non scelerisque dolor convallis vitae. Duis commodo egestas lorem, et egestas nibh laoreet vel. Nullam auctor luctus vulputate. Aliquam erat volutpat. Curabitur libero turpis, aliquet volutpat facilisis et, ornare eu massa. Fusce et vehicula sem, sed bibendum libero. Sed non interdum dolor. Praesent lectus eros, convallis non convallis eu, laoreet volutpat velit. Fusce aliquam, magna laoreet molestie gravida, lectus quam feugiat mauris, eleifend mattis justo ex quis eros. Aliquam ultricies metus a velit accumsan posuere. Aenean pulvinar ligula. "
+                },
+                  new ResourcePost
+                {
+                    Title = "Post3",
+                    CreatedOn = DateTime.UtcNow,
+                    ImageUrl = "https://www.thesprucepets.com/thmb/d-OLDGZ8-cDohlNuKdOC1CIkmng=/1000x1000/smart/filters:no_upscale()/GettyImages-962608834-fd496cfed51e4d2abe61c0af864fa681.jpg",
+                    Description = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum dui velit, ut fermentum magna condimentum sed. Nulla accumsan orci diam, eu commodo tellus congue vitae. Etiam non ullamcorper mi. Maecenas quis vulputate magna. Sed finibus laoreet fringilla. Nam finibus tincidunt felis, nec condimentum neque viverra vitae. Nunc molestie elit nec gravida euismod. Pellentesque quis commodo nunc. Quisque efficitur vehicula enim, vel eleifend metus sollicitudin at. Nunc at odio leo. Integer nec orci id massa euismod pretium.
+
+                                Praesent imperdiet mi quis vestibulum pellentesque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquam est eget diam gravida, quis consequat ligula ullamcorper. Quisque vestibulum mollis leo, id sodales enim dictum sit amet. Sed dapibus velit id nisi tristique efficitur nec vel ante. Duis ultricies mattis molestie. Praesent at velit tincidunt, pharetra elit non, auctor velit. Vivamus vel gravida lectus. Integer ultricies velit et ultricies tincidunt. Aenean scelerisque ut lectus a ullamcorper. Vivamus dapibus imperdiet arcu eu lobortis.
+
+                                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer tempus augue eros, non cursus nisl blandit a. Nunc ullamcorper quam at dolor auctor, sit amet porta sem porta. Suspendisse vel molestie augue. Aenean quis est sit amet magna hendrerit tristique. Suspendisse sed enim justo. Morbi sagittis tempor nunc sed suscipit.
+
+                                Pellentesque et accumsan magna, eu tempus ligula. Donec varius ante urna, non scelerisque dolor convallis vitae. Duis commodo egestas lorem, et egestas nibh laoreet vel. Nullam auctor luctus vulputate. Aliquam erat volutpat. Curabitur libero turpis, aliquet volutpat facilisis et, ornare eu massa. Fusce et vehicula sem, sed bibendum libero. Sed non interdum dolor. Praesent lectus eros, convallis non convallis eu, laoreet volutpat velit. Fusce aliquam, magna laoreet molestie gravida, lectus quam feugiat mauris, eleifend mattis justo ex quis eros. Aliquam ultricies metus a velit accumsan posuere. Aenean pulvinar ligula. "
+                },
+                   new ResourcePost
+                {
+                    Title = "Post4",
+                    CreatedOn = DateTime.UtcNow,
+                    ImageUrl = "https://www.thesprucepets.com/thmb/d-OLDGZ8-cDohlNuKdOC1CIkmng=/1000x1000/smart/filters:no_upscale()/GettyImages-962608834-fd496cfed51e4d2abe61c0af864fa681.jpg",
+                    Description = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum dui velit, ut fermentum magna condimentum sed. Nulla accumsan orci diam, eu commodo tellus congue vitae. Etiam non ullamcorper mi. Maecenas quis vulputate magna. Sed finibus laoreet fringilla. Nam finibus tincidunt felis, nec condimentum neque viverra vitae. Nunc molestie elit nec gravida euismod. Pellentesque quis commodo nunc. Quisque efficitur vehicula enim, vel eleifend metus sollicitudin at. Nunc at odio leo. Integer nec orci id massa euismod pretium.
+
+                                Praesent imperdiet mi quis vestibulum pellentesque. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus aliquam est eget diam gravida, quis consequat ligula ullamcorper. Quisque vestibulum mollis leo, id sodales enim dictum sit amet. Sed dapibus velit id nisi tristique efficitur nec vel ante. Duis ultricies mattis molestie. Praesent at velit tincidunt, pharetra elit non, auctor velit. Vivamus vel gravida lectus. Integer ultricies velit et ultricies tincidunt. Aenean scelerisque ut lectus a ullamcorper. Vivamus dapibus imperdiet arcu eu lobortis.
+
+                                Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer tempus augue eros, non cursus nisl blandit a. Nunc ullamcorper quam at dolor auctor, sit amet porta sem porta. Suspendisse vel molestie augue. Aenean quis est sit amet magna hendrerit tristique. Suspendisse sed enim justo. Morbi sagittis tempor nunc sed suscipit.
+
+                                Pellentesque et accumsan magna, eu tempus ligula. Donec varius ante urna, non scelerisque dolor convallis vitae. Duis commodo egestas lorem, et egestas nibh laoreet vel. Nullam auctor luctus vulputate. Aliquam erat volutpat. Curabitur libero turpis, aliquet volutpat facilisis et, ornare eu massa. Fusce et vehicula sem, sed bibendum libero. Sed non interdum dolor. Praesent lectus eros, convallis non convallis eu, laoreet volutpat velit. Fusce aliquam, magna laoreet molestie gravida, lectus quam feugiat mauris, eleifend mattis justo ex quis eros. Aliquam ultricies metus a velit accumsan posuere. Aenean pulvinar ligula. "
+                }
+            });
+
+            data.SaveChanges();
         }
 
         private static void SeedCities(ApplicationDbContext data)

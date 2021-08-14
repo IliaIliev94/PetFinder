@@ -27,8 +27,7 @@
     <input asp-for="DateLostFound" type="date" name="name" class="form-control" value="@Model.DateLostFound" />
 </div>
 
-@if (!this.User.IsAdmin())
-{
+
     <div class="form-group">
         <label asp-for="CityId">City</label>
         <select asp-for="CityId" class="form-control">
@@ -101,7 +100,7 @@
             </div>
         </div>
     }
-    else
+    @if(ViewBag.Page == "Edit" && !this.User.IsAdmin())
     {
         @if (Model.Pet == null)
         {
@@ -169,6 +168,6 @@
 
         <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
     }
-}
+
 
 

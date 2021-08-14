@@ -28,6 +28,5 @@ namespace PetFinder.Services.SearchPosts.Models
 
         public PetEditServiceModel Pet { get; set; }
 
-        public string UserId { get; init; }
     }
 }

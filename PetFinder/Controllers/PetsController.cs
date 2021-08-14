@@ -26,12 +26,12 @@ namespace PetFinder.Controllers
         public IActionResult All()
         {
 
-            if(!this.ownerService.IsOwner(this.User.GetId()))
+            if(!this.User.IsAdmin() && !this.ownerService.IsOwner(this.User.GetId()))
             {
                 return this.BadRequest();
             }
 
-            var pets = this.petService.All(this.ownerService.GetOwnerId(this.User.GetId()));
+            var pets = this.User.IsAdmin() ? this.petService.All() : this.petService.All(this.ownerService.GetOwnerId(this.User.GetId()));
 
             return this.View(pets);
         }
@@ -40,7 +40,7 @@ namespace PetFinder.Controllers
         public IActionResult Details(string id)
         {
 
-            if (!this.ownerService.IsOwner(this.User.GetId()))
+            if (!this.User.IsAdmin() && !this.ownerService.IsOwner(this.User.GetId()))
             {
                 return this.BadRequest();
             }
@@ -108,7 +108,7 @@ namespace PetFinder.Controllers
 
             
 
-            return this.RedirectToAction("All");
+            return this.RedirectToAction("Details", new { Id = newPet });
         }
 
         [Authorize]
@@ -123,7 +123,7 @@ namespace PetFinder.Controllers
                 return this.RedirectToAction("Error", "Home");
             }
 
-            if (!this.ownerService.IsOwner(userId) || this.ownerService.GetOwnerId(userId) != pet.OwnerId)
+            if (!this.User.IsAdmin() && (!this.ownerService.IsOwner(userId) || this.ownerService.GetOwnerId(userId) != this.petService.GetOwnerId(id)))
             {
                 return this.BadRequest();
             }
@@ -141,7 +141,7 @@ namespace PetFinder.Controllers
         {
             var userId = this.User.GetId();
 
-            if (!this.ownerService.IsOwner(userId) || this.ownerService.GetOwnerId(userId) != pet.OwnerId)
+            if (!this.User.IsAdmin() && (!this.ownerService.IsOwner(userId) || this.ownerService.GetOwnerId(userId) != this.petService.GetOwnerId(pet.Id)))
             {
                 return this.BadRequest();
             }
@@ -182,11 +182,11 @@ namespace PetFinder.Controllers
         [Authorize]
         public IActionResult Delete(string id)
         {
-            var isDeleteSuccessfull = this.petService.Delete(id, this.ownerService.GetOwnerId(this.User.GetId()));
+            var isDeleteSuccessfull = this.User.IsAdmin() ? this.petService.Delete(id) : this.petService.Delete(id, this.ownerService.GetOwnerId(this.User.GetId()));
 
             if(!isDeleteSuccessfull)
             {
-                return this.BadRequest();
+                return this.RedirectToAction("Error", "Home");
             }
 
             return this.RedirectToAction("All");

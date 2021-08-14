@@ -11,6 +11,7 @@ using PetFinder.Data;
 using PetFinder.Infrastructure;
 using PetFinder.Services.Owners;
 using PetFinder.Services.Pets;
+using PetFinder.Services.Resources;
 using PetFinder.Services.SearchPosts;
 using PetFinder.Services.Statistics;
 
@@ -57,6 +58,8 @@ namespace PetFinder
             services.AddTransient<IPetService, PetService>();
 
             services.AddTransient<IOwnerService, OwnerService>();
+
+            services.AddTransient<IResourcesService, ResourcesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

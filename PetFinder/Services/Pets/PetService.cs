@@ -45,6 +45,14 @@ namespace PetFinder.Services.Pets
             return pet.Id;
         }
 
+        public IEnumerable<PetServiceModel> All()
+        {
+            return this.context
+                .Pets
+                .ProjectTo<PetServiceModel>(mapper.ConfigurationProvider)
+                .ToList();
+        }
+
         public IEnumerable<PetServiceModel> All(int ownerId)
         {
             return this.context
@@ -112,11 +120,11 @@ namespace PetFinder.Services.Pets
                 .FirstOrDefault();
         }
 
-        public bool Delete(string id, int ownerId)
+        public bool Delete(string id)
         {
             var pet = this.context.Pets.FirstOrDefault(pet => pet.Id == id);
 
-            if(pet == null || pet.OwnerId != ownerId || context.SearchPosts.Any(searchPost => searchPost.PetId == pet.Id))
+            if(pet == null)
             {
                 return false;
             }
@@ -124,6 +132,20 @@ namespace PetFinder.Services.Pets
             this.context.Pets.Remove(pet);
 
             this.context.SaveChanges();
+
+            return true;
+        }
+
+        public bool Delete(string id, int ownerId)
+        {
+            var pet = this.context.Pets.FirstOrDefault(pet => pet.Id == id);
+
+            if(pet.OwnerId != ownerId || context.SearchPosts.Any(searchPost => searchPost.PetId == pet.Id))
+            {
+                return false;
+            }
+
+            this.Delete(id);
 
             return true;
         }
@@ -138,6 +160,14 @@ namespace PetFinder.Services.Pets
         {
             return this.context.Species
                 .Any(specie => specie.Id == id);
+        }
+
+        public int? GetOwnerId(string id)
+        {
+            return this.context
+                .Pets
+                .FirstOrDefault(pet => pet.Id == id)
+                .OwnerId;
         }
     }
 }

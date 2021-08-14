@@ -66,5 +66,7 @@ namespace PetFinder.Services.SearchPosts
         bool CityExists(int id);
 
         bool PetExists(string id);
+
+        string GetUserId(string id);
     }
 }

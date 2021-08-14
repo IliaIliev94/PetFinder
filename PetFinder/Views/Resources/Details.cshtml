@@ -1,0 +1,26 @@
+﻿@model ResourcePostDetailsServiceModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+
+<div class="row mb-4">
+    <div class="col-md-12 px-0">
+        <img src="@Model.ImageUrl" class="img-fluid w-100" alt="@Model.Title" />
+    </div>
+</div>
+
+
+
+<h2 class="text-center">@Model.Title</h2>
+<h3 class="text-center mt-2">@Model.CreatedOn</h3>
+<p class="text-justify mt-4">@Model.Description</p>
+<div class="text-center mt-5">
+    @if (this.User.IsAdmin())
+    {
+        <a class=" btn btn-primary" asp-controller="Resources" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class=" btn btn-primary" asp-controller="Resources" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    }
+</div>
+

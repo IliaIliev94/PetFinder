@@ -38,6 +38,5 @@ namespace PetFinder.Models.SearchPosts
 
         public AddPetFormModel Pet { get; set; }
 
-        public string UserId { get; set; }
     }
 }

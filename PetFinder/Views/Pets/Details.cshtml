@@ -6,23 +6,22 @@
 }
 
 
-<div class="container-fluid mb-4">
+
     <div class="row">
         <div class="col-md-12">
             <img src="@Model.ImageUrl" class="img-fluid w-100" alt="@Model.Species" />
         </div>
     </div>
-</div>
+
 
 <div class="container">
     <h2 class="text-center">@Model.Name</h2>
     <h3 class="text-center">@Model.Species - @Model.Size</h3>
     <div class="text-center mt-5">
-        @if (Owners.GetOwnerId(this.User.GetId()) == Model.OwnerId)
-            {
-
-            }
+        @if (this.User.IsAdmin() || Owners.GetOwnerId(this.User.GetId()) == Model.OwnerId)
+        {
             <a class=" btn btn-primary" asp-controller="Pets" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <a class=" btn btn-primary" asp-controller="Pets" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            <a class=" btn btn-primary" asp-controller="Pets" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        }
     </div>
 </div>
