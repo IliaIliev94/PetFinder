@@ -56,7 +56,8 @@ namespace PetFinder.Infrastructure
                 .ForMember(x => x.Description, y =>  y.MapFrom(s => s.Description.Substring(0, (Math.Min(100, s.Description.Length)))));
 
             this.CreateMap<ResourcePost, ResourcePostDetailsServiceModel>();
-            this.CreateMap<ResourcePost, ResourcePostEditServiceModel>();
+            this.CreateMap<ResourcePost, ResourcePostEditServiceModel>()
+                .ForMember(x => x.Description, y => y.MapFrom(s => s.Description.Trim()));
             this.CreateMap<ResourcePostEditServiceModel, AddResourcePostFormModel>();
 
         }

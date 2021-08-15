@@ -16,5 +16,6 @@ namespace PetFinder.Services.Resources.Models
         public string ImageUrl { get; init; }
 
         public DateTime CreatedOn { get; init; }
+
     }
 }
