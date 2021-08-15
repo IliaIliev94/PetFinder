@@ -7,8 +7,12 @@ namespace PetFinder.Services.Comments
 {
     public interface ICommentsService
     {
-        void AddSearchPostComment(string comment, string id);
+        void AddSearchPostComment(string comment, string searchPostId, string userId);
 
-        void AddResourcePostComment(string comment, string id);
+        void AddResourcePostComment(string comment, string resourcePostId, string userId);
+
+        bool UserOwnsComment(string commentId, string userId);
+
+        Tuple<bool, string> Delete(string id, string type);
     }
 }

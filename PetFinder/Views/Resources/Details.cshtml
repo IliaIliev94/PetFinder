@@ -2,41 +2,39 @@
 
 @{
     ViewData["Title"] = Model.Title;
+    ViewBag.Type = "Resources";
 }
 
 
 <div class="row mb-4">
-    <div class="col-md-12 px-0">
+    <div class="col-md-12">
         <img src="@Model.ImageUrl" class="img-fluid w-100" alt="@Model.Title" />
     </div>
 </div>
 
 
+<div class="bg-white p-3">
+    <h2 class="text-center">@Model.Title</h2>
+    <h3 class="text-center mt-2">@Model.CreatedOn</h3>
 
-<h2 class="text-center">@Model.Title</h2>
-<h3 class="text-center mt-2">@Model.CreatedOn</h3>
-<p class="text-justify mt-4">@Model.Description</p>
-<div class="text-center mt-5">
-    @if (this.User.IsAdmin())
-    {
-        <a class=" btn btn-primary" asp-controller="Resources" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <a class=" btn btn-primary" asp-controller="Resources" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-    }
+    <p class="mt-4 text-justify">@Model.Description</p>
+
+
+    <div class="text-center mt-5">
+        @if (this.User.IsAdmin())
+        {
+            <a class=" btn btn-primary" asp-controller="Resources" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            <a class=" btn btn-primary" asp-controller="Resources" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+        }
+    </div>
 </div>
 
-@if (this.User.GetId() != null)
-{
-<form method="post" asp-controller="Comments" asp-action="Add" asp-route-resourcePostId="@Model.Id">
-    <h2 class="text-center mt-5">Comments</h2>
-    <div class="row">
-        <div class="input-group mb-3 mt-5 offset-lg-1">
-            <input type="text" class="form-control col-lg-10" name="comment" placeholder="Add comment" aria-label="Recipient's username" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-        </div>
-    </div>
+<div class="bg-white">
+   
+        <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.Id">
 
-</form>
-}
+        <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.Comments">
+
+</div>
+
 

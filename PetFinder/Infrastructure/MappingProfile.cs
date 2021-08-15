@@ -3,6 +3,7 @@ using PetFinder.Data.Models;
 using PetFinder.Models.Pets;
 using PetFinder.Models.Resources;
 using PetFinder.Models.SearchPosts;
+using PetFinder.Services.Comments.Models;
 using PetFinder.Services.Pets.Models;
 using PetFinder.Services.Resources.Models;
 using PetFinder.Services.SearchPosts.Models;
@@ -59,6 +60,9 @@ namespace PetFinder.Infrastructure
             this.CreateMap<ResourcePost, ResourcePostEditServiceModel>()
                 .ForMember(x => x.Description, y => y.MapFrom(s => s.Description.Trim()));
             this.CreateMap<ResourcePostEditServiceModel, AddResourcePostFormModel>();
+
+            this.CreateMap<Comment, CommentServiceModel>()
+                .ForMember(x => x.Username, y => y.MapFrom(s => s.User.UserName));
 
         }
     }

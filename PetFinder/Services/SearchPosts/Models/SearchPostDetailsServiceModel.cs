@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PetFinder.Services.Comments.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,5 +25,7 @@ namespace PetFinder.Services.SearchPosts.Models
         public string UserId { get; init; }
 
         public string PhoneNumber { get; init; }
+
+        public IEnumerable<CommentServiceModel> Comments { get; init; }
     }
 }

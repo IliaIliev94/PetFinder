@@ -59,9 +59,10 @@ html {
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-  height: 100%;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    height: 100%;
+    background-color: #EEEEEE;
 }
 .footer {
   position: absolute;
@@ -69,6 +70,7 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+  background: #ffffff;
 }
 
 

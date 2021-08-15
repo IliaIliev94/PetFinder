@@ -3,9 +3,12 @@
     ViewData["Title"] = "Add Resource Post";
 }
 
-<form class="offset-md-2 offset-lg-3 col-md-8 col-lg-6 g-3" method="post" asp-controller="Resources" asp-action="Add">
-   
-    <partial name="_ResourcePostsFormPartial" model="@Model">
+<div class="row">
+    <form class="offset-md-2 offset-lg-3 col-md-8 col-lg-6 g-3" method="post" asp-controller="Resources" asp-action="Add">
 
-</form>
+        <partial name="_ResourcePostsFormPartial" model="@Model">
+
+    </form>
+
+</div>
 

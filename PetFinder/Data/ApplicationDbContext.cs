@@ -73,6 +73,11 @@ namespace PetFinder.Data
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
 
+            builder.Entity<Comment>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
+
             base.OnModelCreating(builder);
         }
     }

@@ -32,11 +32,14 @@ namespace PetFinder.Services.Resources
 
         public ResourcePostDetailsServiceModel Details(string id)
         {
-            return this.context
+            var resourcePost = this.context
                 .ResourcePosts
                 .Where(resourcePost => resourcePost.Id == id)
                 .ProjectTo<ResourcePostDetailsServiceModel>(mapper.ConfigurationProvider)
                 .FirstOrDefault();
+
+            return resourcePost;
+
         }
 
         public ResourcePostEditServiceModel GetEditData(string id)
