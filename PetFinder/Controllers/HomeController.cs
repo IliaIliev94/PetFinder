@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PetFinder.Data;
 using PetFinder.Models;
-using PetFinder.Models.Home;
+using PetFinder.Services.SearchPosts;
 using PetFinder.Services.Statistics;
 using System;
 using System.Collections.Generic;
@@ -15,40 +15,23 @@ namespace PetFinder.Controllers
     public class HomeController : Controller
     {
         private readonly IStatisticsService statistics;
-        private readonly ApplicationDbContext context;
+        private readonly ISearchPostService searchPostService;
 
-        public HomeController(IStatisticsService statistics, ApplicationDbContext context)
+        public HomeController(IStatisticsService statistics, ISearchPostService searchPostService)
         {
             this.statistics = statistics;
-            this.context = context;
+            this.searchPostService = searchPostService;
         }
 
         public IActionResult Index()
         {
 
-            var pets = this.context.Pets
-                    .OrderByDescending(pet => pet.Id)
-                    .Select(pet => new PetHomeViewModel
-                    {
-                        Id = pet.Id,
-                        Name = pet.Name,
-                        ImageUrl = pet.ImageUrl,
-                        Species = pet.Species.Name,
-                    })
-                    .Take(3)
-                    .ToList();
+            var searchPosts = this.searchPostService.Latest();
 
             var totalStatistics = this.statistics.Total();
 
-            var indexModel = new IndexViewModel
-            {
-                TotalPosts = totalStatistics.TotalPosts,
-                FoundPets = totalStatistics.FoundPets,
-                LostPets = totalStatistics.LostPets,
-                Pets = pets,
-            };
 
-            return View(indexModel);
+            return View(searchPosts);
         }
 
         public IActionResult Privacy()

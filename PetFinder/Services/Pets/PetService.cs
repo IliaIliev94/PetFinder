@@ -169,5 +169,10 @@ namespace PetFinder.Services.Pets
                 .FirstOrDefault(pet => pet.Id == id)
                 .OwnerId;
         }
+
+        public int PetsCount()
+        {
+            return this.context.Pets.Count();
+        }
     }
 }

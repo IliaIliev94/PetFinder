@@ -8,8 +8,9 @@ namespace PetFinder.Services.Owners
     public interface IOwnerService
     {
 
-        public bool IsOwner(string userId);
+        bool IsOwner(string userId);
 
         int GetOwnerId(string userId);
+
     }
 }

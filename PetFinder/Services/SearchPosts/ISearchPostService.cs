@@ -68,5 +68,7 @@ namespace PetFinder.Services.SearchPosts
         bool PetExists(string id);
 
         string GetUserId(string id);
+
+        List<LatestSearchPostsServiceModel> Latest();
     }
 }

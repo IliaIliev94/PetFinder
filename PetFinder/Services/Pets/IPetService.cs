@@ -43,5 +43,7 @@ namespace PetFinder.Services.Pets
 
         int? GetOwnerId(string id);
 
+        int PetsCount();
+
     }
 }

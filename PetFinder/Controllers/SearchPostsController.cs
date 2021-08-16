@@ -173,7 +173,7 @@ namespace PetFinder.Controllers
 
             if(this.searchPostService.GetUserId(id) != this.User.GetId() && !User.IsAdmin())
             {
-                return this.BadRequest();
+                return this.Unauthorized();
             }
 
             var searchPostFormModel = this.mapper.Map<AddSearchPostFormModel>(searchPost);
@@ -241,7 +241,7 @@ namespace PetFinder.Controllers
 
             if(!isEditSuccessfull)
             {
-                return this.RedirectToAction("Error", "Home");
+                return this.NotFound();
             }
 
             return this.RedirectToAction("Details", "SearchPosts", new { Id = searchPost.Id });

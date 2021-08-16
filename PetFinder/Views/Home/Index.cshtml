@@ -1,4 +1,4 @@
-﻿@model IndexViewModel;
+﻿@model List<LatestSearchPostsServiceModel>;
 
 @{
     ViewData["Title"] = "Pet Finder";
@@ -6,7 +6,7 @@
 
 <h1 class="text-center mb-3">Pet Finder</h1>
 
-@if (!Model.Pets.Any())
+@if (!Model.Any())
 {
     <div class="jumbotron">
         <h1 class="display-4">A place to find lost pets!</h1>
@@ -25,12 +25,12 @@
         <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
     </ol>
     <div class="carousel-inner">
-        @for (int i = 0; i < Model.Pets.Count(); i++)
+        @for (int i = 0; i < Model.Count(); i++)
         {
             <div class="carousel-item @(i == 0 ? "active" : string.Empty)">
-                <img class="item-image d-block w-100" src="@Model.Pets[i].ImageUrl" alt="@Model.Pets[i].Species">
+                <img class="item-image d-block w-100" src="@Model[i].ImageUrl" alt="@Model[i].PetSpecies">
                 <div class="carousel-caption d-none d-md-block">
-                    <h5><a class="btn btn-primary" asp-controller="Pets" asp-action="Details" asp-route-id="@Model.Pets[i].Id">@Model.Pets[i].Name @Model.Pets[i].Species </a></h5>
+                    <h5><a class="btn btn-primary" asp-controller="SearchPosts" asp-action="Details" asp-route-id="@Model[i].Id">@Model[i].PetName @Model[i].PetSpecies </a></h5>
                 </div>
             </div>
         }

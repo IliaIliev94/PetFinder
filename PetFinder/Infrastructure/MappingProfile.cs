@@ -64,6 +64,11 @@ namespace PetFinder.Infrastructure
             this.CreateMap<Comment, CommentServiceModel>()
                 .ForMember(x => x.Username, y => y.MapFrom(s => s.User.UserName));
 
+            this.CreateMap<SearchPost, LatestSearchPostsServiceModel>()
+                .ForMember(x => x.ImageUrl, y => y.MapFrom(s => s.Pet.ImageUrl))
+                .ForMember(x => x.PetName, y => y.MapFrom(s => s.Pet.Name))
+                .ForMember(x => x.PetSpecies, y => y.MapFrom(s => s.Pet.Species.Name));
+
         }
     }
 }

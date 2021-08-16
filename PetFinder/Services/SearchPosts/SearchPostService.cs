@@ -302,5 +302,15 @@ namespace PetFinder.Services.SearchPosts
                 .FirstOrDefault(searchPost => searchPost.Id == id)
                 .UserId;
         }
+
+        public List<LatestSearchPostsServiceModel> Latest()
+        {
+            return this.context
+                .SearchPosts
+                .OrderByDescending(searchPost => searchPost.DatePublished)
+                .ProjectTo<LatestSearchPostsServiceModel>(mapper.ConfigurationProvider)
+                .Take(3)
+                .ToList();
+        }
     }
 }

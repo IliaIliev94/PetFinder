@@ -25,5 +25,6 @@ namespace PetFinder.Services.Owners
         {
             return this.context.Owners.FirstOrDefault(owner => owner.UserId == userId).Id;
         }
+
     }
 }

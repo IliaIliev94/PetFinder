@@ -25,10 +25,13 @@ namespace PetFinder.Controllers
         [Authorize]
         public IActionResult All()
         {
+            var userId = this.User.GetId();
 
-            if(!this.User.IsAdmin() && !this.ownerService.IsOwner(this.User.GetId()))
+            var petsCount = this.petService.PetsCount();
+
+            if (!this.User.IsAdmin() && !this.ownerService.IsOwner(userId))
             {
-                return this.BadRequest();
+                return this.Unauthorized();
             }
 
             var pets = this.User.IsAdmin() ? this.petService.All() : this.petService.All(this.ownerService.GetOwnerId(this.User.GetId()));
@@ -42,14 +45,14 @@ namespace PetFinder.Controllers
 
             if (!this.User.IsAdmin() && !this.ownerService.IsOwner(this.User.GetId()))
             {
-                return this.BadRequest();
+                return this.Unauthorized();
             }
 
             var pet = this.petService.Details(id);
 
             if(pet == null)
             {
-                return this.RedirectToAction("Error", "Home");
+                return this.NotFound();
             }
 
             return this.View(pet);
@@ -62,7 +65,7 @@ namespace PetFinder.Controllers
 
             if (!this.ownerService.IsOwner(this.User.GetId()))
             {
-                return this.BadRequest();
+                return RedirectToAction("Become", "Owners");
             }
 
             ViewBag.SearchId = searchId;
