@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using System;
 
-using static PetFinder.WebConstantscs;
+using static PetFinder.WebConstants;
 
 namespace PetFinder.Infrastructure
 {

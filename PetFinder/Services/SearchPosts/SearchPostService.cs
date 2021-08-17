@@ -46,7 +46,7 @@ namespace PetFinder.Services.SearchPosts
             {
                 Title = title,
                 Description = description,
-                IsFound = searchPostType == "Found" ? true : false,
+                IsFoundClaimed = false,
                 CityId = cityId,
                 DatePublished = DateTime.UtcNow,
                 DateLostFound = dateLostFound,
@@ -73,7 +73,7 @@ namespace PetFinder.Services.SearchPosts
             int searchPostsPerPage,
             SearchPostSorting sorting)
         {
-            var searchPostQuery = this.context.SearchPosts.AsQueryable();
+            var searchPostQuery = this.context.SearchPosts.Where(searchPost => !searchPost.Is).AsQueryable();
 
             var totalPages = (int)Math.Ceiling(this.context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == type).Count() * 1.0 / searchPostsPerPage);
 
@@ -160,11 +160,6 @@ namespace PetFinder.Services.SearchPosts
                 .ToList();
 
             return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts, Cities = cities, };
-        }
-
-        private string CreatePet(string type, string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
-        {
-            return petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
         }
 
         public SearchPostDetailsServiceModel Details(string id)
@@ -269,13 +264,24 @@ namespace PetFinder.Services.SearchPosts
             return Tuple.Create(true, type);
         }
 
+        public string SetAsFoundClaimed(string id)
+        {
+            var searchPost = this.context
+                .SearchPosts
+                .FirstOrDefault(searchPost => searchPost.Id == id);
+
+            searchPost.IsFoundClaimed = true;
+
+            return searchPost.SearchPostType.Name;
+        }
+
         public IEnumerable<CityCategoryServiceModel> GetCities()
         {
             return this.context.Cities
                 .ProjectTo<CityCategoryServiceModel>(mapper.ConfigurationProvider).ToList();
         }
 
-        public IEnumerable<PetSelectServiceModel> GetPets(int ownerId)
+        public IEnumerable<PetSelectServiceModel> GetPets(int? ownerId)
         {
             return this.context.Pets
                 .Where(searchPost => searchPost.OwnerId == ownerId)
@@ -311,6 +317,19 @@ namespace PetFinder.Services.SearchPosts
                 .ProjectTo<LatestSearchPostsServiceModel>(mapper.ConfigurationProvider)
                 .Take(3)
                 .ToList();
+        }
+
+        public bool UserOwnsSearchPost(string searchPostId, string userId)
+        {
+            return this.context
+                .SearchPosts
+                .Any(searchPost => searchPost.Id == searchPostId && searchPost.UserId == userId);
+        }
+
+
+        private string CreatePet(string type, string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
+        {
+            return petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
         }
     }
 }

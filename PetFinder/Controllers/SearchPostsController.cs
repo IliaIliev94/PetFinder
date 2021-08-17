@@ -43,7 +43,7 @@ namespace PetFinder.Controllers
                 query.City,
                 query.Type,
                 query.CurrentPage,
-                AllSearchPostsViewModel.SearchPostsPerPage,
+                query.SearchPostsPerPage,
                 query.Sorting);
 
             SetAllSearchPostQueryRsponseData(query, queryResult);
@@ -57,7 +57,7 @@ namespace PetFinder.Controllers
 
             if (searchPost == null)
             {
-                return this.RedirectToAction("Error", "Home");
+                return this.NotFound();
             }
 
 
@@ -67,6 +67,8 @@ namespace PetFinder.Controllers
         [Authorize]
         public IActionResult Mine()
         {
+            var userId = this.User.GetId();
+
             var searchPosts = this.searchPostService.GetSearchPostsById(this.User.GetId());
 
             return this.View(searchPosts);
@@ -122,15 +124,28 @@ namespace PetFinder.Controllers
                 this.ModelState.AddModelError(nameof(searchPost.CityId), "City does not exist.");
             }
 
-            if(searchPost.PetId != "0" && !this.searchPostService.PetExists(searchPost.PetId))
+            if(searchPost.SearchPostType == "Lost" && searchPost.PetId != "0" && !this.searchPostService.PetExists(searchPost.PetId))
             {
                 this.ModelState.AddModelError(nameof(searchPost.PetId), "Pet does not exist.");
+            }
+
+            if(searchPost.PetId == "0")
+            {
+                if(!petService.SpeciesExists(searchPost.Pet.SpeciesId))
+                {
+                    this.ModelState.AddModelError(nameof(searchPost.Pet.SpeciesId), "Pet species does not exist.");
+                }
+
+                if (!petService.SizeExists(searchPost.Pet.SizeId))
+                {
+                    this.ModelState.AddModelError(nameof(searchPost.Pet.SizeId), "Pet size does not exist.");
+                }
             }
 
             if(!ModelState.IsValid)
             {
                 searchPost.Cities = this.searchPostService.GetCities();
-                searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
+                searchPost.Pets = searchPost.SearchPostType == "Lost"? this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId())) : null;
                 searchPost.Pet.Species = this.petService.GetSpecies();
                 searchPost.Pet.Sizes = this.petService.GetSizes();
 
@@ -179,7 +194,7 @@ namespace PetFinder.Controllers
             var searchPostFormModel = this.mapper.Map<AddSearchPostFormModel>(searchPost);
 
             searchPostFormModel.Cities = this.searchPostService.GetCities();
-            if(!this.User.IsAdmin())
+            if(!this.User.IsAdmin() && searchPost.Type == "Lost")
             {
                 searchPostFormModel.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
             }
@@ -255,7 +270,7 @@ namespace PetFinder.Controllers
 
             if(!isDeleteSuccessfull.Item1)
             {
-                return this.BadRequest();
+                return this.NotFound();
             }
 
             if(this.User.IsAdmin())
@@ -264,6 +279,20 @@ namespace PetFinder.Controllers
             }
 
             return this.RedirectToAction("Mine");
+        }
+
+        [Authorize]
+        public IActionResult SetAsFoundClaimed(string id)
+        {
+
+            if(!this.searchPostService.UserOwnsSearchPost(id, this.User.GetId()))
+            {
+                return this.Unauthorized();
+            }
+
+            var searchPostType = this.searchPostService.SetAsFoundClaimed(id);
+
+            return this.RedirectToAction("All", new { Type = searchPostType });
         }
 
 

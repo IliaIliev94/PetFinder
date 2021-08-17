@@ -37,7 +37,7 @@ namespace PetFinder.Tests.Controllers
         {
             MyController<PetsController>
                 .Instance()
-                .WithUser("Test", "Test", WebConstantscs.AdministratorRoleName)
+                .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                 .Calling(c => c.All())
                 .ShouldReturn()
                 .View(view => view
@@ -94,7 +94,7 @@ namespace PetFinder.Tests.Controllers
 
             MyController<PetsController>
               .Instance()
-              .WithUser("Test", "Test", WebConstantscs.AdministratorRoleName)
+              .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
               .WithData(
               GetSize(),
               GetSpecies(),

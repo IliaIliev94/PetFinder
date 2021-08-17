@@ -22,7 +22,7 @@ namespace PetFinder.Data.Models
 
         public string Description { get; set; }
 
-        public bool IsFound { get; set; }
+        public bool IsFoundClaimed { get; set; }
 
         public DateTime DatePublished { get; init; }
 

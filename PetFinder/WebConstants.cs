@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PetFinder
 {
-    public class WebConstantscs
+    public class WebConstants
     {
         public const string AdministratorRoleName = "Administrator";
     }

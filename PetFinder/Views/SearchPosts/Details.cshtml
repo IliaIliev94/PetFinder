@@ -26,36 +26,22 @@
 
     <p class="text-justify mt-4">@Model.Description</p>
     <div class="text-center mt-5">
-        @if (this.User.GetId() == Model.UserId || this.User.IsInRole(WebConstantscs.AdministratorRoleName))
+        @if (this.User.GetId() == Model.UserId || this.User.IsInRole(WebConstants.AdministratorRoleName))
         {
             <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
             <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            @if (!Model.IsFoundClaimed)
+            {
+                <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="SetAsFoundClaimed" asp-route-id="@Model.Id">Set as @(Model.Type == "Lost" ? "Found" : "Claimed")</a>
+            }
+
         }
     </div>
 </div>
 
 
     <div class="bg-white">
-        @if (this.User.GetId() != null)
-        {
-
-            <form method="post" asp-controller="Comments" asp-action="Add" asp-route-searchPostId="@Model.Id">
-                <h2 class="text-center mt-5">Comments</h2>
-
-
-                <div class="row">
-                    <div class="input-group mb-3 mt-5 offset-lg-1">
-                        <input required type="text" class="form-control col-lg-10" name="comment" placeholder="Add comment" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">Submit</button>
-                        </div>
-                    </div>
-                </div>
-
-            </form>
-
-
-        }
-    <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.Comments">
+        <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.Id">
+        <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.Comments">
 </div>
 

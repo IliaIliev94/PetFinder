@@ -36,6 +36,7 @@ namespace PetFinder.Services.Pets
                 SpeciesId = speciesId,
                 SizeId = sizeId,
                 OwnerId = ownerId,
+                DateCreated = DateTime.UtcNow,
             };
 
             this.context.Pets.Add(pet);
@@ -53,11 +54,12 @@ namespace PetFinder.Services.Pets
                 .ToList();
         }
 
-        public IEnumerable<PetServiceModel> All(int ownerId)
+        public IEnumerable<PetServiceModel> All(int? ownerId)
         {
             return this.context
                 .Pets
                 .Where(pet => pet.OwnerId == ownerId)
+                .OrderByDescending(pet => pet.DateCreated)
                 .ProjectTo<PetServiceModel>(mapper.ConfigurationProvider)
                 .ToList();
         }
@@ -136,7 +138,7 @@ namespace PetFinder.Services.Pets
             return true;
         }
 
-        public bool Delete(string id, int ownerId)
+        public bool Delete(string id, int? ownerId)
         {
             var pet = this.context.Pets.FirstOrDefault(pet => pet.Id == id);
 

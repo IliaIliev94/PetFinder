@@ -26,6 +26,10 @@ namespace PetFinder.Services.SearchPosts.Models
 
         public string PhoneNumber { get; init; }
 
+        public string Type { get; init; }
+
+        public bool IsFoundClaimed { get; init; }
+
         public IEnumerable<CommentServiceModel> Comments { get; init; }
     }
 }

@@ -10,7 +10,7 @@ namespace PetFinder.Services.Owners
 
         bool IsOwner(string userId);
 
-        int GetOwnerId(string userId);
+        int? GetOwnerId(string userId);
 
     }
 }

@@ -53,6 +53,8 @@ namespace PetFinder.Services.SearchPosts
 
         Tuple<bool, string> Delete(string id, string userId, bool userIsAdmin);
 
+        string SetAsFoundClaimed(string id);
+
         IEnumerable<SearchPostServiceModel> GetSearchPostsById(string id);
 
         SearchPostDetailsServiceModel Details(string id);
@@ -61,11 +63,13 @@ namespace PetFinder.Services.SearchPosts
 
         IEnumerable<CityCategoryServiceModel> GetCities();
 
-        IEnumerable<PetSelectServiceModel> GetPets(int ownerId);
+        IEnumerable<PetSelectServiceModel> GetPets(int? ownerId);
 
         bool CityExists(int id);
 
         bool PetExists(string id);
+
+        bool UserOwnsSearchPost(string searchPostId, string userId);
 
         string GetUserId(string id);
 

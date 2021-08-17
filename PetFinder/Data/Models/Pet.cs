@@ -26,6 +26,8 @@ namespace PetFinder.Data.Models
 
         public int SizeId { get; set; }
 
+        public DateTime DateCreated { get; set; }
+
         public Size Size { get; set; }
 
         public int SpeciesId { get; set; }

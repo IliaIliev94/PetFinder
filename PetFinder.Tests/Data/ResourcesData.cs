@@ -11,7 +11,7 @@ namespace PetFinder.Tests.Data
     {
         public static IEnumerable<ResourcePost> GetResourcePosts()
         {
-            return Enumerable.Range(0, 10).Select(i => new ResourcePost());
+            return Enumerable.Range(0, 10).Select(i => new ResourcePost { Id = i.ToString(), Title = i.ToString()});
         }
     }
 }

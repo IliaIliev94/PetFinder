@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetFinder.Infrastructure;
 using PetFinder.Models.Resources;
 using PetFinder.Services.Resources;
 using System;
@@ -28,17 +29,23 @@ namespace PetFinder.Controllers
             return this.View(resources);
         }
 
-        [Authorize(Roles = WebConstantscs.AdministratorRoleName)]
+        [Authorize(Roles = WebConstants.AdministratorRoleName)]
         public IActionResult Add()
         {
             return this.View();
         }
 
         [HttpPost]
-        [Authorize(Roles = WebConstantscs.AdministratorRoleName)]
+        [Authorize(Roles = WebConstants.AdministratorRoleName)]
         public IActionResult Add(AddResourcePostFormModel resourcePost)
         {
-           var id = this.resourcesService.Create(resourcePost.Title, resourcePost.Description, resourcePost.ImageUrl);
+
+            if(!this.User.IsAdmin())
+            {
+                return this.Unauthorized();
+            }
+
+            var id = this.resourcesService.Create(resourcePost.Title, resourcePost.Description, resourcePost.ImageUrl);
 
             return this.RedirectToAction("Details", new { Id = id });
         }
@@ -50,7 +57,7 @@ namespace PetFinder.Controllers
             return this.View(resourcePost);
         }
 
-        [Authorize(Roles = WebConstantscs.AdministratorRoleName)]
+        [Authorize(Roles = WebConstants.AdministratorRoleName)]
         public IActionResult Edit(string id)
         {
 
@@ -65,27 +72,44 @@ namespace PetFinder.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = WebConstantscs.AdministratorRoleName)]
+        [Authorize(Roles = WebConstants.AdministratorRoleName)]
         public IActionResult Edit(AddResourcePostFormModel resource)
         {
+
+            if (!this.User.IsAdmin())
+            {
+                return this.Unauthorized();
+            }
+
+            if(!ModelState.IsValid)
+            {
+                return this.View(resource);
+            }
+
             var isEditSuccessfull = this.resourcesService.Edit(resource.Id, resource.Title, resource.Description, resource.ImageUrl);
 
             if(!isEditSuccessfull)
             {
-                return this.RedirectToAction("Error", "Home");
+                return this.NotFound();
             }
 
             return this.RedirectToAction("Details", new {Id = resource.Id});
         }
 
-        [Authorize(Roles = WebConstantscs.AdministratorRoleName)]
+        [Authorize(Roles = WebConstants.AdministratorRoleName)]
         public IActionResult Delete(string id)
         {
+
+            if(!this.User.IsAdmin())
+            {
+                return this.Unauthorized();
+            }
+
             var isDeleteSuccessfull = this.resourcesService.Delete(id);
 
             if(!isDeleteSuccessfull)
             {
-                return this.RedirectToAction("Error", "Home");
+                return this.NotFound();
             }
 
             return this.RedirectToAction("All");

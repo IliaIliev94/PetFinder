@@ -17,7 +17,7 @@ namespace PetFinder.Services.Pets
 
         IEnumerable<PetServiceModel> All();
 
-        IEnumerable<PetServiceModel> All(int ownerId);
+        IEnumerable<PetServiceModel> All(int? ownerId);
 
         PetDetailsServiceModel Details(string id);
 
@@ -29,7 +29,7 @@ namespace PetFinder.Services.Pets
 
         bool Delete(string id);
 
-        bool Delete(string id, int ownerId);
+        bool Delete(string id, int? ownerId);
 
         PetEditServiceModel GetEditData(string id);
 
