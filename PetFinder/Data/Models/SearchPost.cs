@@ -20,6 +20,9 @@ namespace PetFinder.Data.Models
         [Required]
         public string Title { get; set; }
 
+        [Required]
+        public string PhoneNumber { get; set; }
+
         public string Description { get; set; }
 
         public bool IsFoundClaimed { get; set; }

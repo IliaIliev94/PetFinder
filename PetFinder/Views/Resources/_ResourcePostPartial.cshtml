@@ -8,7 +8,7 @@
                 <div class="col p-4 d-flex flex-column position-static">
                     <h3 class="mb-0">@resourcePost.Title</h3>
                     <div class="mb-1 text-muted">@resourcePost.CreatedOn</div>
-                    <p class="card-text mb-auto">@resourcePost.Description</p>
+                    <p class="card-text mb-auto break-word">@resourcePost.Description</p>
                     <a asp-controller="Resources" asp-action="Details" asp-route-id="@resourcePost.Id" class="stretched-link">Continue reading</a>
                 </div>
                 <div class="col-auto d-none d-lg-block">

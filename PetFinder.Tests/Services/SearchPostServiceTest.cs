@@ -23,17 +23,17 @@ namespace PetFinder.Tests.Services
         private SearchPostService searchPostService;
 
         [Theory]
-        [InlineData("Test", "Description", "Found", 1, null, "2", "Jessy", "imageUrl", 1, 2, 1, "test")]
-        [InlineData("12", "Some text", "Lost", 1, "12/05/2021", "2", "Jessy", "imageUrl", 1, 2, 1, "test")]
+        [InlineData("Test", "Description", "Found", 1, null, "2", "Jessy", "imageUrl", 1, 2, 1, "test", "1234")]
+        [InlineData("12", "Some text", "Lost", 1, "12/05/2021", "2", "Jessy", "imageUrl", 1, 2, 1, "test", "089844524")]
         public void CreateShouldWorkWhenDataIsPassedCorrectly(string title, string description, string type, int cityId, string dateLostFound,
-            string petId, string petName, string imageUrl, int speciesId, int sizeId, int? ownerId, string userId)
+            string petId, string petName, string imageUrl, int speciesId, int sizeId, int? ownerId, string userId, string phoneNumber)
         {
             var database = DatabaseMock.Instance;
             var mapper = MapperMock.Mapper;
             var petService = new PetService(database, mapper);
             DateTime? exactDate = dateLostFound == null ? null : DateTime.ParseExact(dateLostFound, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             this.searchPostService = new SearchPostService(database, petService, mapper);
-            var searchPostId = this.searchPostService.Create(title, description, type, cityId, exactDate, petId, petName, imageUrl, speciesId, sizeId, ownerId, userId);
+            var searchPostId = this.searchPostService.Create(title, description, type, cityId, exactDate, petId, petName, imageUrl, speciesId, sizeId, ownerId, userId, phoneNumber);
 
             searchPostId.Should().NotBeEmpty();
             database.SearchPosts.Should().HaveCount(1);

@@ -7,9 +7,9 @@ namespace PetFinder.Services.Comments
 {
     public interface ICommentsService
     {
-        void AddSearchPostComment(string comment, string searchPostId, string userId);
+        bool AddSearchPostComment(string comment, string searchPostId, string userId);
 
-        void AddResourcePostComment(string comment, string resourcePostId, string userId);
+        bool AddResourcePostComment(string comment, string resourcePostId, string userId);
 
         bool UserOwnsComment(string commentId, string userId);
 

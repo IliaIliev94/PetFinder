@@ -109,25 +109,34 @@ namespace PetFinder.Controllers
         public IActionResult Add(AddSearchPostFormModel searchPost)
         {
 
-            if(searchPost.SearchPostType == "Lost" && !this.ownerService.IsOwner(this.User.GetId()))
+            if(searchPost.SearchPostType == "Lost")
             {
-                return this.RedirectToAction("Become", "Owners");
+                if(!this.ownerService.IsOwner(this.User.GetId()))
+                {
+                    return this.RedirectToAction("Become", "Owners");
+                }
+
+                if(searchPost.PetId != "0")
+                {
+                    ModelState.Remove("Pet.ImageUrl");
+                    ModelState.Remove("PhoneNumber");
+                }
+
+                if(searchPost.PetId != "0" && !this.searchPostService.PetExists(searchPost.PetId))
+                {
+                    this.ModelState.AddModelError(nameof(searchPost.PetId), "Pet does not exist.");
+                }
+
+                searchPost.PhoneNumber = this.ownerService.GetPhoneNumber(this.User.GetId());
+                
             }
 
-            if(searchPost.SearchPostType == "Lost" && searchPost.PetId != "0")
-            {
-                ModelState.Remove("Pet.ImageUrl");
-            }
 
             if(!searchPostService.CityExists(searchPost.CityId))
             {
                 this.ModelState.AddModelError(nameof(searchPost.CityId), "City does not exist.");
             }
 
-            if(searchPost.SearchPostType == "Lost" && searchPost.PetId != "0" && !this.searchPostService.PetExists(searchPost.PetId))
-            {
-                this.ModelState.AddModelError(nameof(searchPost.PetId), "Pet does not exist.");
-            }
 
             if(searchPost.PetId == "0")
             {
@@ -169,7 +178,8 @@ namespace PetFinder.Controllers
                 searchPost.Pet.SpeciesId,
                 searchPost.Pet.SizeId,
                 ownerId,
-                userId);
+                userId,
+                searchPost.PhoneNumber);
 
             return this.RedirectToAction("All", "SearchPosts", new { Type = searchPost.SearchPostType});
         }

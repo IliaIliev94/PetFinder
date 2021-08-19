@@ -18,8 +18,8 @@ namespace PetFinder.Services.Statistics
         public StatisticsServiceModel Total()
         {
             var totalPosts = context.SearchPosts.Count();
-            var lostPets = context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == "Lost").Count();
-            var foundPets = context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == "Found").Count();
+            var lostPets = context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == "Lost" && !searchPost.IsFoundClaimed).Count();
+            var foundPets = context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == "Found" || searchPost.IsFoundClaimed).Count();
 
             return new StatisticsServiceModel
             {

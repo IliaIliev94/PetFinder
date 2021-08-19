@@ -135,9 +135,9 @@ namespace PetFinder.Tests.Controllers
         }
 
         [Theory]
-        [InlineData("Test", "Description", "Found", "My Pet", "https://tinyurl.com/4fztbse4", 1, 2, 1)]
-        [InlineData("Test", "Description", "Lost", "My Pet", "https://tinyurl.com/4fztbse4", 1, 2, 1)]
-        public void AddLogicShouldWorkCorrectlyWhenPassedDataIsValid(string title, string description, string type, string petName, string imageUrl, int sizeId, int speciesId, int cityId)
+        [InlineData("Test", "Description", "Found", "My Pet", "https://tinyurl.com/4fztbse4", 1, 2, 1, "085455245")]
+        [InlineData("Test", "Description", "Lost", "My Pet", "https://tinyurl.com/4fztbse4", 1, 2, 1, "+359525878")]
+        public void AddLogicShouldWorkCorrectlyWhenPassedDataIsValid(string title, string description, string type, string petName, string imageUrl, int sizeId, int speciesId, int cityId, string phoneNumber)
         {
             MyController<SearchPostsController>
                 .Instance()
@@ -145,7 +145,7 @@ namespace PetFinder.Tests.Controllers
                 .WithUser()
                 .WithData(new Owner { UserId = "TestId" })
                 .WithData(GetCity(), GetSize(), GetSpecies())
-                .Calling(c => c.Add(new AddSearchPostFormModel { SearchPostType = type, PetId = "0",  CityId = cityId, Title = title, Description = description, Pet = new AddPetFormModel { Name = petName, ImageUrl = imageUrl, SizeId = sizeId, SpeciesId = speciesId} }))
+                .Calling(c => c.Add(new AddSearchPostFormModel { SearchPostType = type, PetId = "0", PhoneNumber = phoneNumber,  CityId = cityId, Title = title, Description = description, Pet = new AddPetFormModel { Name = petName, ImageUrl = imageUrl, SizeId = sizeId, SpeciesId = speciesId} }))
                 .ShouldReturn()
                 .RedirectToAction("All", new { Type = type });
 
@@ -154,7 +154,7 @@ namespace PetFinder.Tests.Controllers
                 .WithUser()
                 .WithData(new Owner { UserId = "TestId"})
                 .WithData(GetCity(), GetSize(), GetSpecies())
-                .Calling(c => c.Add(new AddSearchPostFormModel { SearchPostType = type, PetId = "0", CityId = cityId, Title = title, Description = description, Pet = new AddPetFormModel { Name = petName, ImageUrl = imageUrl, SizeId = sizeId, SpeciesId = speciesId } }))
+                .Calling(c => c.Add(new AddSearchPostFormModel { SearchPostType = type, PetId = "0", PhoneNumber = phoneNumber, CityId = cityId, Title = title, Description = description, Pet = new AddPetFormModel { Name = petName, ImageUrl = imageUrl, SizeId = sizeId, SpeciesId = speciesId } }))
                 .ShouldReturn()
                 .RedirectToAction("All", new { Type = type });
         }

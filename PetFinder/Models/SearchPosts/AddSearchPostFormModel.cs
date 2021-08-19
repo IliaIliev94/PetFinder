@@ -22,6 +22,11 @@ namespace PetFinder.Models.SearchPosts
         [MinLength(MinDescriptionLength)]
         public string Description { get; init; }
 
+        [Required]
+        [Phone]
+        [Display(Name = "Phone Number")]
+        public string PhoneNumber { get; set; }
+
         public DateTime DatePublished { get; init; }
 
         public DateTime? DateLostFound { get; init; }

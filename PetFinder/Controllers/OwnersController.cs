@@ -8,17 +8,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PetFinder.Data.Models;
+using PetFinder.Services.Owners;
+using AutoMapper;
 
 namespace PetFinder.Controllers
 {
     public class OwnersController : Controller
     {
 
-        private readonly ApplicationDbContext context;
+        private readonly IOwnerService ownersService;
+        private readonly IMapper mapper;
 
-        public OwnersController(ApplicationDbContext context)
+        public OwnersController(IOwnerService ownersService, IMapper mapper)
         {
-            this.context = context;
+            this.ownersService = ownersService;
+            this.mapper = mapper;
         }
 
         [Authorize]
@@ -33,7 +37,7 @@ namespace PetFinder.Controllers
         {
             var userId = this.User.GetId();
 
-            var userIsAlreadyOwner = this.context.Owners.Any(owner => owner.UserId == userId);
+            var userIsAlreadyOwner = this.ownersService.IsOwner(userId);
 
             if(userIsAlreadyOwner)
             {
@@ -45,16 +49,37 @@ namespace PetFinder.Controllers
                 return this.View(owner);
             }
 
-            var newOwner = new Owner
+
+            this.ownersService.Add(owner.Name, owner.PhoneNumber, this.User.GetId());
+
+            return this.RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        public IActionResult Edit()
+        {
+            var ownerData = this.mapper.Map<BecomeOwnerFormModel>(this.ownersService.GetOwnerData(this.User.GetId()));
+            return this.View(ownerData);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult Edit(BecomeOwnerFormModel owner)
+        {
+            if(!this.ownersService.IsOwner(this.User.GetId()))
             {
-                Name = owner.Name,
-                PhoneNumber = owner.PhoneNumber,
-                UserId = userId,
-            };
+                return this.Unauthorized();
+            }
 
-            this.context.Owners.Add(newOwner);
+            if(!ModelState.IsValid)
+            {
+                var ownerData = this.mapper.Map<BecomeOwnerFormModel>(this.ownersService.GetOwnerData(this.User.GetId()));
+                return this.View(ownerData);
+            }
 
-            this.context.SaveChanges();
+            var ownerId = this.ownersService.GetOwnerId(this.User.GetId());
+
+            this.ownersService.Edit(ownerId, owner.Name, owner.PhoneNumber);
 
             return this.RedirectToAction("Index", "Home");
         }

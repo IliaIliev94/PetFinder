@@ -27,14 +27,24 @@ namespace PetFinder.Controllers
                 return this.BadRequest();
             }
 
+            var isCreationSuccessfull = false;
+
             if(resourcePostId != null)
             {
-                this.commentsService.AddResourcePostComment(comment, resourcePostId, this.User.GetId());
-                return this.RedirectToAction("Details", "Resources", new {Id = resourcePostId });
+                isCreationSuccessfull = this.commentsService.AddResourcePostComment(comment, resourcePostId, this.User.GetId());
+            }
+            else
+            {
+                isCreationSuccessfull = this.commentsService.AddSearchPostComment(comment, searchPostId, this.User.GetId());
+            }
+            
+            if(!isCreationSuccessfull)
+            {
+                return this.BadRequest();
             }
 
-            this.commentsService.AddSearchPostComment(comment, searchPostId, this.User.GetId());
-            return this.RedirectToAction("Details", "SearchPosts", new { Id = searchPostId });
+            var controllerToRedirectTo = resourcePostId == null ? "SearchPosts" : "ResourcePosts";
+            return this.RedirectToAction("Details", controllerToRedirectTo , new { Id = searchPostId });
         }
 
         [Authorize]

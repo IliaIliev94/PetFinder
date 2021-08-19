@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using MyTested.AspNetCore.Mvc;
+using PetFinder.Areas.Admin.Models.Resources;
 using PetFinder.Controllers;
-using PetFinder.Models.Resources;
 using PetFinder.Services.Resources.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using PetFinder.Areas.Admin.Controllers;
 
 using static PetFinder.Tests.Data.ResourcesData;
 
@@ -19,7 +20,7 @@ namespace PetFinder.Tests.Controllers
         [Fact]
         public void AllShouldReturnView()
         {
-            MyController<ResourcesController>
+            MyController<PetFinder.Controllers.ResourcesController>
                 .Instance()
                 .WithData(GetResourcePosts())
                 .Calling(c => c.All())
@@ -32,7 +33,7 @@ namespace PetFinder.Tests.Controllers
         [Fact]
         public void AddShouldOnlyBeAccessibleByAdmins()
         {
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                 .Instance()
                 .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                 .Calling(c => c.Add())
@@ -44,14 +45,14 @@ namespace PetFinder.Tests.Controllers
         [InlineData("Test", "Test", "Test")]
         public void OnlyAdminShouldBeAbleToAddResourcePost(string title, string description, string imageUrl)
         {
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                 .Instance()
                 .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                 .Calling(c => c.Add(new AddResourcePostFormModel { Title = title, Description = description, ImageUrl = imageUrl }))
                 .ShouldReturn()
                 .RedirectToAction("Details");
 
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                 .Instance()
                 .WithUser()
                 .Calling(c => c.Add(new AddResourcePostFormModel { Title = title, Description = description, ImageUrl = imageUrl }))
@@ -62,7 +63,7 @@ namespace PetFinder.Tests.Controllers
         [Fact]
         public void DetailsShouldReturnView()
         {
-            MyController<ResourcesController>
+            MyController<PetFinder.Controllers.ResourcesController>
                 .Instance()
                 .WithData(GetResourcePosts())
                 .Calling(c => c.Details("0"))
@@ -75,7 +76,7 @@ namespace PetFinder.Tests.Controllers
         [Fact]
         public void EditShouldReturnView()
         {
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                 .Instance()
                 .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                 .WithData(GetResourcePosts())
@@ -85,7 +86,7 @@ namespace PetFinder.Tests.Controllers
                 .WithModelOfType<AddResourcePostFormModel>()
                 .Passing(m => m.Title.Should().BeEquivalentTo("0")));
 
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                .Instance()
                .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                .WithData(GetResourcePosts())
@@ -99,15 +100,15 @@ namespace PetFinder.Tests.Controllers
         [InlineData("3", "Test", "Description", "https://tinyurl.com/4fztbse4")]
         public void OnlyAdminShouldBeAbleToEdit(string id, string title, string description, string imageUrl)
         {
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                 .Instance()
                 .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                 .WithData(GetResourcePosts())
                 .Calling(c => c.Edit(new AddResourcePostFormModel {Id = id, Title = title, Description = description, ImageUrl = imageUrl }))
                 .ShouldReturn()
-                .RedirectToAction("Details", new { Id = id });
+                .RedirectToAction("Details", new { Id = id, Area = "" });
 
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                .Instance()
                .WithUser()
                .WithData(GetResourcePosts())
@@ -119,7 +120,7 @@ namespace PetFinder.Tests.Controllers
         [Fact]
         public void EditShouldReturnNotFoundIfResourcePostDoesNotExist()
         {
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                .Instance()
                .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                .WithData(GetResourcePosts())
@@ -134,7 +135,7 @@ namespace PetFinder.Tests.Controllers
         [InlineData("3", "New", "", "https://tinyurl.com/4fztbse4")]
         public void EditShouldReturnViewIfDataIsInvalid(string id, string title, string description, string imageUrl)
         {
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                 .Instance()
                 .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
                 .WithData(GetResourcePosts())
@@ -149,7 +150,7 @@ namespace PetFinder.Tests.Controllers
         public void OnlyAdministratorShouldBeAbloToDeleteResourcePost()
         {
 
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                .Instance()
                .WithData(GetResourcePosts())
                .WithUser("Test", "Test", WebConstants.AdministratorRoleName)
@@ -157,7 +158,7 @@ namespace PetFinder.Tests.Controllers
                .ShouldReturn()
                .RedirectToAction("All");
 
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
                 .Instance()
                 .WithData(GetResourcePosts())
                 .WithUser()
@@ -170,9 +171,9 @@ namespace PetFinder.Tests.Controllers
         [InlineData(null)]
         [InlineData("11")]
         [InlineData("105")]
-        public void DeleteShouldReturnIfAnAttemptIsMadeToDeleteANonExistingPage(string id)
+        public void DeleteShouldReturnNotFoundIfAnAttemptIsMadeToDeleteANonExistingPage(string id)
         {
-            MyController<ResourcesController>
+            MyController<Areas.Admin.Controllers.ResourcesController>
               .Instance()
               .WithData(GetResourcePosts())
               .WithUser("Test", "Test", WebConstants.AdministratorRoleName)

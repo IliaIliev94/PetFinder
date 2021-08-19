@@ -40,7 +40,8 @@ namespace PetFinder.Services.SearchPosts
             int speciesId,
             int sizeId,
             int? ownerId,
-            string userId)
+            string userId,
+            string phoneNumber)
         {
             var newSearchPost = new SearchPost
             {
@@ -53,6 +54,7 @@ namespace PetFinder.Services.SearchPosts
                 SearchPostTypeId = searchPostType == "Found" ? 1 : 2,
                 PetId = (searchPostType == "Found" || petId == "0") ? CreatePet(searchPostType, petName, imageUrl, speciesId, sizeId, ownerId) : petId,
                 UserId = userId,
+                PhoneNumber = phoneNumber,
             };
 
 
@@ -73,7 +75,7 @@ namespace PetFinder.Services.SearchPosts
             int searchPostsPerPage,
             SearchPostSorting sorting)
         {
-            var searchPostQuery = this.context.SearchPosts.Where(searchPost => !searchPost.Is).AsQueryable();
+            var searchPostQuery = this.context.SearchPosts.Where(searchPost => !searchPost.IsFoundClaimed).AsQueryable();
 
             var totalPages = (int)Math.Ceiling(this.context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == type).Count() * 1.0 / searchPostsPerPage);
 
@@ -268,9 +270,12 @@ namespace PetFinder.Services.SearchPosts
         {
             var searchPost = this.context
                 .SearchPosts
+                .Include(searchPost => searchPost.SearchPostType)
                 .FirstOrDefault(searchPost => searchPost.Id == id);
 
             searchPost.IsFoundClaimed = true;
+
+            this.context.SaveChanges();
 
             return searchPost.SearchPostType.Name;
         }

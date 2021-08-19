@@ -16,8 +16,12 @@ namespace PetFinder.Services.Comments
             this.context = context;
         }
 
-        public void AddResourcePostComment(string comment, string resourcePostId, string userId)
+        public bool AddResourcePostComment(string comment, string resourcePostId, string userId)
         {
+            if(!this.context.Users.Any(user => user.Id == userId) || !this.context.ResourcePosts.Any(resourcePost => resourcePost.Id == resourcePostId))
+            {
+                return false;
+            }
             var newComment = new Comment
             {
                 Content = comment,
@@ -28,10 +32,18 @@ namespace PetFinder.Services.Comments
 
             this.context.Comments.Add(newComment);
             this.context.SaveChanges();
+
+            return true;
         }
 
-        public void AddSearchPostComment(string comment, string searchPostId, string userId)
+        public bool AddSearchPostComment(string comment, string searchPostId, string userId)
         {
+
+            if (!this.context.Users.Any(user => user.Id == userId) || !this.context.SearchPosts.Any(searchPost => searchPost.Id == searchPostId))
+            {
+                return false;
+            }
+
             var newComment = new Comment
             {
                 Content = comment,
@@ -42,6 +54,8 @@ namespace PetFinder.Services.Comments
 
             this.context.Comments.Add(newComment);
             this.context.SaveChanges();
+
+            return true;
         }
 
         public Tuple<bool, string> Delete(string id, string type)

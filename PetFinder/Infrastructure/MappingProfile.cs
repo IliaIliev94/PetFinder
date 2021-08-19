@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using PetFinder.Areas.Admin.Models.Resources;
 using PetFinder.Data.Models;
+using PetFinder.Models.Owners;
 using PetFinder.Models.Pets;
-using PetFinder.Models.Resources;
 using PetFinder.Models.SearchPosts;
 using PetFinder.Services.Comments.Models;
+using PetFinder.Services.Owners.Models;
 using PetFinder.Services.Pets.Models;
 using PetFinder.Services.Resources.Models;
 using PetFinder.Services.SearchPosts.Models;
@@ -69,6 +71,9 @@ namespace PetFinder.Infrastructure
                 .ForMember(x => x.ImageUrl, y => y.MapFrom(s => s.Pet.ImageUrl))
                 .ForMember(x => x.PetName, y => y.MapFrom(s => s.Pet.Name))
                 .ForMember(x => x.PetSpecies, y => y.MapFrom(s => s.Pet.Species.Name));
+
+            this.CreateMap<Owner, OwnerEditServiceModel>();
+            this.CreateMap<OwnerEditServiceModel, BecomeOwnerFormModel>();
 
         }
     }

@@ -7,6 +7,7 @@ namespace PetFinder
 {
     public class WebConstants
     {
+        public const string AreaName = "Admin";
         public const string AdministratorRoleName = "Administrator";
     }
 }

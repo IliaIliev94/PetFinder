@@ -1,0 +1,11 @@
+﻿@model AddResourcePostFormModel
+
+@{
+    ViewData["Title"] = "Edit Resource Post";
+}
+
+<form class="offset-md-2 offset-lg-3 col-md-8 col-lg-6 g-3" method="post" asp-controller="Resources" asp-action="Edit">
+
+    <partial name="_ResourcePostsFormPartial" model="@Model" />
+
+</form>

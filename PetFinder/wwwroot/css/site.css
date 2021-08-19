@@ -108,3 +108,7 @@ a.disabled {
     margin-top: 20px;
     margin-bottom: 40px;
 }
+
+.break-word {
+    word-wrap: break-word;
+}

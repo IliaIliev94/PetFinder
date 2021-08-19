@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PetFinder.Services.Owners.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,14 @@ namespace PetFinder.Services.Owners
         bool IsOwner(string userId);
 
         int? GetOwnerId(string userId);
+
+        string GetPhoneNumber(string userId);
+
+        void Add(string name, string phoneNumber, string userId);
+
+        OwnerEditServiceModel GetOwnerData(string userId);
+
+        void Edit(int? id, string name, string phoneNumber);
 
     }
 }

@@ -30,7 +30,8 @@ namespace PetFinder.Services.SearchPosts
             int speciesId,
             int sizeId,
             int? ownerId,
-            string userId);
+            string userId,
+            string phoneNumber);
 
         bool Edit(
             string id,

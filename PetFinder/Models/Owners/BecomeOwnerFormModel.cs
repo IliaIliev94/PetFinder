@@ -10,6 +10,8 @@ namespace PetFinder.Models.Owners
 {
     public class BecomeOwnerFormModel
     {
+
+        public int? Id { get; init; }
         [Required]
         [MaxLength(NameMaxLength)]
         public string Name { get; init; }

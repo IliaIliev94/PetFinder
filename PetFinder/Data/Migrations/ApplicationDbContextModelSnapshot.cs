@@ -383,6 +383,10 @@ namespace PetFinder.Data.Migrations
                     b.Property<string>("PetId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SearchPostTypeId")
                         .HasColumnType("int");
 

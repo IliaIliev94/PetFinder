@@ -24,7 +24,7 @@
         <h5 class="text-center">Phone number for contact: @Model.PhoneNumber</h5>
     }
 
-    <p class="text-justify mt-4">@Model.Description</p>
+    <p class="text-justify mt-4 break-word">@Model.Description</p>
     <div class="text-center mt-5">
         @if (this.User.GetId() == Model.UserId || this.User.IsInRole(WebConstants.AdministratorRoleName))
         {
@@ -40,8 +40,17 @@
 </div>
 
 
-    <div class="bg-white">
-        <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.Id">
-        <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.Comments">
+<div class="bg-white">
+    @if (this.User.GetId() != null)
+    {
+
+        <form method="post" asp-controller="Comments" asp-action="Add" asp-route-searchPostId="@Model.Id">
+
+            <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.Id">
+        </form>
+
+
+    }
+    <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.Comments">
 </div>
 

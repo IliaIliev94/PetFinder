@@ -28,50 +28,116 @@
 </div>
 
 
-    <div class="form-group">
-        <label asp-for="CityId">City</label>
-        <select asp-for="CityId" class="form-control">
-            @foreach (var city in Model.Cities)
-            {
-                <option value="@city.Id">@city.Name</option>
-            }
-        </select>
-    </div>
-
-    @if (ViewBag.Page == "Add")
-    {
-        @if (ViewBag.Type == "Lost")
+<div class="form-group">
+    <label asp-for="CityId">City</label>
+    <select asp-for="CityId" class="form-control">
+        @foreach (var city in Model.Cities)
         {
-            <div class="form-group">
-                <label asp-for="PetId">Pet</label>
-                <select asp-for="PetId" class="form-control" id="trigger-select">
-                    <option value="0">Create new pet</option>
-                    @foreach (var pet in Model.Pets)
-                    {
-                        <option value="@pet.Id">@pet.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="PetId" class="small text-danger"></span>
-            </div>
+            <option value="@city.Id">@city.Name</option>
         }
+    </select>
+</div>
+
+@if (ViewBag.Type == "Found")
+{
+    <div class="form-group">
+        <label asp-for="PhoneNumber"></label>
+        <input asp-for="PhoneNumber" type="text" class="form-control" id="title" value="@Model.PhoneNumber">
+        <span asp-validation-for="PhoneNumber" class="small text-danger"></span>
+    </div>
+}
+
+@if (ViewBag.Page == "Add")
+{
+    @if (ViewBag.Type == "Lost")
+    {
+        <div class="form-group">
+            <label asp-for="PetId">Pet</label>
+            <select asp-for="PetId" class="form-control" id="trigger-select">
+                <option value="0">Create new pet</option>
+                @foreach (var pet in Model.Pets)
+                {
+                    <option value="@pet.Id">@pet.Name</option>
+                }
+            </select>
+            <span asp-validation-for="PetId" class="small text-danger"></span>
+        </div>
+    }
 
 
 
 
-        <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
+    <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
 
-        <div class="" id="trigger-form">
-            <h2 class="heading-margin text-center">Add Pet Data</h2>
+    <div class="" id="trigger-form">
+        <h2 class="heading-margin text-center">Add Pet Data</h2>
+        <div class="form-group">
+            <label asp-for="Pet.Name" class="form-label">Name</label>
+            <input asp-for="Pet.Name" type="text" class="form-control" id="name">
+            <span asp-validation-for="Pet.Name" class="small text-danger"></span>
+        </div>
+
+
+        <div class="form-group">
+            <label asp-for="Pet.ImageUrl" class="form-label">Image URL</label>
+            <input asp-for="Pet.ImageUrl" type="text" class="form-control">
+            <span asp-validation-for="Pet.ImageUrl" class="small text-danger"></span>
+        </div>
+
+
+
+        <div class="form-group">
+            <label asp-for="Pet.SizeId">Size</label>
+            <select asp-for="Pet.SizeId" class="form-control">
+                @foreach (var size in Model.Pet.Sizes)
+                {
+                    <option value="@size.Id">@size.Type</option>
+                }
+            </select>
+        </div>
+
+
+
+        <div class="form-group">
+            <label asp-for="Pet.SpeciesId">Species</label>
+            <select asp-for="Pet.SpeciesId" class="form-control">
+                @foreach (var specie in Model.Pet.Species)
+                {
+                    <option value="@specie.Id">@specie.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+}
+@if (ViewBag.Page == "Edit" && !this.User.IsAdmin())
+{
+    @if (Model.Pet == null)
+    {
+        <div class="form-group">
+            <label asp-for="PetId">Pet</label>
+            <select asp-for="PetId" class="form-control" id="trigger-select">
+                @foreach (var pet in Model.Pets)
+                {
+                    <option value="@pet.Id">@pet.Name</option>
+                }
+            </select>
+        </div>
+    }
+
+    else
+    {
+        <div>
+            <h2 class="heading-margin text-center">Edit Pet Data</h2>
             <div class="form-group">
-                <label asp-for="Pet.Name" class="form-label">Name</label>
-                <input asp-for="Pet.Name" type="text" class="form-control" id="name">
+                <label asp-for="Pet.Name" class="form-label"></label>
+                <input asp-for="Pet.Name" type="text" class="form-control" id="name" value="@Model.Pet.Name">
                 <span asp-validation-for="Pet.Name" class="small text-danger"></span>
             </div>
 
 
             <div class="form-group">
-                <label asp-for="Pet.ImageUrl" class="form-label">Image URL</label>
-                <input asp-for="Pet.ImageUrl" type="text" class="form-control">
+                <label asp-for="Pet.ImageUrl" class="form-label"></label>
+                <input asp-for="Pet.ImageUrl" type="text" class="form-control" value="@Model.Pet.ImageUrl">
                 <span asp-validation-for="Pet.ImageUrl" class="small text-danger"></span>
             </div>
 
@@ -82,6 +148,10 @@
                 <select asp-for="Pet.SizeId" class="form-control">
                     @foreach (var size in Model.Pet.Sizes)
                     {
+                        if (size.Id == Model.Pet.SizeId)
+                        {
+                            <option selected value="@size.Id">@size.Type</option>
+                        }
                         <option value="@size.Id">@size.Type</option>
                     }
                 </select>
@@ -94,80 +164,19 @@
                 <select asp-for="Pet.SpeciesId" class="form-control">
                     @foreach (var specie in Model.Pet.Species)
                     {
-                        <option value="@specie.Id">@specie.Name</option>
+                        if (specie.Id == Model.Pet.SpeciesId)
+                        {
+                            <option selected value="@specie.Id">@specie.Name</option>
+                        }
+
                     }
                 </select>
             </div>
         </div>
     }
-    @if(ViewBag.Page == "Edit" && !this.User.IsAdmin())
-    {
-        @if (Model.Pet == null)
-        {
-            <div class="form-group">
-                <label asp-for="PetId">Pet</label>
-                <select asp-for="PetId" class="form-control" id="trigger-select">
-                    @foreach (var pet in Model.Pets)
-                    {
-                        <option value="@pet.Id">@pet.Name</option>
-                    }
-                </select>
-            </div>
-        }
 
-        else
-        {
-            <div>
-                <h2 class="heading-margin text-center">Edit Pet Data</h2>
-                <div class="form-group">
-                    <label asp-for="Pet.Name" class="form-label"></label>
-                    <input asp-for="Pet.Name" type="text" class="form-control" id="name" value="@Model.Pet.Name">
-                    <span asp-validation-for="Pet.Name" class="small text-danger"></span>
-                </div>
-
-
-                <div class="form-group">
-                    <label asp-for="Pet.ImageUrl" class="form-label"></label>
-                    <input asp-for="Pet.ImageUrl" type="text" class="form-control" value="@Model.Pet.ImageUrl">
-                    <span asp-validation-for="Pet.ImageUrl" class="small text-danger"></span>
-                </div>
-
-
-
-                <div class="form-group">
-                    <label asp-for="Pet.SizeId">Size</label>
-                    <select asp-for="Pet.SizeId" class="form-control">
-                        @foreach (var size in Model.Pet.Sizes)
-                        {
-                            if (size.Id == Model.Pet.SizeId)
-                            {
-                                <option selected value="@size.Id">@size.Type</option>
-                            }
-                            <option value="@size.Id">@size.Type</option>
-                        }
-                    </select>
-                </div>
-
-
-
-                <div class="form-group">
-                    <label asp-for="Pet.SpeciesId">Species</label>
-                    <select asp-for="Pet.SpeciesId" class="form-control">
-                        @foreach (var specie in Model.Pet.Species)
-                        {
-                            if (specie.Id == Model.Pet.SpeciesId)
-                            {
-                                <option selected value="@specie.Id">@specie.Name</option>
-                            }
-
-                        }
-                    </select>
-                </div>
-            </div>
-        }
-
-        <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
-    }
+    <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
+}
 
 
 
