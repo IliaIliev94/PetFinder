@@ -57,9 +57,9 @@ namespace PetFinder.Services.Owners
             return this.mapper.Map<OwnerEditServiceModel>(this.context.Owners.FirstOrDefault(owner => owner.UserId == userId));
         }
 
-        public void Edit(int? id, string name, string phoneNumber)
+        public void Edit(string userId, string name, string phoneNumber)
         {
-            var owner = this.context.Owners.FirstOrDefault(owner => owner.Id == id);
+            var owner = this.context.Owners.FirstOrDefault(owner => owner.UserId == userId);
             owner.Name = name;
             owner.PhoneNumber = phoneNumber;
             this.context.SaveChanges();

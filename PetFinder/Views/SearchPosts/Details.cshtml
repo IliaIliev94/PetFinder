@@ -30,7 +30,7 @@
         {
             <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
             <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-            @if (!Model.IsFoundClaimed)
+            @if (!Model.IsFoundClaimed && this.User.GetId() == Model.UserId)
             {
                 <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="SetAsFoundClaimed" asp-route-id="@Model.Id">Set as @(Model.Type == "Lost" ? "Found" : "Claimed")</a>
             }

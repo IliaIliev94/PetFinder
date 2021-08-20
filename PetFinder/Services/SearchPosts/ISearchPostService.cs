@@ -70,6 +70,8 @@ namespace PetFinder.Services.SearchPosts
 
         bool PetExists(string id);
 
+        bool SearchPostTypeExists(string name);
+
         bool UserOwnsSearchPost(string searchPostId, string userId);
 
         string GetUserId(string id);

@@ -204,10 +204,10 @@ namespace PetFinder.Controllers
             var searchPostFormModel = this.mapper.Map<AddSearchPostFormModel>(searchPost);
 
             searchPostFormModel.Cities = this.searchPostService.GetCities();
-            if(!this.User.IsAdmin() && searchPost.Type == "Lost")
-            {
-                searchPostFormModel.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
-            }
+
+            searchPostFormModel.Pets = (!this.User.IsAdmin() && searchPost.Type == "Lost") 
+                ? this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId())) : null;
+
             searchPostFormModel.Pet = searchPost.Type == "Lost" ? null : GetEditPetData(searchPost.PetId);
 
             return this.View(searchPostFormModel);
@@ -223,9 +223,20 @@ namespace PetFinder.Controllers
                 return this.BadRequest();
             }
 
-            if (searchPost.SearchPostType == "Lost" && searchPost.PetId != "0")
+            if(!this.searchPostService.SearchPostTypeExists(searchPost.SearchPostType))
             {
-                ModelState.Remove("Pet.ImageUrl");
+                return this.BadRequest();
+            }
+
+            if (searchPost.SearchPostType == "Lost")
+            {
+                ModelState.Remove("PhoneNumber");
+
+                if(searchPost.PetId != "0")
+                {
+                    ModelState.Remove("Pet.ImageUrl");
+                }
+                
             }
 
             if (!searchPostService.CityExists(searchPost.CityId) && !User.IsAdmin())
@@ -236,10 +247,9 @@ namespace PetFinder.Controllers
             if (!ModelState.IsValid)
             {
                 searchPost.Cities = this.searchPostService.GetCities();
-                if(!this.User.IsAdmin())
-                {
-                    searchPost.Pets = this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
-                }
+
+                searchPost.Pets = this.User.IsAdmin()
+                        ? null : this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
                 
                 return this.View(searchPost);
             }

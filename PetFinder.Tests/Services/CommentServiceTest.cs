@@ -17,6 +17,7 @@ namespace PetFinder.Tests.Services
     public class CommentServiceTest
     {
         private ICommentsService commentService;
+
         [Theory]
         [InlineData("Test", "TestId")]
         public void AddShouldAddComments(string comment, string userId)

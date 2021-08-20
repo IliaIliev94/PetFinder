@@ -19,7 +19,7 @@ namespace PetFinder.Services.Owners
 
         OwnerEditServiceModel GetOwnerData(string userId);
 
-        void Edit(int? id, string name, string phoneNumber);
+        void Edit(string userId, string name, string phoneNumber);
 
     }
 }

@@ -20,7 +20,8 @@ namespace PetFinder.Infrastructure
     {
         public MappingProfile()
         {
-            this.CreateMap<SearchPostEditServiceModel, AddSearchPostFormModel>();
+            this.CreateMap<SearchPostEditServiceModel, AddSearchPostFormModel>()
+                .ForMember(x => x.SearchPostType, y => y.MapFrom(s => s.Type));
             this.CreateMap<PetEditServiceModel, AddPetFormModel>();
 
             this.CreateMap<SearchPost, SearchPostServiceModel>()

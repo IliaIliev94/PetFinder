@@ -66,7 +66,8 @@ namespace PetFinder.Controllers
         [HttpPost]
         public IActionResult Edit(BecomeOwnerFormModel owner)
         {
-            if(!this.ownersService.IsOwner(this.User.GetId()))
+            var userId = this.User.GetId();
+            if (!this.ownersService.IsOwner(userId))
             {
                 return this.Unauthorized();
             }
@@ -79,7 +80,7 @@ namespace PetFinder.Controllers
 
             var ownerId = this.ownersService.GetOwnerId(this.User.GetId());
 
-            this.ownersService.Edit(ownerId, owner.Name, owner.PhoneNumber);
+            this.ownersService.Edit(userId, owner.Name, owner.PhoneNumber);
 
             return this.RedirectToAction("Index", "Home");
         }

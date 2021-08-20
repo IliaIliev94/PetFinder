@@ -336,5 +336,10 @@ namespace PetFinder.Services.SearchPosts
         {
             return petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
         }
+
+        public bool SearchPostTypeExists(string name)
+        {
+            return this.context.SearchPostTypes.Any(searchPostType => searchPostType.Name == name);
+        }
     }
 }
