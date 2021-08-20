@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using PetFinder.Data;
 using PetFinder.Data.Models;
 using PetFinder.Infrastructure;
 using PetFinder.Services.Pets;
@@ -18,14 +19,20 @@ namespace PetFinder.Tests.Services
     public class PetServiceTest
     {
         private IPetService petService;
+        private readonly ApplicationDbContext database;
+        private IMapper mapper;
+
+        public PetServiceTest()
+        {
+            this.database = DatabaseMock.Instance;
+            this.mapper = MapperMock.Mapper;
+            this.petService = new PetService(database, mapper);
+        }
+
         [Theory]
         [InlineData("Test", "ImageUrl", 1, 1, 2)]
         public void CreateShouldWorkWhenDataIsPassedCorrectly(string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            this.petService = new PetService(database, mapper);
-
             var petId = this.petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
             petId.Should().NotBe(null);
 
@@ -41,7 +48,6 @@ namespace PetFinder.Tests.Services
         [InlineData("Maxi", "asd", 2, 1, 1)]
         public void DetailsShouldWorkCorrectly(string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
         {
-            var database = DatabaseMock.Instance;
             var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
             this.petService = new PetService(database, mapper);
             database.Sizes.AddRange(GetSize());
@@ -58,10 +64,6 @@ namespace PetFinder.Tests.Services
         [InlineData(2)]
         public void GetOwnerIdWorksCorrectlyWhenPassedValidData(int ownerId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            this.petService = new PetService(database, mapper);
-
             database.Owners.Add(new Owner { Id = ownerId, Name = "Test", PhoneNumber = "08978548", UserId = "2" });
             database.SaveChanges();
 
@@ -75,10 +77,6 @@ namespace PetFinder.Tests.Services
         [InlineData("Test", "ImageUrl", 1, 1, 2)]
         public void PetCountShouldReturnAccurateResult(string name, string imageUrl, int speciesId, int sizeId, int? ownerId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            this.petService = new PetService(database, mapper);
-
             database.Pets.Should().HaveCount(0);
             this.petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
             this.petService.Create(name, imageUrl, speciesId, sizeId, ownerId);
@@ -92,10 +90,6 @@ namespace PetFinder.Tests.Services
         [InlineData("Maxi", "https://tinyurl.com/4fztbse4", 2, 3)]
         public void EditShouldWorkCorrectly(string name, string imageUrl, int speciesId, int sizeId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            this.petService = new PetService(database, mapper);
-
             var petId = this.petService.Create("Test", "ImageUrl", 1, 1, 2);
 
             var isEditsuccessfull = this.petService.Edit(petId, name, imageUrl, speciesId, sizeId);
@@ -113,10 +107,6 @@ namespace PetFinder.Tests.Services
         [Fact]
         public void DeleteShouldWorkCorrectly()
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            this.petService = new PetService(database, mapper);
-
             database.Pets.Should().HaveCount(0);
             var petId = this.petService.Create("Test", "ImageUrl", 1, 1, 2);
             database.Pets.Should().HaveCount(1);
@@ -129,10 +119,6 @@ namespace PetFinder.Tests.Services
         [Fact]
         public void DeleteShouldReturnFalseIfAnAttemptIsMadeToDeleteANonExistingPet()
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            this.petService = new PetService(database, mapper);
-
             var petId = this.petService.Create("Test", "ImageUrl", 1, 1, 2);
             var isDeleteSuccessfull = this.petService.Delete("Test");
             isDeleteSuccessfull.Should().BeFalse();
@@ -142,8 +128,7 @@ namespace PetFinder.Tests.Services
         [InlineData("Maxi", "https://tinyurl.com/4fztbse4", 2, 1, 1)]
         public void AllShouldReturnAllPetsOfTheGivenOwner(string name, string imageUrl, int speciesId, int sizeId, int ownerId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
+            this.mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
             this.petService = new PetService(database, mapper);
 
             database.Owners.Add(new Owner { Id = ownerId, Name = "Test", PhoneNumber = "08978548", UserId = "2" });

@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Moq;
+using PetFinder.Data;
 using PetFinder.Data.Models;
 using PetFinder.Services.Pets;
 using PetFinder.Services.SearchPosts;
@@ -21,6 +22,17 @@ namespace PetFinder.Tests.Services
     public class SearchPostServiceTest
     {
         private SearchPostService searchPostService;
+        private IPetService petService;
+        private readonly ApplicationDbContext database;
+        private IMapper mapper;
+
+        public SearchPostServiceTest()
+        {
+            this.database = DatabaseMock.Instance;
+            this.mapper = MapperMock.Mapper;
+            this.petService = new PetService(database, mapper);
+            this.searchPostService = new SearchPostService(database, petService, mapper);
+        }
 
         [Theory]
         [InlineData("Test", "Description", "Found", 1, null, "2", "Jessy", "imageUrl", 1, 2, 1, "test", "1234")]
@@ -28,11 +40,8 @@ namespace PetFinder.Tests.Services
         public void CreateShouldWorkWhenDataIsPassedCorrectly(string title, string description, string type, int cityId, string dateLostFound,
             string petId, string petName, string imageUrl, int speciesId, int sizeId, int? ownerId, string userId, string phoneNumber)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            var petService = new PetService(database, mapper);
             DateTime? exactDate = dateLostFound == null ? null : DateTime.ParseExact(dateLostFound, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            this.searchPostService = new SearchPostService(database, petService, mapper);
+            
             var searchPostId = this.searchPostService.Create(title, description, type, cityId, exactDate, petId, petName, imageUrl, speciesId, sizeId, ownerId, userId, phoneNumber);
 
             searchPostId.Should().NotBeEmpty();
@@ -42,10 +51,6 @@ namespace PetFinder.Tests.Services
         [Fact]
         public void AllShouldReturnCorrectNumberOfSearchPosts()
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            var petService = new PetService(database, mapper);
-            this.searchPostService = new SearchPostService(database, petService, mapper);
             database.SearchPosts.AddRange(GetLostSearchPosts());
             database.SaveChanges();
 
@@ -59,10 +64,6 @@ namespace PetFinder.Tests.Services
         [InlineData("1", "New Title", "New Description", 2, "15/05/2021", "2")]
         public void EditShouldWorkCorrectlyWhenSearchPostExists(string id, string title, string description, int cityId, string dateLostFound, string petId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            var petService = new PetService(database, mapper);
-            this.searchPostService = new SearchPostService(database, petService, mapper);
             DateTime? exactDate = dateLostFound == null ? null : DateTime.ParseExact(dateLostFound, "dd/MM/yyyy",  CultureInfo.InvariantCulture);
 
             database.AddRange(GetFoundSearchPosts());
@@ -86,10 +87,6 @@ namespace PetFinder.Tests.Services
         [InlineData(null, "New Title", "New Description", 2, "15/05/2021", "2")]
         public void EditShouldreturnFalseWhenSearchPostDoesNotExist(string id, string title, string description, int cityId, string dateLostFound, string petId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            var petService = new PetService(database, mapper);
-            this.searchPostService = new SearchPostService(database, petService, mapper);
             DateTime? exactDate = dateLostFound == null ? null : DateTime.ParseExact(dateLostFound, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
             database.AddRange(GetFoundSearchPosts());
@@ -105,11 +102,6 @@ namespace PetFinder.Tests.Services
         [InlineData("Test", "1")]
         public void DeleteShouldWorkWhenSearchPostExistsAnduserIsAuthorized(string userId, string searchPostId)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-            var petService = new PetService(database, mapper);
-            this.searchPostService = new SearchPostService(database, petService, mapper);
-
             database.Users.Add(new IdentityUser { Id = userId });
             database.SearchPosts.Add(new SearchPost { Id = searchPostId, UserId = userId, SearchPostType = new SearchPostType { Id = 1, Name = "Found"} });
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
+using PetFinder.Data;
 using PetFinder.Data.Models;
 using PetFinder.Infrastructure;
 using PetFinder.Services.Comments;
@@ -17,14 +18,17 @@ namespace PetFinder.Tests.Services
     public class CommentServiceTest
     {
         private ICommentsService commentService;
+        private readonly ApplicationDbContext database;
 
+        public CommentServiceTest()
+        {
+            this.database = DatabaseMock.Instance;
+            this.commentService = new CommentsService(database);
+        }
         [Theory]
         [InlineData("Test", "TestId")]
         public void AddShouldAddComments(string comment, string userId)
         {
-            var database = DatabaseMock.Instance;
-            this.commentService = new CommentsService(database);
-
             database.ResourcePosts.Add(new ResourcePost { Id = "1" });
             database.Users.Add(new IdentityUser { Id = userId });
             database.SaveChanges();
@@ -38,9 +42,6 @@ namespace PetFinder.Tests.Services
         [Fact]
         public void AddShouldReturnFalseIfPostDoesNotExist()
         {
-            var database = DatabaseMock.Instance;
-            this.commentService = new CommentsService(database);
-
             database.ResourcePosts.Add(new ResourcePost { Id = "1" });
             database.Users.Add(new IdentityUser { Id = "TestId" });
             database.SaveChanges();
@@ -53,9 +54,6 @@ namespace PetFinder.Tests.Services
         [InlineData("Test", "TestId")]
         public void DeleteShouldWorkCorrectly(string comment, string userId)
         {
-            var database = DatabaseMock.Instance;
-            this.commentService = new CommentsService(database);
-
             database.ResourcePosts.Add(new ResourcePost { Id = "1" });
             database.Users.Add(new IdentityUser { Id = userId });
             database.SaveChanges();

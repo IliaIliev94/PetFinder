@@ -2,7 +2,9 @@
 using FluentAssertions;
 using PetFinder.Data;
 using PetFinder.Data.Models;
+using PetFinder.Infrastructure;
 using PetFinder.Services.Owners;
+using PetFinder.Services.Owners.Models;
 using PetFinder.Tests.Mocks;
 using System;
 using System.Collections.Generic;
@@ -16,11 +18,13 @@ namespace PetFinder.Tests.Services
     public class OwnerServiceTest
     {
         private IOwnerService ownerService;
-        private readonly ApplicationDbContext database = DatabaseMock.Instance;
-        private readonly IMapper mapper = MapperMock.Mapper;
+        private readonly ApplicationDbContext database;
+        private IMapper mapper;
 
         public OwnerServiceTest()
         {
+            this.database = DatabaseMock.Instance;
+            this.mapper = MapperMock.Mapper;
             this.ownerService = new OwnerService(database, mapper);
         }
 
@@ -65,7 +69,6 @@ namespace PetFinder.Tests.Services
         [InlineData("TestUser", "08985455465", "TestId")]
         public void GetPhoneNumberShouldReturnCorrectResult(string name, string phoneNumber, string userId)
         {
-
             this.ownerService.Add(name, phoneNumber, userId);
 
             var phoneNumberResult = this.ownerService.GetPhoneNumber(userId);
@@ -92,7 +95,15 @@ namespace PetFinder.Tests.Services
         [InlineData("Test", "Test", "TestId")]
         public void GetEditDataShouldReturnCorrectResult(string name, string phoneNumber, string userId)
         {
-            this.ownerService.GetOwnerData(userId);
+            this.mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
+            this.ownerService = new OwnerService(database, mapper);
+
+            this.ownerService.Add(name, phoneNumber, userId);
+
+            var owner = this.ownerService.GetOwnerData(userId);
+
+            owner.Name.Should().BeEquivalentTo(name);
+            owner.PhoneNumber.Should().BeEquivalentTo(phoneNumber);
         }
     }
 }

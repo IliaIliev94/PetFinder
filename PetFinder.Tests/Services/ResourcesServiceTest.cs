@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
+using PetFinder.Data;
 using PetFinder.Data.Models;
 using PetFinder.Infrastructure;
 using PetFinder.Services.Resources;
@@ -16,15 +17,21 @@ namespace PetFinder.Tests.Services
     public class ResourcesServiceTest
     {
         private IResourcesService resourcesService;
+        private readonly ApplicationDbContext database;
+        private IMapper mapper;
+
+        public ResourcesServiceTest()
+        {
+            database = DatabaseMock.Instance;
+            mapper = MapperMock.Mapper;
+            this.resourcesService = new ResourcesService(database, mapper);
+        }
 
         [Theory]
         [InlineData("Title", "Description", "ImageUrl")]
         [InlineData("Test", "Test", "Test")]
         public void CreateShouldWorkCorrectly(string title, string description, string imageUrl)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = MapperMock.Mapper;
-
             this.resourcesService = new ResourcesService(database, mapper);
             database.ResourcePosts.Should().HaveCount(0);
             this.resourcesService.Create(title, description, imageUrl);
@@ -44,8 +51,7 @@ namespace PetFinder.Tests.Services
         [InlineData("Title", "Description", "ImageUrl")]
         public void AllShouldReturnCorrectResult(string title, string description, string imageUrl)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
+            this.mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
 
             this.resourcesService = new ResourcesService(database, mapper);
 
@@ -64,8 +70,7 @@ namespace PetFinder.Tests.Services
         [InlineData("Test", "Test", "Test")]
         public void DetailsShouldReturnCorrectResult(string title, string description, string imageUrl)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
+            this.mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
 
             this.resourcesService = new ResourcesService(database, mapper);
 
@@ -81,11 +86,6 @@ namespace PetFinder.Tests.Services
         [InlineData("New Title", "New Description", "https://tinyurl.com/4fztbse4")]
         public void EditShouldWorkCorrectly(string title, string description, string imageUrl)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
-
-            this.resourcesService = new ResourcesService(database, mapper);
-
             var resourcePostId = this.resourcesService.Create("Test Title", "Test Description", "Test Image Url");
             var isEditSuccessfull = this.resourcesService.Edit(resourcePostId, title, description, imageUrl);
 
@@ -103,11 +103,6 @@ namespace PetFinder.Tests.Services
         [Fact]
         public void EditShouldReturnFalseIfNonExistingResourcePostIsSelected()
         {
-            var database = DatabaseMock.Instance;
-            var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
-
-            this.resourcesService = new ResourcesService(database, mapper);
-
             var resourcePostId = this.resourcesService.Create("Test Title", "Test Description", "Test Image Url");
             var isEditSuccessfull = this.resourcesService.Edit("TestId", "New Title", "New Description", "New Image Url");
 
@@ -119,10 +114,6 @@ namespace PetFinder.Tests.Services
         [InlineData("New Title", "New Description", "https://tinyurl.com/4fztbse4")]
         public void DeleteShouldWorkCorrectly(string title, string description, string imageUrl)
         {
-            var database = DatabaseMock.Instance;
-            var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
-
-            this.resourcesService = new ResourcesService(database, mapper);
             database.ResourcePosts.Should().HaveCount(0);
             var resourcePostId = this.resourcesService.Create(title, description, imageUrl);
             database.ResourcePosts.Should().HaveCount(1);
@@ -135,11 +126,6 @@ namespace PetFinder.Tests.Services
         [Fact]
         public void DeleteShouldReturnFalseIfNoneExistingResourcePostIsSelected()
         {
-
-            var database = DatabaseMock.Instance;
-            var mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
-
-            this.resourcesService = new ResourcesService(database, mapper);
             var isDeleteSuccessfull = this.resourcesService.Delete("Test");
 
             isDeleteSuccessfull.Should().BeFalse();
