@@ -12,6 +12,8 @@ using Xunit;
 using PetFinder.Areas.Admin.Controllers;
 
 using static PetFinder.Tests.Data.ResourcesData;
+using PetFinder.Models.Resources;
+using PetFinder.Models.Shared;
 
 namespace PetFinder.Tests.Controllers
 {
@@ -23,7 +25,7 @@ namespace PetFinder.Tests.Controllers
             MyController<PetFinder.Controllers.ResourcesController>
                 .Instance()
                 .WithData(GetResourcePosts())
-                .Calling(c => c.All())
+                .Calling(c => c.All(new AllResourcePostsViewModel { Pagination = new PaginationViewModel { CurrentPage = 1, PostsPerPage = 10} }))
                 .ShouldReturn()
                 .View(view => view
                 .WithModelOfType<IEnumerable<ResourcePostServiceModel>>()

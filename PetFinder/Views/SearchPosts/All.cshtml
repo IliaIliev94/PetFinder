@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Search Posts";
+    Model.Pagination.Type = Model.Type;
+    ViewBag.Controller = "SearchPosts";
 }
 
 <h2 class="text-center my-2">@ViewData["Title"]</h2>
@@ -82,38 +84,7 @@
 
     @if(Model.SearchPosts.Any())
     {
-        <nav aria-label="Page navigation example">
-
-            <div class="d-flex justify-content-center mt-5">
-                <ul class="pagination mx-auto">
-
-                    <li class="page-item">
-                        <a asp-controller="SearchPosts" asp-action="All"
-                           asp-route-currentPage="@(Model.CurrentPage - 1)"
-                           asp-route-type="@Model.Type"
-                           class="page-link @(Model.CurrentPage <= 1 ? "disabled" : String.Empty)">Previous</a>
-                    </li>
-
-                    @for (var i = 1; i <= @Model.TotalPages; i++)
-                    {
-                        <li class="page-item">
-                            <a asp-controller="SearchPosts"
-                               asp-action="All"
-                               asp-route-currentPage="@i"
-                               asp-route-type="@Model.Type"
-                               class="page-link">@i</a>
-                        </li>
-                    }
-                    <li class="page-item">
-                        <a asp-controller="SearchPosts" asp-action="All"
-                           asp-route-currentPage="@(Model.CurrentPage + 1)"
-                           asp-route-type="@Model.Type"
-                           class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : String.Empty)">Next</a>
-                    </li>
-                </ul>
-            </div>
-
-        </nav>
-    }
+       <partial name="../Shared/_PaginationPartial" for="@Model.Pagination"/>
+    } 
 
 </div>

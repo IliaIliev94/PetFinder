@@ -28,8 +28,9 @@ namespace PetFinder.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult All([FromQuery] AllSearchPostsViewModel query)
+        public IActionResult All([FromQuery] AllSearchPostsViewModel query, int currentPage)
         {
+            query.Pagination.CurrentPage = currentPage != 0 ? currentPage : 1;
 
             if (query.Type != "Lost" && query.Type != "Found")
             {
@@ -42,8 +43,8 @@ namespace PetFinder.Controllers
                 query.SearchTerm,
                 query.City,
                 query.Type,
-                query.CurrentPage,
-                query.SearchPostsPerPage,
+                query.Pagination.CurrentPage,
+                query.Pagination.PostsPerPage,
                 query.Sorting);
 
             SetAllSearchPostQueryRsponseData(query, queryResult);
@@ -321,8 +322,8 @@ namespace PetFinder.Controllers
             query.PetSizes = queryResult.PetSizes;
             query.PetSpecies = queryResult.PetSpecies;
             query.SearchPosts = queryResult.SearchPosts;
-            query.TotalPages = queryResult.TotalPages;
-            query.CurrentPage = queryResult.CurrentPage;
+            query.Pagination.TotalPages = queryResult.TotalPages;
+            query.Pagination.CurrentPage = queryResult.CurrentPage;
             query.Cities = queryResult.Cities;
         }
 

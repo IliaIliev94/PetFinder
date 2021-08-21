@@ -1,7 +1,8 @@
-﻿@model IEnumerable<ResourcePostServiceModel>
+﻿@model AllResourcePostsViewModel
 
 @{
     ViewData["Title"] = "Resources";
+    ViewBag.Controller = "Resources";
 }
 <h2 class="text-center heading-margin">@ViewData["Title"]</h2>
 @if (User.IsAdmin())
@@ -11,4 +12,15 @@
 </div>
     
 }
-<partial name="_ResourcePostPartial" model="@Model" />
+<form method="get">
+    <div class="input-group mb-5">
+        <input asp-for="SearchTerm" type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+               aria-describedby="search-addon" />
+        <button type="submit" class="btn btn-primary">search</button>
+    </div>
+</form>
+
+
+<partial name="_ResourcePostPartial" model="@Model.ResourcePosts" />
+
+<partial name="../Shared/_PaginationPartial" for="@Model.Pagination" />

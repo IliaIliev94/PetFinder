@@ -77,7 +77,10 @@ namespace PetFinder.Services.SearchPosts
         {
             var searchPostQuery = this.context.SearchPosts.Where(searchPost => !searchPost.IsFoundClaimed).AsQueryable();
 
-            var totalPages = (int)Math.Ceiling(this.context.SearchPosts.Where(searchPost => searchPost.SearchPostType.Name == type).Count() * 1.0 / searchPostsPerPage);
+            var totalPages = (int)Math.Ceiling(this.context
+                    .SearchPosts.Where(searchPost =>  searchPost.SearchPostType.Name == type 
+                    && !searchPost.IsFoundClaimed)
+                    .Count() * 1.0 / searchPostsPerPage);
 
             if(currentPage < 1)
             {

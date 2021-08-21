@@ -10,11 +10,6 @@ namespace PetFinder.Models.SearchPosts
 {
     public class AllSearchPostsViewModel
     {
-        public int SearchPostsPerPage { get; set; } = 9;
-
-        public int CurrentPage { get; set; } = 1;
-
-        public int TotalPages { get; set; }
 
         public string Type { get; init; }
 
@@ -40,5 +35,7 @@ namespace PetFinder.Models.SearchPosts
         public IEnumerable<string> Cities { get; set; }
 
         public IEnumerable<SearchPostServiceModel> SearchPosts { get; set; }
+
+        public PaginationViewModel Pagination { get; set; } = new PaginationViewModel { PostsPerPage = 3 };
     }
 }

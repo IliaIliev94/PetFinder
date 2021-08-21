@@ -16,6 +16,7 @@ using static PetFinder.Tests.Data.PetData;
 using static PetFinder.Tests.Data.CitiesData;
 using PetFinder.Services.SearchPosts.Models;
 using PetFinder.Models.Pets;
+using PetFinder.Models.Shared;
 
 namespace PetFinder.Tests.Controllers
 {
@@ -36,7 +37,7 @@ namespace PetFinder.Tests.Controllers
             MyController<SearchPostsController>
                 .Instance()
                 .WithData(GetFoundSearchPosts())
-                .Calling(c => c.All(new AllSearchPostsViewModel { Type = "Found", SearchPostsPerPage = 11 }))
+                .Calling(c => c.All(new AllSearchPostsViewModel { Type = "Found", Pagination = new PaginationViewModel { PostsPerPage = 11} }))
                 .ShouldReturn()
                 .View(view => view
                 .WithModelOfType<AllSearchPostsViewModel>()

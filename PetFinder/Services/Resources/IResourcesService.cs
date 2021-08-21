@@ -8,7 +8,7 @@ namespace PetFinder.Services.Resources
 {
     public interface IResourcesService
     {
-        IEnumerable<ResourcePostServiceModel> All();
+        ResourcePostQueryServiceModel All(string searchTerm, int currentPage, int resourcePostsPerPage);
 
         ResourcePostDetailsServiceModel Details (string id);
 

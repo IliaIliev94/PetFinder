@@ -60,7 +60,7 @@ namespace PetFinder.Tests.Services
                 this.resourcesService.Create(title, description, imageUrl);
             }
 
-            var resourcePosts = this.resourcesService.All();
+            var resourcePosts = this.resourcesService.All(null, 1, 10);
 
             resourcePosts.Should().HaveCount(10);
         }

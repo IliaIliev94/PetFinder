@@ -21,13 +21,42 @@ namespace PetFinder.Services.Resources
             this.mapper = mapper;
         }
 
-        public IEnumerable<ResourcePostServiceModel> All()
+        public ResourcePostQueryServiceModel All(string searchTerm, int currentPage, int resourcePostsPerPage)
         {
-            return this.context
-                .ResourcePosts
+            var resourcePostQuery = this.context.ResourcePosts.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var searchTermInvariant = searchTerm.ToLower();
+
+                resourcePostQuery = resourcePostQuery.Where(resourcePostQuery => resourcePostQuery.Title.ToLower().Contains(searchTermInvariant)
+                || resourcePostQuery.Description.ToLower().Contains(searchTermInvariant));
+
+            }
+
+            var totalPages = (int)Math.Ceiling(resourcePostQuery.Count() * 1.0 / resourcePostsPerPage);
+
+
+            if (currentPage < 1)
+            {
+                currentPage = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+            }
+
+
+
+            var resourcePosts = resourcePostQuery
+                .Skip((currentPage - 1) * resourcePostsPerPage)
+                .Take(resourcePostsPerPage)
                 .OrderByDescending(resourcePost => resourcePost.CreatedOn)
                 .ProjectTo<ResourcePostServiceModel>(mapper.ConfigurationProvider)
                 .ToList();
+
+            return new ResourcePostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, Resources = resourcePosts };
         }
 
         public ResourcePostDetailsServiceModel Details(string id)
