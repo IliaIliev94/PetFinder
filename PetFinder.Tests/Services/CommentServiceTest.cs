@@ -27,7 +27,7 @@ namespace PetFinder.Tests.Services
         }
         [Theory]
         [InlineData("Test", "TestId")]
-        public void AddShouldAddComments(string comment, string userId)
+        public void AddResourcePostCommentShouldAddComments(string comment, string userId)
         {
             database.ResourcePosts.Add(new ResourcePost { Id = "1" });
             database.Users.Add(new IdentityUser { Id = userId });
@@ -40,7 +40,7 @@ namespace PetFinder.Tests.Services
         }
 
         [Fact]
-        public void AddShouldReturnFalseIfPostDoesNotExist()
+        public void AddResourcePostCommentShouldReturnFalseIfPostDoesNotExist()
         {
             database.ResourcePosts.Add(new ResourcePost { Id = "1" });
             database.Users.Add(new IdentityUser { Id = "TestId" });
@@ -65,6 +65,31 @@ namespace PetFinder.Tests.Services
             var isDeleteSuccessfull = this.commentService.Delete(commentId, null);
             isDeleteSuccessfull.Item1.Should().BeTrue();
             database.Comments.Should().HaveCount(0);
+        }
+
+        [Theory]
+        [InlineData("Test", "TestId")]
+        public void AddSearchPostCommentShouldAddComments(string comment, string userId)
+        {
+            database.SearchPosts.Add(new SearchPost { Id = "1" });
+            database.Users.Add(new IdentityUser { Id = userId });
+            database.SaveChanges();
+
+            database.Comments.Should().HaveCount(0);
+            var isCreationSuccessfull = this.commentService.AddSearchPostComment(comment, "1", userId);
+            isCreationSuccessfull.Should().BeTrue();
+            database.Comments.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void AddSearchPostCommentShouldReturnFalseIfPostDoesNotExist()
+        {
+            database.SearchPosts.Add(new SearchPost { Id = "1" });
+            database.Users.Add(new IdentityUser { Id = "TestId" });
+            database.SaveChanges();
+
+            var isCreationSuccessfull = this.commentService.AddResourcePostComment("Comment", "User", "Test");
+            isCreationSuccessfull.Should().BeFalse();
         }
     }
 }

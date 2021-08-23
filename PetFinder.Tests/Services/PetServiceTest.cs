@@ -116,6 +116,22 @@ namespace PetFinder.Tests.Services
             database.Pets.Should().HaveCount(0);
         }
 
+        [Theory]
+        [InlineData("TestId", 1, "Maxi", "https://tinyurl.com/4fztbse4", 1, 2)]
+        public void DeleteShouldWorkCorrectlyForOwners(string userId, int ownerId, string petName, string imageUrl, int speciesId, int sizeId)
+        {
+            this.database.Owners.Add(new Owner { Id = ownerId, Name = "Test", UserId = userId });
+            this.database.SaveChanges();
+
+            database.Pets.Should().HaveCount(0);
+            var petId = this.petService.Create(petName, imageUrl, speciesId, sizeId, ownerId);
+            database.Pets.Should().HaveCount(1);
+
+            var isDeleteSuccessfull = this.petService.Delete(petId, ownerId);
+            isDeleteSuccessfull.Should().BeTrue();
+            database.Pets.Should().HaveCount(0);
+        }
+
         [Fact]
         public void DeleteShouldReturnFalseIfAnAttemptIsMadeToDeleteANonExistingPet()
         {
@@ -124,6 +140,29 @@ namespace PetFinder.Tests.Services
             isDeleteSuccessfull.Should().BeFalse();
         }
 
+        [Fact]
+        public void DeleteShouldReturnFalseIfUserDoesNotOwnPet()
+        {
+            var petId = this.petService.Create("Test", "ImageUrl", 1, 1, 2);
+            var isDeleteSuccessfull = this.petService.Delete(petId, 3);
+            isDeleteSuccessfull.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(1, "Maxi", "https://tinyurl.com/4fztbse4", 2, 4, "TestSearchPost")]
+        public void DeleteShouldReturnFalseIfPetBelongsToASearchPost(int ownerId, string petName, 
+            string imageUrl, int speciesId, int sizeId, string searchPostId)
+        {
+            var petId = this.petService.Create(petName, imageUrl, speciesId, sizeId, ownerId);
+            this.database.SearchPosts.Add(new SearchPost { Id = searchPostId, PetId = petId });
+            this.database.SaveChanges();
+
+            var isDeleteSuccessfull = this.petService.Delete(petId, ownerId);
+
+            isDeleteSuccessfull.Should().BeFalse();
+
+        }
+        
         [Theory]
         [InlineData("Maxi", "https://tinyurl.com/4fztbse4", 2, 1, 1)]
         public void AllShouldReturnAllPetsOfTheGivenOwner(string name, string imageUrl, int speciesId, int sizeId, int ownerId)
@@ -144,6 +183,38 @@ namespace PetFinder.Tests.Services
 
             var pets = this.petService.All(ownerId);
             pets.Should().HaveCount(10);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(4)]
+        [InlineData(10)]
+        public void PetSpeciesExistsReturnsCorrectResult(int id)
+        {
+            this.database.Species.AddRange(Enumerable.Range(1, 10).Select(i => new Specie { Id = i, Name = i.ToString() }));
+            this.database.SaveChanges();
+
+            var speciesExists = this.petService.SpeciesExists(id);
+            speciesExists.Should().BeTrue();
+
+            speciesExists = this.petService.SpeciesExists(20);
+            speciesExists.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(4)]
+        [InlineData(10)]
+        public void PetSizeExistsReturnsCorrectResult(int id)
+        {
+            this.database.Sizes.AddRange(Enumerable.Range(1, 10).Select(i => new Size { Id = i, Type = i.ToString() }));
+            this.database.SaveChanges();
+
+            var speciesExists = this.petService.SizeExists(id);
+            speciesExists.Should().BeTrue();
+
+            speciesExists = this.petService.SizeExists(20);
+            speciesExists.Should().BeFalse();
         }
     }
 }

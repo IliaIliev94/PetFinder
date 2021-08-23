@@ -20,6 +20,7 @@ namespace PetFinder.Tests.Controllers
         {
             MyController<HomeController>
                 .Instance()
+                .WithData(GetSearchPosts())
                 .Calling(c => c.Index())
                 .ShouldReturn()
                 .View(view => view
