@@ -3,11 +3,7 @@ using MyTested.AspNetCore.Mvc;
 using PetFinder.Controllers;
 using PetFinder.Data.Models;
 using PetFinder.Models.SearchPosts;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using static PetFinder.Tests.Data.SearchPostsData;
 using static PetFinder.Tests.Data.SizeData;
@@ -28,7 +24,7 @@ namespace PetFinder.Tests.Controllers
             MyController<SearchPostsController>
                 .Instance()
                 .WithData(GetLostSearchPosts())
-                .Calling(c => c.All(new AllSearchPostsViewModel { Type = "Lost" }))
+                .Calling(c => c.All(new AllSearchPostsViewModel { Type = "Lost", Pagination = new PaginationViewModel { PostsPerPage = 9} }, 1))
                 .ShouldReturn()
                 .View(view => view
                 .WithModelOfType<AllSearchPostsViewModel>()
@@ -37,7 +33,7 @@ namespace PetFinder.Tests.Controllers
             MyController<SearchPostsController>
                 .Instance()
                 .WithData(GetFoundSearchPosts())
-                .Calling(c => c.All(new AllSearchPostsViewModel { Type = "Found", Pagination = new PaginationViewModel { PostsPerPage = 11} }))
+                .Calling(c => c.All(new AllSearchPostsViewModel { Type = "Found", Pagination = new PaginationViewModel { PostsPerPage = 11} }, 1))
                 .ShouldReturn()
                 .View(view => view
                 .WithModelOfType<AllSearchPostsViewModel>()
@@ -51,7 +47,7 @@ namespace PetFinder.Tests.Controllers
         {
             MyController<SearchPostsController>
                 .Instance()
-                .Calling(c => c.All(new AllSearchPostsViewModel { Type = type }))
+                .Calling(c => c.All(new AllSearchPostsViewModel { Type = type }, 1))
                 .ShouldReturn()
                 .BadRequest();
 

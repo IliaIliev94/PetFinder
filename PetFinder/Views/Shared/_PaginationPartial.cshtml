@@ -14,11 +14,11 @@
 
             @for (var i = 1; i <= @Model.TotalPages; i++)
             {
-                <li class="page-item">
+                <li class="page-item @(i == Model.CurrentPage ? "active" : String.Empty)">
                     <a asp-controller="@ViewBag.Controller"
                        asp-action="All"
-                       asp-route-currentPage="@i"
                        asp-route-type="@Model.Type"
+                       asp-route-currentPage="@i"
                        class="page-link">@i</a>
                 </li>
             }

@@ -31,7 +31,7 @@ namespace PetFinder.Controllers.Api
                 query.SearchTerm,
                 query.City,
                 query.Type,
-                query.CurentPage,
+                query.CurrentPage,
                 AllSearchPostsApiRequestModel.PostsPerPage,
                 query.Sorting);
 

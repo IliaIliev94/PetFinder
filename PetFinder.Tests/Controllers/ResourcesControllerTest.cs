@@ -25,11 +25,11 @@ namespace PetFinder.Tests.Controllers
             MyController<PetFinder.Controllers.ResourcesController>
                 .Instance()
                 .WithData(GetResourcePosts())
-                .Calling(c => c.All(new AllResourcePostsViewModel { Pagination = new PaginationViewModel { CurrentPage = 1, PostsPerPage = 10} }))
+                .Calling(c => c.All(new AllResourcePostsViewModel { Pagination = new PaginationViewModel { PostsPerPage = 10}}, 1))
                 .ShouldReturn()
                 .View(view => view
-                .WithModelOfType<IEnumerable<ResourcePostServiceModel>>()
-                .Passing(m => m.Should().HaveCount(10)));
+                .WithModelOfType<AllResourcePostsViewModel>()
+                .Passing(m => m.ResourcePosts.Should().HaveCount(10)));
         }
 
         [Fact]

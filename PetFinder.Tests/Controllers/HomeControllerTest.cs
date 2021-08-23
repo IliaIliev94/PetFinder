@@ -18,11 +18,9 @@ namespace PetFinder.Tests.Controllers
         [Fact]
         public void IndexShouldReturnCorrectView()
         {
-            MyMvc
-                .Pipeline()
-                .ShouldMap("/")
-                .To<HomeController>(c => c.Index())
-                .Which(c => c.WithData(GetSearchPosts()))
+            MyController<HomeController>
+                .Instance()
+                .Calling(c => c.Index())
                 .ShouldReturn()
                 .View(view => view
                     .WithModelOfType<List<LatestSearchPostsServiceModel>>()

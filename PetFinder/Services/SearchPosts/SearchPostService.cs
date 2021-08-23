@@ -77,21 +77,6 @@ namespace PetFinder.Services.SearchPosts
         {
             var searchPostQuery = this.context.SearchPosts.Where(searchPost => !searchPost.IsFoundClaimed).AsQueryable();
 
-            var totalPages = (int)Math.Ceiling(this.context
-                    .SearchPosts.Where(searchPost =>  searchPost.SearchPostType.Name == type 
-                    && !searchPost.IsFoundClaimed)
-                    .Count() * 1.0 / searchPostsPerPage);
-
-            if(currentPage < 1)
-            {
-                currentPage = 1;
-            }
-
-            if(currentPage > totalPages)
-            {
-                currentPage = totalPages;
-            }
-
             if (!string.IsNullOrWhiteSpace(species))
             {
                 searchPostQuery = searchPostQuery.Where(searchPost => searchPost.Pet.Species.Name == species);
@@ -111,6 +96,22 @@ namespace PetFinder.Services.SearchPosts
                     || searchPost.Description.ToLower().Contains(searchTermInvariant)
                     || searchPost.Pet.Name.ToLower().Contains(searchTermInvariant)
                     || searchPost.Pet.Species.Name.Contains(searchTermInvariant));
+            }
+
+
+            var totalPages = (int)Math.Ceiling(searchPostQuery
+                    .Where(searchPost =>  searchPost.SearchPostType.Name == type 
+                    && !searchPost.IsFoundClaimed)
+                    .Count() * 1.0 / searchPostsPerPage);
+
+            if(currentPage < 1)
+            {
+                currentPage = 1;
+            }
+
+            if(currentPage > totalPages)
+            {
+                currentPage = totalPages;
             }
 
             if (!string.IsNullOrWhiteSpace(type))
