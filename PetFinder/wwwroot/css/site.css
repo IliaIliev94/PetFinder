@@ -90,13 +90,8 @@ body {
 
 
 .item-image {
-    max-height: 800px;
-    width: auto;
-}
-
-.card-img-top {
-    height: 20rem;
-    object-fit: cover;
+    height: auto;
+    width: 100%;
 }
 
 a.disabled {
@@ -112,3 +107,17 @@ a.disabled {
 .break-word {
     word-wrap: break-word;
 }
+
+@media (max-width: 576px) {
+    .card-img-top {
+        object-fit: cover;
+    }
+}
+
+@media (min-width: 1000px) {
+    .card-img-top {
+        height: 20rem;
+        object-fit: cover;
+    }
+}
+

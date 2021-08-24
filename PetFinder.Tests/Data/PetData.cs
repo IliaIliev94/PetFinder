@@ -13,5 +13,10 @@ namespace PetFinder.Tests.Data
         {
             return new Pet { Id = petId, Name = name, SizeId = sizeId, SpeciesId = speciesId, ImageUrl = imageUrl, OwnerId = ownerId };
         }
+
+        public static IEnumerable<Pet> GetPets()
+        {
+            return Enumerable.Range(0, 10).Select(i => new Pet { Id = i.ToString(), Name = i.ToString() });
+        }
     }
 }

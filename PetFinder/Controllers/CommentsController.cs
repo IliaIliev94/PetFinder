@@ -43,8 +43,9 @@ namespace PetFinder.Controllers
                 return this.BadRequest();
             }
 
-            var controllerToRedirectTo = resourcePostId == null ? "SearchPosts" : "ResourcePosts";
-            return this.RedirectToAction("Details", controllerToRedirectTo , new { Id = searchPostId });
+            var controllerToRedirectTo = resourcePostId == null ? "SearchPosts" : "Resources";
+            var idToRedirectTo = resourcePostId == null ? searchPostId : resourcePostId;
+            return this.RedirectToAction("Details", controllerToRedirectTo , new { Id = idToRedirectTo });
         }
 
         [Authorize]

@@ -13,5 +13,10 @@ namespace PetFinder.Tests.Data
         {
             return new City { Id = 1, Name = "Test"};
         }
+
+        public static IEnumerable<City> GetCities()
+        {
+            return Enumerable.Range(1, 10).Select(i => new City { Id = i, Name = i.ToString()});
+        }
     }
 }

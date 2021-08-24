@@ -361,6 +361,11 @@ namespace PetFinder.Services.SearchPosts
 
         public IEnumerable<SearchPostServiceModel> Saved(string userId)
         {
+            var test = this.context
+                .SavedSearchPosts
+                .Where(saved => saved.UserId == userId)
+                .Select(s => s.SearchPost);
+
             return this.context
                 .SavedSearchPosts
                 .Where(saved => saved.UserId == userId)

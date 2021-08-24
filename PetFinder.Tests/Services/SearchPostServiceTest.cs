@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Moq;
 using PetFinder.Data;
 using PetFinder.Data.Models;
+using PetFinder.Infrastructure;
 using PetFinder.Services.Pets;
 using PetFinder.Services.SearchPosts;
 using PetFinder.Tests.Mocks;
@@ -16,6 +17,8 @@ using System.Threading.Tasks;
 using Xunit;
 
 using static PetFinder.Tests.Data.SearchPostsData;
+using static PetFinder.Tests.Data.CitiesData;
+using static PetFinder.Tests.Data.PetData;
 
 namespace PetFinder.Tests.Services
 {
@@ -51,10 +54,13 @@ namespace PetFinder.Tests.Services
         [Fact]
         public void AllShouldReturnCorrectNumberOfSearchPosts()
         {
+            this.mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
+            this.searchPostService = new SearchPostService(database, petService, mapper);
             database.SearchPosts.AddRange(GetLostSearchPosts());
             database.SaveChanges();
 
-            var searchPosts = this.searchPostService.All(null, null, null, null, "Lost", 1, 10, Models.Shared.SearchPostSorting.DatePublished);
+
+            var searchPosts = this.searchPostService.All(null, null, null, null, "Lost", 1, 10, Models.Shared.SearchPostSorting.DatePublished, "TestId");
 
             searchPosts.SearchPosts.Should().HaveCount(10);
         }
@@ -113,6 +119,99 @@ namespace PetFinder.Tests.Services
             searchPostExists.Should().BeFalse();
         }
 
-       
+        [Theory]
+        [InlineData("TestId", "TestId")]
+        public void SaveWorksCorrectly(string userId, string searchPostId)
+        {
+            database.Users.Add(new IdentityUser { Id = userId });
+            database.SearchPosts.Add(new SearchPost { Id = searchPostId, UserId = userId, SearchPostType = new SearchPostType { Id = 1, Name = "Found" } });
+
+            database.SaveChanges();
+
+            var isSaveSuccessfull = this.searchPostService.Save(searchPostId, userId);
+
+            isSaveSuccessfull.Should().BeTrue();
+            database.SavedSearchPosts.Any(saved => saved.SearchPostId == searchPostId && saved.UserId == userId);
+        }
+
+        [Theory]
+        [InlineData("UserId", "1")]
+        public void SavedShouldReturnCorrectNumberOfSearchPosts(string userId, string searchPostId)
+        {
+            this.mapper = new MapperConfiguration(mc => mc.AddProfile(new MappingProfile())).CreateMapper();
+            this.searchPostService = new SearchPostService(database, petService, mapper);
+            this.database.SearchPosts.Add(new SearchPost { Id = searchPostId });
+            this.database.SaveChanges();
+
+            this.searchPostService.Save(searchPostId, userId);
+
+            var searchPosts = this.searchPostService.Saved(userId);
+
+            searchPosts.Should().HaveCount(1);
+        }
+
+        [Theory]
+        [InlineData("1", "Lost")]
+        public void SetAsFoundClaimedWorksCorrectly(string searchPostId, string type)
+        {
+            this.database.SearchPosts.Add(new SearchPost { Id = searchPostId, 
+                IsFoundClaimed = false, SearchPostType = new SearchPostType { Id = 1, Name = type} });
+            this.database.SaveChanges();
+
+            var searchPostType = this.searchPostService.SetAsFoundClaimed(searchPostId);
+
+            searchPostType.Should().BeEquivalentTo(type);
+            var isFoundClaimed = this.database.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == searchPostId).IsFoundClaimed;
+
+            isFoundClaimed.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(2)]
+        [InlineData(4)]
+        public void CityExistsReturnsCorrectResult(int cityId)
+        {
+            this.database.AddRange(GetCities());
+            this.database.SaveChanges();
+
+            var cityExists = this.searchPostService.CityExists(cityId);
+
+            cityExists.Should().BeTrue();
+
+            var fakeCity = this.searchPostService.CityExists(20);
+            fakeCity.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("2")]
+        [InlineData("4")]
+        public void PetExistsReturnsCorrectResult(string petId)
+        {
+            this.database.AddRange(GetPets());
+            this.database.SaveChanges();
+
+            var cityExists = this.searchPostService.PetExists(petId);
+
+            cityExists.Should().BeTrue();
+
+            var fakeCity = this.searchPostService.PetExists("Test");
+            fakeCity.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("Test", "1")]
+        public void RemoveRemovesSavedSearchPost(string userId, string searchPostId)
+        {
+
+            this.searchPostService.Save(searchPostId, userId);
+            database.SavedSearchPosts.Any(saved => saved.UserId == userId && saved.SearchPostId == searchPostId)
+                    .Should().BeTrue();
+            this.searchPostService.Remove(searchPostId, userId);
+            database.SavedSearchPosts.Any(saved => saved.UserId == userId && saved.SearchPostId == searchPostId)
+        .Should().BeFalse();
+
+        }
+
+
     }
 }
