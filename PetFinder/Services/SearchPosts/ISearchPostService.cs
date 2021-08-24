@@ -19,6 +19,8 @@ namespace PetFinder.Services.SearchPosts
             SearchPostSorting sorting,
             string userId = null);
 
+        IEnumerable<SearchPostServiceModel> Saved(string userId);
+
         string Create(
             string title,
             string description,
@@ -74,6 +76,10 @@ namespace PetFinder.Services.SearchPosts
         bool SearchPostTypeExists(string name);
 
         bool UserOwnsSearchPost(string searchPostId, string userId);
+
+        bool Save(string searchPostId, string userId);
+
+        bool Remove(string searchPostId, string userId);
 
         string GetUserId(string id);
 

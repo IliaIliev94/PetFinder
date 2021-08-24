@@ -13,6 +13,9 @@
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="SearchPosts" asp-action="Mine">My Search Posts</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="SearchPosts" asp-action="Saved">Saved Search Posts</a>
+            </li>
 
             @if (Owners.IsOwner(User.GetId()))
             {

@@ -15,11 +15,11 @@
                     <h5 class="card-title">@searchPost.Title</h5>
                     <p class="card-text">@searchPost.PetName - @searchPost.PetSpecies</p>
                     <a asp-controller="SearchPosts" asp-action="Details" asp-route-id="@searchPost.Id" class="btn btn-primary">Details</a>
-                    @if (!searchPost.IsSaved)
+                    @if(searchPost.UserId != this.User.GetId())
                     {
-                        <a asp-controller="SearchPosts" asp-action="Save" asp-route-id="@searchPost.Id" class="btn btn-primary">Save</a>
+                <a asp-controller="SearchPosts" asp-action=@(searchPost.IsSaved ? "Remove" : "Save") asp-route-id="@searchPost.Id" 
+                        class="btn btn-primary">@(searchPost.IsSaved ? "Remove" : "Save")</a>
                     }
-
                 </div>
             </div>
         </div>

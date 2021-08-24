@@ -317,6 +317,40 @@ namespace PetFinder.Controllers
             return this.RedirectToAction("All", new { Type = searchPostType });
         }
 
+        [Authorize]
+        public IActionResult Saved()
+        {
+            var savedSearchPosts = this.searchPostService.Saved(this.User.GetId());
+
+            return this.View(savedSearchPosts);
+        }
+
+        [Authorize]
+        public IActionResult Save(string id)
+        {
+            var isSaveSuccessfull = this.searchPostService.Save(id, this.User.GetId());
+
+            if(!isSaveSuccessfull)
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction("Saved");
+        }
+
+        [Authorize]
+        public IActionResult Remove(string id)
+        {
+            var isRemovalSuccessfull = this.searchPostService.Remove(id, this.User.GetId());
+
+            if(!isRemovalSuccessfull)
+            {
+                return this.NotFound();
+            }
+
+            return this.RedirectToAction("Saved");
+        }
+
 
         private void SetAllSearchPostQueryRsponseData(AllSearchPostsViewModel query, SearchPostQueryServiceModel queryResult)
         {

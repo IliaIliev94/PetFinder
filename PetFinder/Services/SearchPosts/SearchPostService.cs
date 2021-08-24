@@ -156,15 +156,7 @@ namespace PetFinder.Services.SearchPosts
             var searchPosts = searchPostQuery
                 .Skip((parsedPageNumber > 0 ? parsedPageNumber : 0) * searchPostsPerPage)
                 .Take(searchPostsPerPage)
-                .Select(searchPost => new SearchPostServiceModel
-                {
-                    Id = searchPost.Id,
-                    Title = searchPost.Title,
-                    ImageUrl = searchPost.Pet.ImageUrl,
-                    PetName = searchPost.Pet.Name,
-                    PetSpecies = searchPost.Pet.Species.Name,
-                    IsSaved = context.SavedSearchPosts.Any(saved => saved.SearchPostId == searchPost.Id && saved.UserId == userId),
-                })
+                .ProjectTo<SearchPostServiceModel>(mapper.ConfigurationProvider, new { currentUserId = userId })
                 .ToList();
 
             return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts, Cities = cities, };
@@ -346,6 +338,51 @@ namespace PetFinder.Services.SearchPosts
         public bool SearchPostTypeExists(string name)
         {
             return this.context.SearchPostTypes.Any(searchPostType => searchPostType.Name == name);
+        }
+
+        public bool Save(string searchPostId, string userId)
+        {
+            if(this.context.SavedSearchPosts.Any(saved => saved.SearchPostId == searchPostId && saved.UserId == userId))
+            {
+                return false;
+            }
+
+            var savedSearchPost = new UserSearchPost
+            {
+                SearchPostId = searchPostId,
+                UserId = userId,
+            };
+
+            this.context.SavedSearchPosts.Add(savedSearchPost);
+            this.context.SaveChanges();
+
+            return true;
+        }
+
+        public IEnumerable<SearchPostServiceModel> Saved(string userId)
+        {
+            return this.context
+                .SavedSearchPosts
+                .Where(saved => saved.UserId == userId)
+                .Select(s => s.SearchPost)
+                .ProjectTo<SearchPostServiceModel>(this.mapper.ConfigurationProvider, new { currentUserId = userId });
+        }
+
+        public bool Remove(string searchPostId, string userId)
+        {
+            var savedSearchPost = this.context.SavedSearchPosts
+                .FirstOrDefault(savedSearchPost => savedSearchPost.SearchPostId == searchPostId &&
+                    savedSearchPost.UserId == userId);
+
+            if(savedSearchPost == null)
+            {
+                return false;
+            }
+
+            this.context.SavedSearchPosts.Remove(savedSearchPost);
+            this.context.SaveChanges();
+
+            return true;
         }
     }
 }

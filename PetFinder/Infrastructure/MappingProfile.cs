@@ -20,6 +20,8 @@ namespace PetFinder.Infrastructure
     {
         public MappingProfile()
         {
+            string currentUserId = null;
+
             this.CreateMap<SearchPostEditServiceModel, AddSearchPostFormModel>()
                 .ForMember(x => x.SearchPostType, y => y.MapFrom(s => s.Type));
             this.CreateMap<PetEditServiceModel, AddPetFormModel>();
@@ -27,7 +29,8 @@ namespace PetFinder.Infrastructure
             this.CreateMap<SearchPost, SearchPostServiceModel>()
                 .ForMember(x => x.ImageUrl, y => y.MapFrom(s => s.Pet.ImageUrl))
                 .ForMember(x => x.PetName, y => y.MapFrom(s => s.Pet.Name))
-                .ForMember(x => x.PetSpecies, y => y.MapFrom(s => s.Pet.Species.Name));
+                .ForMember(x => x.PetSpecies, y => y.MapFrom(s => s.Pet.Species.Name))
+                .ForMember(x => x.IsSaved, y => y.MapFrom(s => s.SavedSearchPosts.Any(sp => sp.UserId == currentUserId)));
 
             this.CreateMap<SearchPost, SearchPostDetailsServiceModel>()
                 .ForMember(x => x.ImageUrl, y => y.MapFrom(s => s.Pet.ImageUrl))
