@@ -47,6 +47,7 @@
     </div>
 }
 
+
 @if (ViewBag.Page == "Add")
 {
     @if (ViewBag.Type == "Lost")
@@ -109,6 +110,8 @@
         </div>
     </div>
 }
+
+
 @if (ViewBag.Page == "Edit" && !this.User.IsAdmin())
 {
     @if (Model.Pet == null)

@@ -36,6 +36,6 @@ namespace PetFinder.Models.SearchPosts
 
         public IEnumerable<SearchPostServiceModel> SearchPosts { get; set; }
 
-        public PaginationViewModel Pagination { get; set; } = new PaginationViewModel { PostsPerPage = 3 };
+        public PaginationViewModel Pagination { get; set; } = new PaginationViewModel { PostsPerPage = 9 };
     }
 }
