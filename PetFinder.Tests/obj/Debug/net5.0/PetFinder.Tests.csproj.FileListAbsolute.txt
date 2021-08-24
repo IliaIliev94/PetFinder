@@ -540,3 +540,4 @@ D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder.Tests\bin\Debu
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder.Tests\bin\Debug\net5.0\FluentAssertions.dll
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder.Tests\bin\Debug\net5.0\Castle.Core.dll
 D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder.Tests\bin\Debug\net5.0\Moq.dll
+D:\SoftUni-Work\C# ASP NET Core\Final Project\PetFinder\PetFinder.Tests\bin\Debug\net5.0\PetFinder.StaticWebAssets.xml

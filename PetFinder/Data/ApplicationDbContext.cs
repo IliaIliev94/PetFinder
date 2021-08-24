@@ -28,6 +28,8 @@ namespace PetFinder.Data
 
         public DbSet<Owner> Owners { get; init; }
 
+        public DbSet<UserSearchPost> SavedSearchPosts { get; init; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -77,6 +79,19 @@ namespace PetFinder.Data
                 .HasOne(x => x.User)
                 .WithMany()
                 .HasForeignKey(x => x.UserId);
+
+            builder.Entity<UserSearchPost>()
+                .HasKey(x => new { x.UserId, x.SearchPostId });
+
+            builder.Entity<UserSearchPost>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId);
+
+            builder.Entity<UserSearchPost>()
+                .HasOne(x => x.SearchPost)
+                .WithMany(x => x.SavedSearchPosts)
+                .HasForeignKey(x => x.SearchPostId);
 
             base.OnModelCreating(builder);
         }

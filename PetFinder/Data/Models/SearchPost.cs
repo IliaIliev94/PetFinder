@@ -12,6 +12,7 @@ namespace PetFinder.Data.Models
         public SearchPost()
         {
             this.Comments = new HashSet<Comment>();
+            this.SavedSearchPosts = new HashSet<UserSearchPost>();
         }
 
         [Required]
@@ -48,6 +49,8 @@ namespace PetFinder.Data.Models
         public string UserId { get; set; }
 
         public virtual IdentityUser User { get; set; }
+
+        public ICollection<UserSearchPost> SavedSearchPosts { get; set; }
 
 
     }

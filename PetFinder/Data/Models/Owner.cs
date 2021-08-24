@@ -17,6 +17,7 @@ namespace PetFinder.Data.Models
         public string Name { get; set; }
 
         [Required]
+        [Phone]
         [MaxLength(PhoneMaxLength)]
         public string PhoneNumber { get; set; }
 

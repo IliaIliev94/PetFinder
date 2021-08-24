@@ -45,7 +45,8 @@ namespace PetFinder.Controllers
                 query.Type,
                 query.Pagination.CurrentPage,
                 query.Pagination.PostsPerPage,
-                query.Sorting);
+                query.Sorting,
+                this.User.GetId());
 
             SetAllSearchPostQueryRsponseData(query, queryResult);
 

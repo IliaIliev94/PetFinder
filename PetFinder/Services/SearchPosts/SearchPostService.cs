@@ -73,7 +73,8 @@ namespace PetFinder.Services.SearchPosts
             string type,
             int currentPage,
             int searchPostsPerPage,
-            SearchPostSorting sorting)
+            SearchPostSorting sorting,
+            string userId = null)
         {
             var searchPostQuery = this.context.SearchPosts.Where(searchPost => !searchPost.IsFoundClaimed).AsQueryable();
 
@@ -162,6 +163,7 @@ namespace PetFinder.Services.SearchPosts
                     ImageUrl = searchPost.Pet.ImageUrl,
                     PetName = searchPost.Pet.Name,
                     PetSpecies = searchPost.Pet.Species.Name,
+                    IsSaved = context.SavedSearchPosts.Any(saved => saved.SearchPostId == searchPost.Id && saved.UserId == userId),
                 })
                 .ToList();
 

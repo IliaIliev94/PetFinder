@@ -16,7 +16,8 @@ namespace PetFinder.Services.SearchPosts
             string type,
             int currentPage,
             int searchPostsPerPage,
-            SearchPostSorting sorting);
+            SearchPostSorting sorting,
+            string userId = null);
 
         string Create(
             string title,
