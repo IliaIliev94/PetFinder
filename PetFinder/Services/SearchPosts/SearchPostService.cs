@@ -342,10 +342,18 @@ namespace PetFinder.Services.SearchPosts
 
         public bool Save(string searchPostId, string userId)
         {
-            if(this.context.SavedSearchPosts.Any(saved => saved.SearchPostId == searchPostId && saved.UserId == userId))
+
+            if (!this.context.SearchPosts.Any(searchPost => searchPost.Id == searchPostId))
             {
                 return false;
             }
+
+            if (this.context.SavedSearchPosts.Any(saved => saved.SearchPostId == searchPostId && saved.UserId == userId))
+            {
+                return false;
+            }
+
+
 
             var savedSearchPost = new UserSearchPost
             {

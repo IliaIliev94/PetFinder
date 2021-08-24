@@ -185,5 +185,16 @@ namespace PetFinder.Tests.Controllers
                 .View(view => view
                 .WithModelOfType<AddSearchPostFormModel>());
         }
+
+        [Fact]
+        public void SaveShouldReturnNotFoundIfSearchPostDoesNotExist()
+        {
+            MyController<SearchPostsController>
+                .Instance()
+                .WithUser()
+                .Calling(c => c.Save("Test"))
+                .ShouldReturn()
+                .NotFound();
+        }
     }
 }
