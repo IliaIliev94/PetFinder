@@ -48,6 +48,13 @@
         </nav>
     </header>
     <div class="container">
+        @if (TempData.ContainsKey("Message") && TempData.ContainsKey("Type"))
+        {
+            <div class="alert alert-@TempData["Type"]" role="alert">
+                @TempData["Message"]
+            </div>
+        }
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

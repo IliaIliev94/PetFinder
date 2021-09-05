@@ -10,6 +10,7 @@ using PetFinder.Services.Pets;
 using PetFinder.Services.SearchPosts.Models;
 using PetFinder.Services.Owners;
 using AutoMapper;
+using PetFinder.Common.Messages;
 
 namespace PetFinder.Controllers
 {
@@ -182,6 +183,9 @@ namespace PetFinder.Controllers
                 ownerId,
                 userId,
                 searchPost.PhoneNumber);
+
+            TempData["Message"] = string.Format(Messages.SuccessMessage, "searchpost");
+            TempData["Type"] = MessageTypes.Success;
 
             return this.RedirectToAction("All", "SearchPosts", new { Type = searchPost.SearchPostType});
         }

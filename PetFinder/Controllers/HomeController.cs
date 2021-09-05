@@ -28,9 +28,6 @@ namespace PetFinder.Controllers
 
             var searchPosts = this.searchPostService.Latest();
 
-            var totalStatistics = this.statistics.Total();
-
-
             return View(searchPosts);
         }
 
