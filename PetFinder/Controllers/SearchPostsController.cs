@@ -256,7 +256,14 @@ namespace PetFinder.Controllers
 
                 searchPost.Pets = this.User.IsAdmin()
                         ? null : this.searchPostService.GetPets(this.ownerService.GetOwnerId(this.User.GetId()));
+
+                if(searchPost.SearchPostType == "Found")
+                {
+                    searchPost.Pet.Sizes = this.petService.GetSizes();
+                    searchPost.Pet.Species = this.petService.GetSpecies();
+                }
                 
+
                 return this.View(searchPost);
             }
 

@@ -48,6 +48,7 @@
 }
 
 
+
 @if (ViewBag.Page == "Add")
 {
     @if (ViewBag.Type == "Lost")
@@ -68,7 +69,7 @@
 
 
 
-    <input type="hidden" asp-for="SearchPostType" value="@ViewBag.Type" />
+
 
     <div class="" id="trigger-form">
         <h2 class="heading-margin text-center">Add Pet Data</h2>
@@ -133,14 +134,14 @@
             <h2 class="heading-margin text-center">Edit Pet Data</h2>
             <div class="form-group">
                 <label asp-for="Pet.Name" class="form-label"></label>
-                <input asp-for="Pet.Name" type="text" class="form-control" id="name" value="@Model.Pet.Name">
+                <input asp-for="Pet.Name" type="text" class="form-control" id="name">
                 <span asp-validation-for="Pet.Name" class="small text-danger"></span>
             </div>
 
 
             <div class="form-group">
                 <label asp-for="Pet.ImageUrl" class="form-label"></label>
-                <input asp-for="Pet.ImageUrl" type="text" class="form-control" value="@Model.Pet.ImageUrl">
+                <input asp-for="Pet.ImageUrl" type="text" class="form-control">
                 <span asp-validation-for="Pet.ImageUrl" class="small text-danger"></span>
             </div>
 
@@ -151,10 +152,6 @@
                 <select asp-for="Pet.SizeId" class="form-control">
                     @foreach (var size in Model.Pet.Sizes)
                     {
-                        if (size.Id == Model.Pet.SizeId)
-                        {
-                            <option selected value="@size.Id">@size.Type</option>
-                        }
                         <option value="@size.Id">@size.Type</option>
                     }
                 </select>
@@ -167,11 +164,8 @@
                 <select asp-for="Pet.SpeciesId" class="form-control">
                     @foreach (var specie in Model.Pet.Species)
                     {
-                        if (specie.Id == Model.Pet.SpeciesId)
-                        {
-                            <option selected value="@specie.Id">@specie.Name</option>
-                        }
 
+                        <option value="@specie.Id">@specie.Name</option>
                     }
                 </select>
             </div>
