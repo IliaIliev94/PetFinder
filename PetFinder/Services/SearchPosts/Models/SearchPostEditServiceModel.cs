@@ -20,6 +20,8 @@ namespace PetFinder.Services.SearchPosts.Models
 
         public string PetId { get; init; }
 
+        public string PhoneNumber { get; init; }
+
         public IEnumerable<PetSelectServiceModel> Pets { get; set; }
 
         public int CityId { get; init; }

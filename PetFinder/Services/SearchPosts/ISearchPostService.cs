@@ -42,7 +42,8 @@ namespace PetFinder.Services.SearchPosts
             string description,
             int cityId,
             DateTime? dateLostFound,
-            string petId);
+            string petId,
+            string phoneNumber = null);
 
         bool Edit(
             string id,
@@ -53,7 +54,8 @@ namespace PetFinder.Services.SearchPosts
             string petName,
             string imageUrl,
             int petSpeciesId,
-            int petSizeId);
+            int petSizeId,
+            string phoneNumber);
 
         Tuple<bool, string> Delete(string id, string userId, bool userIsAdmin);
 

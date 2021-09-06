@@ -180,7 +180,7 @@ namespace PetFinder.Services.SearchPosts
                 .FirstOrDefault();
         }
 
-        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petId)
+        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petId, string phoneNumber = null)
         {
             var searchPost = this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == id);
 
@@ -192,9 +192,15 @@ namespace PetFinder.Services.SearchPosts
             searchPost.Title = title;
             searchPost.Description = description;
             searchPost.DateLostFound = dateLostFound;
+
             if(cityId != 0)
             {
                 searchPost.CityId = cityId;
+            }
+
+            if(phoneNumber != null)
+            {
+                searchPost.PhoneNumber = phoneNumber;
             }
             if(!string.IsNullOrWhiteSpace(petId))
             {
@@ -208,10 +214,10 @@ namespace PetFinder.Services.SearchPosts
 
         }
 
-        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petName, string imageUrl, int petSpeciesId, int petSizeId)
+        public bool Edit(string id, string title, string description, int cityId, DateTime? dateLostFound, string petName, string imageUrl, int petSpeciesId, int petSizeId, string phoneNumber)
         {
            var petId = this.context.SearchPosts.FirstOrDefault(searchPost => searchPost.Id == id).PetId;
-           var isSearchPostEditSuccessfull = this.Edit(id, title, description, cityId, dateLostFound, petId);
+           var isSearchPostEditSuccessfull = this.Edit(id, title, description, cityId, dateLostFound, petId, phoneNumber);
            var isPetEditSuccessfull = this.petService.Edit(petId, petName, imageUrl, petSpeciesId, petSizeId);
 
             if(!isSearchPostEditSuccessfull || !isPetEditSuccessfull)

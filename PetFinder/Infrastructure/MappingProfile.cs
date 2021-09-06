@@ -42,6 +42,7 @@ namespace PetFinder.Infrastructure
 
             this.CreateMap<SearchPost, SearchPostEditServiceModel>()
                 .ForMember(x => x.Type, y => y.MapFrom(s => s.SearchPostType.Name))
+                .ForMember(x => x.PhoneNumber, y => y.MapFrom(s => s.PhoneNumber))
                 .ForMember(x => x.Pet, y => y.Ignore());
 
             this.CreateMap<Pet, PetServiceModel>()

@@ -184,7 +184,7 @@ namespace PetFinder.Controllers
                 userId,
                 searchPost.PhoneNumber);
 
-            TempData["Message"] = string.Format(Messages.SuccessMessage, "searchpost");
+            TempData["Message"] = string.Format(Messages.SuccessAddMessage, "searchpost");
             TempData["Type"] = MessageTypes.Success;
 
             return this.RedirectToAction("All", "SearchPosts", new { Type = searchPost.SearchPostType});
@@ -276,7 +276,7 @@ namespace PetFinder.Controllers
                 {
                     isEditSuccessfull = this.searchPostService.Edit(searchPost.Id, searchPost.Title, searchPost.Description,
                         searchPost.CityId, searchPost.DateLostFound, searchPost.Pet.Name,
-                        searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId);
+                        searchPost.Pet.ImageUrl, searchPost.Pet.SpeciesId, searchPost.Pet.SizeId, searchPost.PhoneNumber);
                 }
             }
 
@@ -284,6 +284,9 @@ namespace PetFinder.Controllers
             {
                 return this.NotFound();
             }
+
+            TempData["Message"] = string.Format(Messages.SuccessEditMessage, "searchpost");
+            TempData["Type"] = MessageTypes.Success;
 
             return this.RedirectToAction("Details", "SearchPosts", new { Id = searchPost.Id });
         }
@@ -303,6 +306,9 @@ namespace PetFinder.Controllers
             {
                 return this.RedirectToAction("All", "SearchPosts", new { Type = isDeleteSuccessfull.Item2 });
             }
+
+            TempData["Message"] = string.Format(Messages.SuccessDeleteMessage, "searchpost");
+            TempData["Type"] = MessageTypes.Success;
 
             return this.RedirectToAction("Mine");
         }
@@ -339,6 +345,9 @@ namespace PetFinder.Controllers
                 return this.NotFound();
             }
 
+            TempData["Message"] = string.Format(Messages.SuccessSaveMessage, "searchpost");
+            TempData["Type"] = MessageTypes.Success;
+
             return this.RedirectToAction("Saved");
         }
 
@@ -351,6 +360,9 @@ namespace PetFinder.Controllers
             {
                 return this.NotFound();
             }
+
+            TempData["Message"] = string.Format(Messages.SuccessRemoveSavedMessage, "searchpost");
+            TempData["Type"] = MessageTypes.Success;
 
             return this.RedirectToAction("Saved");
         }
