@@ -1,0 +1,21 @@
+﻿@model AddSearchPostFormModel
+
+
+@if (ViewBag.Type == "Lost")
+{
+    <div class="form-group">
+        <label asp-for="PetId">Pet</label>
+        <select asp-for="PetId" class="form-control" id="trigger-select">
+            <option value="0">Create new pet</option>
+            @foreach (var pet in Model.Pets)
+            {
+                <option value="@pet.Id">@pet.Name</option>
+            }
+        </select>
+        <span asp-validation-for="PetId" class="small text-danger"></span>
+    </div>
+}
+
+<div class="" id="trigger-form">
+    <partial name="../Pets/_PetFormPartial" for="@Model.Pet" />
+</div>

@@ -114,7 +114,9 @@ namespace PetFinder.Controllers
 
             if(searchPost.SearchPostType == "Lost")
             {
-                if(!this.ownerService.IsOwner(this.User.GetId()))
+                ModelState.Remove("PhoneNumber");
+
+                if (!this.ownerService.IsOwner(this.User.GetId()))
                 {
                     return this.RedirectToAction("Become", "Owners");
                 }
@@ -122,10 +124,9 @@ namespace PetFinder.Controllers
                 if(searchPost.PetId != "0")
                 {
                     ModelState.Remove("Pet.ImageUrl");
-                    ModelState.Remove("PhoneNumber");
                 }
 
-                if(searchPost.PetId != "0" && !this.searchPostService.PetExists(searchPost.PetId))
+                if (searchPost.PetId != "0" && !this.searchPostService.PetExists(searchPost.PetId))
                 {
                     this.ModelState.AddModelError(nameof(searchPost.PetId), "Pet does not exist.");
                 }

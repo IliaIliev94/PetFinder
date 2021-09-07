@@ -1,0 +1,19 @@
+﻿@model AddSearchPostFormModel
+
+@if (Model.Pet == null)
+{
+    <div class="form-group">
+        <label asp-for="PetId">Pet</label>
+        <select asp-for="PetId" class="form-control" id="trigger-select">
+            @foreach (var pet in Model.Pets)
+            {
+                <option value="@pet.Id">@pet.Name</option>
+            }
+        </select>
+    </div>
+}
+
+else
+{
+    <partial name="../Pets/_PetFormPartial" for="@Model.Pet" />
+}

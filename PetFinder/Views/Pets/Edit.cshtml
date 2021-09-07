@@ -5,55 +5,8 @@
 }
 
 <form class="offset-md-2 offset-lg-3 col-md-8 col-lg-6 g-3" method="post" asp-controller="Pets" asp-action="Edit">
-    <h2 class="header-margin text-center">@ViewData["Title"]</h2>
-    <div class="form-group">
-        <label asp-for="Name" class="form-label">Name</label>
-        <input asp-for="Name" type="text" class="form-control" value="@Model.Name">
-        <span asp-validation-for="Name" class="small text-danger"></span>
-    </div>
 
-
-    <div class="form-group">
-        <label asp-for="ImageUrl" class="form-label">Image URL</label>
-        <input asp-for="ImageUrl" type="text" class="form-control" value="@Model.ImageUrl">
-        <span asp-validation-for="ImageUrl" class="small text-danger"></span>
-    </div>
-
-
-
-    <div class="form-group">
-        <label asp-for="SizeId">Size</label>
-        <select asp-for="SizeId" class="form-control">
-            @foreach (var size in Model.Sizes)
-            {
-                if (size.Id == Model.SizeId)
-                {
-                    <option selected value="@size.Id">@size.Type</option>
-                }
-                else
-                {
-                    <option value="@size.Id">@size.Type</option>
-                }
-
-            }
-        </select>
-    </div>
-
-
-
-    <div class="form-group">
-        <label asp-for="SpeciesId">Species</label>
-        <select asp-for="SpeciesId" class="form-control">
-            @foreach (var specie in Model.Species)
-            {
-                if (specie.Id == Model.SpeciesId)
-                {
-                    <option selected value="@specie.Id">@specie.Name</option>
-                }
-                <option value="@specie.Id">@specie.Name</option>
-            }
-        </select>
-    </div>
+    <partial name="_PetFormPartial" for="@Model" />
 
 
     <button type="submit" class="btn btn-primary mt-3 col-sm-12 col-md-auto">Submit</button>
