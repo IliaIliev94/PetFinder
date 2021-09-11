@@ -29,9 +29,8 @@ namespace PetFinder.Controllers
             this.mapper = mapper;
         }
 
-        public IActionResult All([FromQuery] AllSearchPostsViewModel query, int currentPage)
+        public IActionResult All([FromQuery] AllSearchPostsViewModel query, int currentPage = 1)
         {
-            query.Pagination.CurrentPage = currentPage != 0 ? currentPage : 1;
 
             if (query.Type != "Lost" && query.Type != "Found")
             {
@@ -44,7 +43,7 @@ namespace PetFinder.Controllers
                 query.SearchTerm,
                 query.City,
                 query.Type,
-                query.Pagination.CurrentPage,
+                currentPage,
                 query.Pagination.PostsPerPage,
                 query.Sorting,
                 this.User.GetId());

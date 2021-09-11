@@ -11,6 +11,6 @@ namespace PetFinder.Models.SearchPosts
     {
         public SearchPostDetailsServiceModel SearchPost { get; set; }
 
-        public PaginationViewModel Pagination { get; set; } = new PaginationViewModel { PostsPerPage = 3 };
+        public PaginationViewModel Pagination { get; set; } = new PaginationViewModel { PostsPerPage = 5 };
     }
 }

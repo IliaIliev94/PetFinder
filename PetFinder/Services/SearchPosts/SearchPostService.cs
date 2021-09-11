@@ -182,7 +182,11 @@ namespace PetFinder.Services.SearchPosts
                 currentPage = totalPages;
             }
 
-            searchPost.Comments = searchPost.Comments.Skip((currentPage - 1) * commentsPerPage).Take(commentsPerPage);
+            searchPost.Comments = searchPost.Comments
+                .OrderByDescending(comment => comment.CreatedOn)
+                .Skip((currentPage - 1) * commentsPerPage)
+                .Take(commentsPerPage)
+                .ToList();
 
 
             return new SearchPostDetailsQueryServiceModel { SearchPost = searchPost, TotalPages = totalPages, CurrentPage = currentPage};

@@ -10,7 +10,7 @@ namespace PetFinder.Services.Resources
     {
         ResourcePostQueryServiceModel All(string searchTerm, int currentPage, int resourcePostsPerPage);
 
-        ResourcePostDetailsServiceModel Details (string id);
+        ResourcePostDetailsQueryServiceModel Details (string id, int totalPages, int commentsPerPage);
 
         ResourcePostEditServiceModel GetEditData(string id);
 

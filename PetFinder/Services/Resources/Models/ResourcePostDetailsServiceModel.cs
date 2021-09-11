@@ -18,7 +18,7 @@ namespace PetFinder.Services.Resources.Models
 
         public DateTime CreatedOn { get; init; }
 
-        public IEnumerable<CommentServiceModel> Comments { get; init; }
+        public IEnumerable<CommentServiceModel> Comments { get; set; }
 
     }
 }

@@ -81,10 +81,7 @@
 
    <partial name="_SearchPostsPartial" model="@Model.SearchPosts">
 
+    <partial name="../Shared/_PaginationPartial" for="@Model.Pagination"/>
 
-    @if(Model.SearchPosts.Any())
-    {
-       <partial name="../Shared/_PaginationPartial" for="@Model.Pagination"/>
-    } 
 
 </div>

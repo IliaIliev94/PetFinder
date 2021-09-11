@@ -33,11 +33,15 @@ namespace PetFinder.Controllers
 
         
 
-        public IActionResult Details(string id)
+        public IActionResult Details([FromQuery] ResourcesDetailsViewModel query, string id, int currentPage = 1)
         {
-            var resourcePost = this.resourcesService.Details(id);
+            var queryResult = this.resourcesService.Details(id, currentPage, query.Pagination.PostsPerPage);
 
-            return this.View(resourcePost);
+            query.ResourcePost = queryResult.ResourcePost;
+            query.Pagination.CurrentPage = queryResult.CurrentPage;
+            query.Pagination.TotalPages = queryResult.TotalPages;
+
+            return this.View(query);
         }
 
        

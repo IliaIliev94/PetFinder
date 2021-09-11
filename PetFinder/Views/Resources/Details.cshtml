@@ -1,30 +1,32 @@
-﻿@model ResourcePostDetailsServiceModel
+﻿@model ResourcesDetailsViewModel
 
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.ResourcePost.Title;
     ViewBag.Type = "Resources";
+    ViewBag.Controller = "Resources";
+    ViewBag.Action = "Details";
 }
 
 
 <div class="row mb-4">
     <div class="col-md-12">
-        <img src="@Model.ImageUrl" class="img-fluid w-100" alt="@Model.Title" />
+        <img src="@Model.ResourcePost.ImageUrl" class="img-fluid w-100" alt="@Model.ResourcePost.Title" />
     </div>
 </div>
 
 
 <div class="bg-white p-3">
-    <h2 class="text-center">@Model.Title</h2>
-    <h3 class="text-center mt-2">@Model.CreatedOn</h3>
+    <h2 class="text-center">@Model.ResourcePost.Title</h2>
+    <h3 class="text-center mt-2">@Model.ResourcePost.CreatedOn</h3>
 
-    <p class="mt-4 text-justify break-word">@Model.Description</p>
+    <p class="mt-4 text-justify break-word">@Model.ResourcePost.Description</p>
 
 
     <div class="text-center mt-5">
         @if (this.User.IsAdmin())
         {
-            <a class=" btn btn-primary" asp-area="Admin" asp-controller="Resources" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class=" btn btn-primary" asp-area="Admin" asp-controller="Resources" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            <a class=" btn btn-primary" asp-area="Admin" asp-controller="Resources" asp-action="Edit" asp-route-id="@Model.ResourcePost.Id">Edit</a>
+            <a class=" btn btn-primary" asp-area="Admin" asp-controller="Resources" asp-action="Delete" asp-route-id="@Model.ResourcePost.Id">Delete</a>
         }
     </div>
 </div>
@@ -34,16 +36,17 @@
     @if (this.User.GetId() != null)
     {
 
-    <form method="post" asp-controller="Comments" asp-action="Add" asp-route-resourcePostId="@Model.Id">
+    <form method="post" asp-controller="Comments" asp-action="Add" asp-route-resourcePostId="@Model.ResourcePost.Id">
 
-        <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.Id">
+        <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.ResourcePost.Id">
     </form>
 
 
     }
 
 
-        <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.Comments">
+        <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.ResourcePost.Comments"/>
+        <partial name="../Shared/_PaginationPartial" for="@Model.Pagination"/>
 
 </div>
 

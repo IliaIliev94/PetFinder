@@ -59,7 +59,7 @@ namespace PetFinder.Services.Resources
             return new ResourcePostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, Resources = resourcePosts };
         }
 
-        public ResourcePostDetailsServiceModel Details(string id)
+        public ResourcePostDetailsQueryServiceModel Details(string id, int currentPage, int commentsPerPage)
         {
             var resourcePost = this.context
                 .ResourcePosts
@@ -67,7 +67,25 @@ namespace PetFinder.Services.Resources
                 .ProjectTo<ResourcePostDetailsServiceModel>(mapper.ConfigurationProvider)
                 .FirstOrDefault();
 
-            return resourcePost;
+            var totalPages = (int)Math.Ceiling(resourcePost.Comments.Count() * 1.0 / commentsPerPage);
+
+            resourcePost.Comments = resourcePost.Comments
+                .OrderByDescending(comment => comment.CreatedOn)
+                .Skip((currentPage - 1) * commentsPerPage)
+                .Take(commentsPerPage)
+                .ToList();
+
+            if (currentPage < 1)
+            {
+                currentPage = 1;
+            }
+
+            if (currentPage > totalPages)
+            {
+                currentPage = totalPages;
+            }
+
+            return new ResourcePostDetailsQueryServiceModel { ResourcePost = resourcePost, CurrentPage = currentPage, TotalPages = totalPages};
 
         }
 
