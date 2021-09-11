@@ -1,14 +1,16 @@
-﻿@model SearchPostDetailsServiceModel
+﻿@model SearchPostDetailsViewModel
 
 @{
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = Model.SearchPost.Title;
     ViewBag.Type = "SearchPosts";
+    ViewBag.Controller = "SearchPosts";
+    ViewBag.Action = "Details";
 }
 
 <div class="mb-4">
     <div class="row">
         <div class="col-md-12">
-            <img src="@Model.ImageUrl" class="img-fluid w-100" alt="@Model.PetSpecies" />
+            <img src="@Model.SearchPost.ImageUrl" class="img-fluid w-100" alt="@Model.SearchPost.PetSpecies" />
         </div>
     </div>
 </div>
@@ -16,23 +18,23 @@
 
 
 <div class="bg-white p-3">
-    <h2 class="text-center">@Model.Title</h2>
-    <h3 class="text-center">@Model.PetName - @Model.PetSpecies</h3>
-    <h5 class="text-center">@Model.City</h5>
-    @if (!String.IsNullOrEmpty(Model.PhoneNumber))
+    <h2 class="text-center">@Model.SearchPost.Title</h2>
+    <h3 class="text-center">@Model.SearchPost.PetName - @Model.SearchPost.PetSpecies</h3>
+    <h5 class="text-center">@Model.SearchPost.City</h5>
+    @if (!String.IsNullOrEmpty(Model.SearchPost.PhoneNumber))
     {
-        <h5 class="text-center">Phone number for contact: @Model.PhoneNumber</h5>
+        <h5 class="text-center">Phone number for contact: @Model.SearchPost.PhoneNumber</h5>
     }
 
-    <p class="text-justify mt-4 break-word">@Model.Description</p>
+    <p class="text-justify mt-4 break-word">@Model.SearchPost.Description</p>
     <div class="text-center mt-5">
-        @if (this.User.GetId() == Model.UserId || this.User.IsInRole(WebConstants.AdministratorRoleName))
+        @if (this.User.GetId() == Model.SearchPost.UserId || this.User.IsInRole(WebConstants.AdministratorRoleName))
         {
-            <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-            <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-            @if (!Model.IsFoundClaimed && this.User.GetId() == Model.UserId)
+            <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Edit" asp-route-id="@Model.SearchPost.Id">Edit</a>
+            <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="Delete" asp-route-id="@Model.SearchPost.Id">Delete</a>
+            @if (!Model.SearchPost.IsFoundClaimed && this.User.GetId() == Model.SearchPost.UserId)
             {
-                <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="SetAsFoundClaimed" asp-route-id="@Model.Id">Set as @(Model.Type == "Lost" ? "Found" : "Claimed")</a>
+                <a class=" btn btn-primary" asp-controller="SearchPosts" asp-action="SetAsFoundClaimed" asp-route-id="@Model.SearchPost.Id">Set as @(Model.SearchPost.Type == "Lost" ? "Found" : "Claimed")</a>
             }
 
         }
@@ -44,13 +46,15 @@
     @if (this.User.GetId() != null)
     {
 
-        <form method="post" asp-controller="Comments" asp-action="Add" asp-route-searchPostId="@Model.Id">
+        <form method="post" asp-controller="Comments" asp-action="Add" asp-route-searchPostId="@Model.SearchPost.Id">
 
-            <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.Id">
+            <partial name="~/Views/Comments/_CommentFormPartial.cshtml" model="@Model.SearchPost.Id">
         </form>
 
 
     }
-    <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.Comments">
+    <partial name="~/Views/Comments/_CommentPartial.cshtml" model="@Model.SearchPost.Comments">
+    <partial name="../Shared/_PaginationPartial" for="@Model.Pagination">
+
 </div>
 

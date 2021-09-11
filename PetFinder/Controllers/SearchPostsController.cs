@@ -54,17 +54,20 @@ namespace PetFinder.Controllers
             return this.View(query);
         }
 
-        public IActionResult Details(string id)
+        public IActionResult Details([FromQuery] SearchPostDetailsViewModel query, string id, int currentPage = 1)
         {
-            var searchPost = this.searchPostService.Details(id);
+            var queryResult = this.searchPostService.Details(id, currentPage, query.Pagination.PostsPerPage);
 
-            if (searchPost == null)
+            if (queryResult == null)
             {
                 return this.NotFound();
             }
 
+            query.SearchPost = queryResult.SearchPost;
+            query.Pagination.TotalPages = queryResult.TotalPages;
+            query.Pagination.CurrentPage = queryResult.CurrentPage;
 
-            return this.View(searchPost);
+            return this.View(query);
         }
 
         [Authorize]

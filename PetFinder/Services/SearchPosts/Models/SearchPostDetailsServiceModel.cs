@@ -30,6 +30,6 @@ namespace PetFinder.Services.SearchPosts.Models
 
         public bool IsFoundClaimed { get; init; }
 
-        public IEnumerable<CommentServiceModel> Comments { get; init; }
+        public IEnumerable<CommentServiceModel> Comments { get; set; }
     }
 }

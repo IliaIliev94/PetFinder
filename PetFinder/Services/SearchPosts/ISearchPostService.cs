@@ -63,7 +63,7 @@ namespace PetFinder.Services.SearchPosts
 
         IEnumerable<SearchPostServiceModel> GetSearchPostsById(string id);
 
-        SearchPostDetailsServiceModel Details(string id);
+        SearchPostDetailsQueryServiceModel Details(string id, int currentPage, int commentsPerPage);
 
         SearchPostEditServiceModel GetEditData(string id);
 

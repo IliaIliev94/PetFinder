@@ -6,7 +6,7 @@
         <ul class="pagination mx-auto">
 
             <li class="page-item">
-                <a asp-controller="@ViewBag.Controller" asp-action="All"
+                <a asp-controller="@ViewBag.Controller" asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
                    asp-route-currentPage="@(Model.CurrentPage - 1)"
                    asp-route-type="@Model.Type"
                    class="page-link @(Model.CurrentPage <= 1 ? "disabled" : String.Empty)">Previous</a>
@@ -16,14 +16,14 @@
             {
                 <li class="page-item @(i == Model.CurrentPage ? "active" : String.Empty)">
                     <a asp-controller="@ViewBag.Controller"
-                       asp-action="All"
+                       asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
                        asp-route-type="@Model.Type"
                        asp-route-currentPage="@i"
                        class="page-link">@i</a>
                 </li>
             }
             <li class="page-item">
-                <a asp-controller="@ViewBag.Controller" asp-action="All"
+                <a asp-controller="@ViewBag.Controller" asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
                    asp-route-currentPage="@(Model.CurrentPage + 1)"
                    asp-route-type="@Model.Type"
                    class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : String.Empty)">Next</a>

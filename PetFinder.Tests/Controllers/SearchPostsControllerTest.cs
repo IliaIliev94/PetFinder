@@ -61,7 +61,7 @@ namespace PetFinder.Tests.Controllers
                 .Instance()
                 .WithUser()
                 .WithData(new Owner { Id = 1, PhoneNumber = "0565548545", UserId = "TestId"}, GetSize(), GetSpecies() , GetPet(petId, "Test", 1, 2, "test", 1), GetCity(), GetSearchPost(id, title, description, petId, cityId, null))
-                .Calling(c => c.Details("Test"))
+                .Calling(c => c.Details(new SearchPostDetailsViewModel { }, "Test", 1))
                 .ShouldReturn()
                 .View(view => view
                 .WithModelOfType<SearchPostDetailsServiceModel>()
@@ -71,7 +71,7 @@ namespace PetFinder.Tests.Controllers
                 .Instance()
                 .WithUser()
                 .WithData(new Owner { Id = 1, PhoneNumber = "0565548545", UserId = "TestId" }, GetSize(), GetSpecies(), GetPet(petId, "Test", 1, 2, "test", 1), GetCity(), GetSearchPost(id, title, description, petId, cityId, null))
-                .Calling(c => c.Details("1"))
+                .Calling(c => c.Details(new SearchPostDetailsViewModel { }, "1", 1))
                 .ShouldReturn()
                 .NotFound();
         }

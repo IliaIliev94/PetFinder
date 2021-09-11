@@ -162,13 +162,30 @@ namespace PetFinder.Services.SearchPosts
             return new SearchPostQueryServiceModel { TotalPages = totalPages, CurrentPage = currentPage, PetSizes = petSizes, PetSpecies = petSpecies, SearchPosts = searchPosts, Cities = cities, };
         }
 
-        public SearchPostDetailsServiceModel Details(string id)
+        public SearchPostDetailsQueryServiceModel Details(string id, int currentPage, int commentsPerPage)
         {
-            return this.context
+            var searchPost = this.context
                 .SearchPosts
                 .Where(searchPost => searchPost.Id == id)
-                .ProjectTo<SearchPostDetailsServiceModel>(mapper.ConfigurationProvider)
+                .ProjectTo<SearchPostDetailsServiceModel>(mapper.ConfigurationProvider, new { currentPage = currentPage, commentsCount = commentsPerPage})
                 .FirstOrDefault();
+
+            var totalPages = (int)Math.Ceiling(searchPost.Comments.Count() * 1.0 / commentsPerPage);
+
+            if(currentPage < 1)
+            {
+                currentPage = 1;
+            }
+
+            if(currentPage > totalPages)
+            {
+                currentPage = totalPages;
+            }
+
+            searchPost.Comments = searchPost.Comments.Skip((currentPage - 1) * commentsPerPage).Take(commentsPerPage);
+
+
+            return new SearchPostDetailsQueryServiceModel { SearchPost = searchPost, TotalPages = totalPages, CurrentPage = currentPage};
         }
 
         public SearchPostEditServiceModel GetEditData(string id)
