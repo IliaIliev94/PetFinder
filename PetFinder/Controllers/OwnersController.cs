@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using PetFinder.Data.Models;
 using PetFinder.Services.Owners;
 using AutoMapper;
+using PetFinder.Common.Messages;
 
 namespace PetFinder.Controllers
 {

@@ -6,6 +6,12 @@
 
         <div class="d-flex justify-content-center mt-5">
             <ul class="pagination mx-auto">
+                <li class="page-item">
+                    <a asp-controller="@ViewBag.Controller" asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
+                       asp-route-currentPage="1"
+                       asp-route-type="@Model.Type"
+                       class="page-link @(Model.CurrentPage == 1 ? "disabled" : String.Empty)">First</a>
+                </li>
 
                 <li class="page-item">
                     <a asp-controller="@ViewBag.Controller" asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
@@ -14,7 +20,31 @@
                        class="page-link @(Model.CurrentPage <= 1 ? "disabled" : String.Empty)">Previous</a>
                 </li>
 
-                @for (var i = 1; i <= @Model.TotalPages; i++)
+                @for (int i = Model.CurrentPage - 3, counter = 0; counter < 3; i++, counter++)
+                {
+
+                    if (i >= 1)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : String.Empty)">
+                            <a asp-controller="@ViewBag.Controller"
+                               asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
+                               asp-route-type="@Model.Type"
+                               asp-route-currentPage="@i"
+                               class="page-link">@i</a>
+                        </li>
+                    }
+
+                }
+
+                <li class="page-item active">
+                    <a asp-controller="@ViewBag.Controller"
+                       asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
+                       asp-route-type="@Model.Type"
+                       asp-route-currentPage="@Model.CurrentPage"
+                       class="page-link">@Model.CurrentPage</a>
+                </li>
+
+                @for (int i = Model.CurrentPage + 1, counter = 0; i <= Model.TotalPages && counter < 3; i++, counter++)
                 {
                     <li class="page-item @(i == Model.CurrentPage ? "active" : String.Empty)">
                         <a asp-controller="@ViewBag.Controller"
@@ -24,11 +54,19 @@
                            class="page-link">@i</a>
                     </li>
                 }
+
                 <li class="page-item">
                     <a asp-controller="@ViewBag.Controller" asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
                        asp-route-currentPage="@(Model.CurrentPage + 1)"
                        asp-route-type="@Model.Type"
                        class="page-link @(Model.CurrentPage >= Model.TotalPages ? "disabled" : String.Empty)">Next</a>
+                </li>
+
+                <li class="page-item">
+                    <a asp-controller="@ViewBag.Controller" asp-action="@(String.IsNullOrWhiteSpace(ViewBag.Action) ? "All" : ViewBag.Action)"
+                       asp-route-currentPage="@(Model.TotalPages)"
+                       asp-route-type="@Model.Type"
+                       class="page-link @(Model.CurrentPage == Model.TotalPages ? "disabled" : String.Empty)">Last</a>
                 </li>
             </ul>
         </div>

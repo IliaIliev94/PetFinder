@@ -120,6 +120,9 @@ namespace PetFinder.Controllers
 
                 if (!this.ownerService.IsOwner(this.User.GetId()))
                 {
+                    TempData["Message"] = string.Format(Messages.UnauthorizedMessage, "owner");
+                    TempData["Type"] = MessageTypes.Error;
+
                     return this.RedirectToAction("Become", "Owners");
                 }
 
@@ -165,6 +168,9 @@ namespace PetFinder.Controllers
                 searchPost.Pet.Sizes = this.petService.GetSizes();
 
                 ViewBag.Type = searchPost.SearchPostType;
+
+                TempData["Message"] = string.Format(Messages.ErrorAddMessage, "searchpost");
+                TempData["Type"] = MessageTypes.Error;
 
                 return this.View(searchPost);
             }

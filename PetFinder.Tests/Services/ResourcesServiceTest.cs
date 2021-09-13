@@ -76,9 +76,9 @@ namespace PetFinder.Tests.Services
 
             var resourcePostId = this.resourcesService.Create(title, description, imageUrl);
 
-            var resourcePost = this.resourcesService.Details(resourcePostId);
+            var resourcePost = this.resourcesService.Details(resourcePostId, 1, 3);
 
-            resourcePost.Id.Should().BeEquivalentTo(resourcePostId);
+            resourcePost.ResourcePost.Id.Should().BeEquivalentTo(resourcePostId);
         }
 
         [Theory]

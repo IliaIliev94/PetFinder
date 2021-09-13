@@ -8,5 +8,6 @@ namespace PetFinder.Common.Messages
     public static class MessageTypes
     {
         public const string Success = "success";
+        public const string Error = "danger";
     }
 }
