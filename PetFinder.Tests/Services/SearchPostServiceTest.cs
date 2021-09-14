@@ -202,6 +202,8 @@ namespace PetFinder.Tests.Services
         [InlineData("Test", "1")]
         public void RemoveRemovesSavedSearchPost(string userId, string searchPostId)
         {
+            this.database.SearchPosts.Add(new SearchPost { Id = searchPostId });
+            this.database.SaveChanges();
 
             this.searchPostService.Save(searchPostId, userId);
             database.SavedSearchPosts.Any(saved => saved.UserId == userId && saved.SearchPostId == searchPostId)

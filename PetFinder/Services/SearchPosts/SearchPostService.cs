@@ -170,6 +170,11 @@ namespace PetFinder.Services.SearchPosts
                 .ProjectTo<SearchPostDetailsServiceModel>(mapper.ConfigurationProvider, new { currentPage = currentPage, commentsCount = commentsPerPage})
                 .FirstOrDefault();
 
+            if(searchPost == null)
+            {
+                return new SearchPostDetailsQueryServiceModel { SearchPost = null };
+            }
+
             var totalPages = (int)Math.Ceiling(searchPost.Comments.Count() * 1.0 / commentsPerPage);
 
             if(currentPage < 1)

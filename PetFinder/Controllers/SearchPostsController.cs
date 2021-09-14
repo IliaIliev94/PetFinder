@@ -57,7 +57,7 @@ namespace PetFinder.Controllers
         {
             var queryResult = this.searchPostService.Details(id, currentPage, query.Pagination.PostsPerPage);
 
-            if (queryResult == null)
+            if (queryResult.SearchPost == null)
             {
                 return this.NotFound();
             }

@@ -68,11 +68,11 @@ namespace PetFinder.Tests.Controllers
             MyController<PetFinder.Controllers.ResourcesController>
                 .Instance()
                 .WithData(GetResourcePosts())
-                .Calling(c => c.Details("0"))
+                .Calling(c => c.Details(new ResourcesDetailsViewModel { Pagination = new PaginationViewModel { PostsPerPage = 9} }, "0", 1))
                 .ShouldReturn()
                 .View(view => view
-                .WithModelOfType<ResourcePostDetailsServiceModel>()
-                .Passing(m => m.Id.Should().BeEquivalentTo("0")));
+                .WithModelOfType<ResourcesDetailsViewModel>()
+                .Passing(m => m.ResourcePost.Id.Should().BeEquivalentTo("0")));
         }
 
         [Fact]
